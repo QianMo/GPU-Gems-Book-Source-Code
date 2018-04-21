@@ -1,0 +1,36 @@
+CONTAINER Mfxmaterial
+{
+	NAME Mfxmaterial;
+
+	INCLUDE Mbase;
+
+	GROUP Obaselist
+    {
+		BOOL MATERIAL_PAGE_PROPERTIES { PAGE; HIDDEN; PARENTMSG ID_FX_PARAMS_GRP; }
+    }
+
+	GROUP ID_FX_PARAMS_GRP
+	{
+		DEFAULT 1;
+		FILENAME FX_PATH {ANIM OFF;}
+		GROUP
+		{
+			LAYOUTGROUP; COLUMNS 3;
+			GROUP
+			{
+				BUTTON FX_EDIT {}
+			}
+			GROUP
+			{
+				BUTTON FX_RELOAD {}
+			}
+			GROUP
+			{
+				BUTTON FX_RELOAD_W_DEFAULT {}
+			}
+		}
+		LONG FX_TECHNIQUE {CYCLE {}; ANIM OFF;}
+	}
+
+	INCLUDE Massign;
+}

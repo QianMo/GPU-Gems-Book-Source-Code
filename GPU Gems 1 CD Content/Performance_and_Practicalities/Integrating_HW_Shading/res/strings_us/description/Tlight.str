@@ -1,0 +1,7 @@
+STRINGTABLE Tlight
+{
+	Tlight	"C4Dfx Light Control";
+
+	INCLUDELIGHT "Cast Light";
+	INCLUDESHADOW "Generate Shadow";
+}

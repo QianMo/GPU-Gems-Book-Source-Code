@@ -1,0 +1,5 @@
+float4 main(half2       coords   : TEX0,
+    uniform samplerRECT texture) : COLOR
+{
+  return f4texRECT(texture, coords);
+} 

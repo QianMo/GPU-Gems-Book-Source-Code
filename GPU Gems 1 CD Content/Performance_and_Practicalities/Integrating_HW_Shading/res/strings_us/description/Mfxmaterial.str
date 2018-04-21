@@ -1,0 +1,12 @@
+STRINGTABLE Mfxmaterial
+{
+	Mfxmaterial "C4Dfx Material";
+
+	ID_FX_PARAMS_GRP "C4Dfx Settings";
+	FX_USEFORSHADOW "Use for Shadow Map";
+	FX_PATH "fx File";
+	FX_EDIT "Edit ...";
+	FX_RELOAD "Reload";
+	FX_RELOAD_W_DEFAULT "Reload with Default Values";
+	FX_TECHNIQUE "Technique";
+}

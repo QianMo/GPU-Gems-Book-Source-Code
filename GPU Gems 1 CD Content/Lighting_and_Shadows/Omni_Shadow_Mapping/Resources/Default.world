@@ -1,0 +1,136 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+world
+{
+	version 97
+
+	actorslist 6
+	{
+		actor
+		{
+			class "FIREBALL"
+			name  "FireBall_01"
+
+			patheslist 1
+			{
+				"Light_03.path"
+			}
+			
+			position { 0 0 0 }
+			rotation { 0 0 0 }
+
+			speed "20.0f"
+		}
+
+		actor
+		{
+			class "FIREBALL"
+			name  "FireBall_02"
+
+			patheslist 1
+			{
+				"Light_01.path"
+			}
+			
+			position { 0 0 0 }
+			rotation { 0 0 0 }
+
+			speed "20.0f"
+		}
+
+		actor
+		{
+			class "WORLDROOM"
+			name  "Room_01"
+
+			mesheslist 1
+			{
+				"AlchemistRoom_01.x"
+			}
+			
+			position { 0 0 0 }
+			rotation { 0 0 0 }
+		}
+
+		actor
+		{
+			class "WORLDROOM"
+			name  "Room_02"
+
+			mesheslist 1
+			{
+				"AlchemistRoom_02.x"
+			}
+			
+			position { 0 0 0 }
+			rotation { 0 0 0 }
+		}
+
+		actor
+		{
+			class "WORLDROOM"
+			name  "Room_03"
+
+			mesheslist 1
+			{
+				"AlchemistRoom_03.x"
+			}
+			
+			position { 0 0 0 }
+			rotation { 0 0 0 }
+		}
+
+		actor
+		{
+			class "WORLDROOM"
+			name  "Alchemist_01"
+
+			mesheslist 1
+			{
+				"AlchemistMask.x"
+			}
+			
+			position {   0 0 0 }
+			rotation { -90 0 0 }
+		}
+	}
+
+	// Lights
+	lightslist 2
+	{
+
+		light
+		{
+			name "Light_01"
+
+			patheslist 1
+			{
+				"Light_03.path"
+			}
+
+			position  { -700.0f 750.0f 0.0f }
+
+			diffuse   { 0.6f 0.7f 0.8f 1.0f }
+			specular  { 0.5f 0.5f 0.5f 1.0f }
+		}
+
+		light
+		{
+			name "Light_02"
+
+			patheslist 1
+			{
+				"Light_01.path"
+			}
+		
+			position  { 0.0f 450.0f 0.0f }
+
+			diffuse   { 0.8f 0.7f 0.6f 1.0f }
+			specular  { 1.0f 1.0f 1.0f 1.0f }
+		}
+	}
+}
+
+// end of file

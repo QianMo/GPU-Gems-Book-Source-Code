@@ -1,0 +1,23 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultBlinn.fx"
+
+	diffuse  { 120.0f 120.0f 120.0f 255.0f }
+	specular {  70.0f  30.0f  30.0f 255.0f }
+
+	power "16.0f"
+
+	bumpscale "2.5f"
+
+	diffusemap         "Stone_10.jpg"
+	specularmap        "Stone_10_Spec.jpg"
+	normalmap          "Stone_06_DOT3.jpg"
+}
+
+// end of file

@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "paramgl", "paramgl.vcproj", "{09BD04B0-59E9-46F5-BD55-FB156817B435}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug Multithreaded DLL = Debug Multithreaded DLL
+		Release Multithreaded DLL = Release Multithreaded DLL
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{09BD04B0-59E9-46F5-BD55-FB156817B435}.Debug Multithreaded DLL.ActiveCfg = Debug Multithreaded DLL|Win32
+		{09BD04B0-59E9-46F5-BD55-FB156817B435}.Debug Multithreaded DLL.Build.0 = Debug Multithreaded DLL|Win32
+		{09BD04B0-59E9-46F5-BD55-FB156817B435}.Release Multithreaded DLL.ActiveCfg = Release Multithreaded DLL|Win32
+		{09BD04B0-59E9-46F5-BD55-FB156817B435}.Release Multithreaded DLL.Build.0 = Release Multithreaded DLL|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flo", "flo.vcproj", "{AA13673D-DD27-4699-9885-EF6CE860A62A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{62F77601-DA78-47C2-97B1-C7C7F7AE95F9} = {62F77601-DA78-47C2-97B1-C7C7F7AE95F9}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "paramgl", "..\paramgl\paramgl.vcproj", "{62F77601-DA78-47C2-97B1-C7C7F7AE95F9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccProjectUniqueName0 = ..\\paramgl\\paramgl.vcproj
+		SccProjectName0 = paramgl
+		SccLocalPath0 = ..\\paramgl
+		SccProvider0 = MSSCCI:Perforce\u0020SCM
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{AA13673D-DD27-4699-9885-EF6CE860A62A}.Debug.ActiveCfg = Debug|Win32
+		{AA13673D-DD27-4699-9885-EF6CE860A62A}.Debug.Build.0 = Debug|Win32
+		{AA13673D-DD27-4699-9885-EF6CE860A62A}.Release.ActiveCfg = Release|Win32
+		{AA13673D-DD27-4699-9885-EF6CE860A62A}.Release.Build.0 = Release|Win32
+		{62F77601-DA78-47C2-97B1-C7C7F7AE95F9}.Debug.ActiveCfg = Debug|Win32
+		{62F77601-DA78-47C2-97B1-C7C7F7AE95F9}.Debug.Build.0 = Debug|Win32
+		{62F77601-DA78-47C2-97B1-C7C7F7AE95F9}.Release.ActiveCfg = Release|Win32
+		{62F77601-DA78-47C2-97B1-C7C7F7AE95F9}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

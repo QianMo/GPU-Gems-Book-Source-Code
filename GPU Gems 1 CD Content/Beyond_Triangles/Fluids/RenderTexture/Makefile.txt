@@ -1,0 +1,7 @@
+all: TestRenderTexture TestRenderTextureCg
+
+TestRenderTexture: TestRenderTexture.cpp RenderTexture.cpp RenderTexture.h
+	g++ -g -o TestRenderTexture TestRenderTexture.cpp RenderTexture.cpp -lGL -lglut -lGLEW
+
+TestRenderTextureCg: TestRenderTextureCg.cpp RenderTexture.cpp RenderTexture.h
+	g++ -g -o TestRenderTextureCg TestRenderTextureCg.cpp RenderTexture.cpp -lGL -lglut -lGLEW -lCg -lCgGL

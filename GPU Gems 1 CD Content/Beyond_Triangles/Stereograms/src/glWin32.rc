@@ -1,0 +1,153 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Portuguese (Brazil) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PTB)
+#ifdef _WIN32
+LANGUAGE LANG_PORTUGUESE, SUBLANG_PORTUGUESE_BRAZILIAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "RenderP3D.ico"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Open &Depth Image...\tCtrl+D", ID_FILEOPEN_DEPTHMAP
+        MENUITEM "Open &Tile Image...\tCtrl+T", ID_FILEOPEN_TILEMAP
+        MENUITEM "Open 3D &Mesh...\tCtrl+M",    ID_FILEOPEN_3DMESH
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   ID_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               ID_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Generate &Stereogram",        ID_VIEW_GENERATESTEREOGRAM
+        MENUITEM "Depth from 3D &Mesh",         ID_VIEW_DEPTHFROM3DMESH
+        MENUITEM SEPARATOR
+        MENUITEM "Texture &Filtering\tCtrl+F",  ID_VIEW_TEXTUREFILTERING
+        MENUITEM "&Invert Depth\tCtrl+I",       ID_VIEW_INVERTDEPTH
+        POPUP "&Depth Factor\t<,>"
+        BEGIN
+            MENUITEM "Mini (0.1)",                  ID_VIEW_DEPTHFACTOR_010
+            MENUITEM "Small (0.25)",                ID_VIEW_DEPTHFACTOR_025
+            MENUITEM "Medium (0.50)",               ID_VIEW_DEPTHFACTOR_050
+            MENUITEM "High (0.75)",                 ID_VIEW_DEPTHFACTOR_075
+            MENUITEM "Full (1.0)",                  ID_VIEW_DEPTHFACTOR_100
+            MENUITEM "Super (2.0)",                 ID_VIEW_DEPTHFACTOR_200
+        END
+        POPUP "&Number or Stripes\t-,+"
+        BEGIN
+            MENUITEM "8",                           ID_VIEW_NUMBERORSTRIPS_8
+            MENUITEM "12",                          ID_VIEW_NUMBERORSTRIPS_12
+            MENUITEM "16",                          ID_VIEW_NUMBERORSTRIPS_16
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "F&ull-Screen\tAlt+Enter",     ID_VIEW_FULLSCREEN
+    END
+    POPUP "&Render"
+    BEGIN
+        MENUITEM "OpenGL &Information...",      ID_FILE_RENDERINFO
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR ACCELERATORS DISCARDABLE 
+BEGIN
+    "D",            ID_FILEOPEN_DEPTHMAP,   VIRTKEY, CONTROL, NOINVERT
+    "F",            ID_VIEW_TEXTUREFILTERING, VIRTKEY, CONTROL, NOINVERT
+    "I",            ID_VIEW_INVERTDEPTH,    VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_FILEOPEN_3DMESH,     VIRTKEY, CONTROL, NOINVERT
+    "T",            ID_FILEOPEN_TILEMAP,    VIRTKEY, CONTROL, NOINVERT
+    VK_F4,          ID_EXIT,                VIRTKEY, ALT, NOINVERT
+    VK_RETURN,      ID_VIEW_FULLSCREEN,     VIRTKEY, ALT, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TEXTUREFILTER   "Turns texture filtering on/off\\Texture Filter"
+    ID_VIEW_TEXTUREMIPMAP   "Turns texture mip-maping on/off\nMipmap"
+    ID_VIEW_WIREFRAME       "Shows the scene in wireframe mode\nWireframe"
+    ID_VIEW_OCTREE          "Display the bouond box for the rendered octree nodes\nOctree"
+    ID_VIEW_FOG             "Turns vertex fog on/off at the farplane distance\nFog"
+END
+
+#endif    // Portuguese (Brazil) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

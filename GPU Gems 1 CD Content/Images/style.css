@@ -1,0 +1,231 @@
+BODY {
+	MARGIN-TOP: 0px; MARGIN-LEFT: 0px; BACKGROUND-COLOR: #ffffff
+}
+BODY {
+	FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, Sans Serif
+}
+TD {
+	FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, Sans Serif
+}
+DIV {
+	FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, Sans Serif
+}
+P {
+	FONT-SIZE: 12px; COLOR: #000000; LINE-HEIGHT: 15px; FONT-FAMILY: Verdana, Geneva, Arial, Helvetica, Sans Serif
+}
+H1 {
+	MARGIN-TOP: 0px; FONT-WEIGHT: bold; FONT-SIZE: 14px; MARGIN-BOTTOM: 0px; TEXT-TRANSFORM: uppercase; COLOR: #000000
+}
+H2 {
+	MARGIN-TOP: 0px; FONT-WEIGHT: bold; FONT-SIZE: 15px; MARGIN-BOTTOM: 0px; COLOR: #000000; FONT-STYLE: italic
+}
+H3 {
+	MARGIN-TOP: 0px; FONT-WEIGHT: bold; FONT-SIZE: 11px; MARGIN-BOTTOM: 0px; TEXT-TRANSFORM: uppercase; COLOR: #333399
+}
+H4 {
+	MARGIN-TOP: 0px; FONT-WEIGHT: bold; FONT-SIZE: 11px; MARGIN-BOTTOM: 0px; COLOR: #000000
+}
+.text {
+	FONT-SIZE: 12px; COLOR: #000000; LINE-HEIGHT: 15px
+}
+A.text {
+	TEXT-DECORATION: underline
+}
+A.text:hover {
+	COLOR: #5f84c8
+}
+.footnotes {
+	FONT-SIZE: 10px; COLOR: #000000; FONT-STYLE: italic
+}
+.header {
+	FONT-WEIGHT: bold; FONT-SIZE: 15px; COLOR: #000000; LINE-HEIGHT: 17px
+}
+.info {
+	FONT-SIZE: 10px; COLOR: #666666; LINE-HEIGHT: 11px
+}
+.date {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+.news {
+	FONT-SIZE: 10px; COLOR: #395389; LINE-HEIGHT: 10px
+}
+A.news {
+	FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.news:hover {
+	COLOR: #000000
+}
+.lnav {
+	FONT-SIZE: 10px; COLOR: #000000; LINE-HEIGHT: 15px
+}
+A.lnav {
+	TEXT-DECORATION: none
+}
+A.lnav:hover {
+	COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.trail {
+	FONT-SIZE: 10px; COLOR: #000000; TEXT-DECORATION: none
+}
+A.trail:hover {
+	COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.trailon {
+	FONT-SIZE: 10px; COLOR: #5f84c8; TEXT-DECORATION: none
+}
+.fb {
+	FONT-SIZE: 10px; COLOR: #000066
+}
+.fbhead {
+	FONT-WEIGHT: bold; FONT-SIZE: 11px; COLOR: #ffffff
+}
+A.fb {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #000000
+}
+A.fb:hover {
+	COLOR: #ffffff
+}
+.prodname {
+	FONT-WEIGHT: bold; FONT-SIZE: 16px; COLOR: #000000; TEXT-ALIGN: right
+}
+.prodtag {
+	FONT-WEIGHT: bold; FONT-SIZE: 11px
+}
+.specs {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #000000
+}
+.iohead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #255287
+}
+.io {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+A.io {
+	FONT-WEIGHT: bold; COLOR: #000000; TEXT-DECORATION: underline
+}
+A.io:hover {
+	COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.form {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #000000
+}
+.formlite {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+.iomainhead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #255287
+}
+.iomain {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+A.iomain {
+	FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.iomain:hover {
+	COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.softtext {
+	FONT-SIZE: 10px; COLOR: #6c7ec5; LINE-HEIGHT: 14px
+}
+.softbullet {
+	FONT-SIZE: 10px; COLOR: #6c7ec5; LINE-HEIGHT: 12px; PADDING-TOP: 5px
+}
+.softtitle {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #6c7ec5; PADDING-TOP: 10px
+}
+.lohead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #000000
+}
+.lo {
+	FONT-SIZE: 10px; COLOR: #5469c2
+}
+A.lo {
+	FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.lo:hover {
+	COLOR: #65a6e9
+}
+.lomainhead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #000000
+}
+.lomain {
+	FONT-SIZE: 10px; COLOR: #5469c2
+}
+A.lomain {
+	FONT-WEIGHT: bold; TEXT-DECORATION: underline
+}
+A.lomain:hover {
+	COLOR: #65a6e9
+}
+.eohead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #000000
+}
+.eo {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+A.eo:hover {
+	COLOR: #76b060; TEXT-DECORATION: underline
+}
+A.eo {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #37641c; TEXT-DECORATION: underline
+}
+.eomainhead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #000000
+}
+.eomain {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+A.eomain:hover {
+	COLOR: #76b060; TEXT-DECORATION: underline
+}
+A.eomain {
+	FONT-WEIGHT: bold; COLOR: #37641c; PADDING-TOP: 7px; TEXT-DECORATION: underline
+}
+.fohead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #255287
+}
+.fo {
+	FONT-SIZE: 10px; COLOR: #000000
+}
+A.fo {
+	FONT-WEIGHT: bold; COLOR: #000000; TEXT-DECORATION: underline
+}
+A.fo:hover {
+	COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.fomainhead {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #255287; LINE-HEIGHT: 14px
+}
+.fomain {
+	FONT-SIZE: 10px; COLOR: #000000; LINE-HEIGHT: 14px; FONT-STYLE: normal
+}
+A.fomain {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #000000; TEXT-DECORATION: underline
+}
+A.fomain:hover {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; COLOR: #5f84c8; TEXT-DECORATION: underline
+}
+.threeDheader {
+	FONT-WEIGHT: bold; FONT-SIZE: 10px; TEXT-TRANSFORM: uppercase; COLOR: #ffffff
+}
+.threeD {
+	FONT-SIZE: 10px; COLOR: #000000; LINE-HEIGHT: 15px
+}
+A.threeD {
+	FONT-WEIGHT: bold; TEXT-TRANSFORM: uppercase; COLOR: #000000; TEXT-DECORATION: underline
+}
+A.threeD:hover {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.arrow {
+	FONT-WEIGHT: bold; FONT-SIZE: 8px; COLOR: #ffffff
+}
+INPUT {
+	FONT-SIZE: 8pt; FONT-FAMILY: Arial
+}
+.CompatibilityCell {
+	BORDER-TOP: medium none; FONT-SIZE: 10px; COLOR: #000080; BORDER-BOTTOM: white 0.5pt solid; FONT-FAMILY: Arial; BACKGROUND-COLOR: #b7bbcc
+}
+.CompatibilityHeader {
+	FONT-SIZE: 10px; COLOR: #ffffff; FONT-FAMILY: Arial; BACKGROUND-COLOR: #000000
+}

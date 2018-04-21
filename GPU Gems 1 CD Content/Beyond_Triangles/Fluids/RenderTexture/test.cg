@@ -1,0 +1,6 @@
+
+// A passthrough program
+float4 main(float4 color : COL0) : COLOR
+{
+  return color;
+} 

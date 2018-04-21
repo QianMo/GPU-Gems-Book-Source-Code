@@ -1,0 +1,161 @@
+//-------------------------------------------------------------------
+//
+//    A filmlook display pipeline for OpenEXR images, implemented
+//    as an NVIDIA fp30 profile fragment shader.
+//
+//    This fragment shader uses the pack_2half and unpack_4ubyte
+//    Cg standard library functions, so it requires cgc version 1.1
+//    or later.
+//
+//    Authors:
+//        Drew Hess   <dhess@ilm.com>
+//        Simon Green <SGreen@nvidia.com>
+//
+//--------------------------------------------------------------
+
+//---------------------------------------------------------------------
+//
+//    Lut lookup function.
+//
+//    The lut is a 256x256 RECT texture, so it's addressed
+//    [0,0]-[256,256]; and it's a floating-point texture, so
+//    its filtering is GL_NEAREST.
+//
+//    The index into the lut is the channel brightness, which
+//    is a 16-bit half.  We need to split this half value into
+//    its LSB and MSB, use the LSB bits to index the x coordinate
+//    of the texture, and use the MSB bits to index the
+//    y coordinate of the texture.
+//
+//    To do this, first we pack the half index into a float using
+//    pack_2half.  Next, we unpack the 4 unsigned bytes from the
+//    float into 4 half values using unpack_4ubyte.  unpack_4ubyte
+//    scales the 8-bit unsigned integers to 0->1.0 in half space, but
+//    because we want to index into a RECT texture, we multiply this 
+//    result by 256.0 to get our final x and y indicies.
+//
+//    Example:
+//
+//    Assume the half input color is 1.34375.  The unsigned
+//    16-bit integer representation of this number is 15712,
+//    or 0011110101100000 in binary.  So we want the x index into 
+//    the lut texture to be 96 (01100000 binary), and we want the y 
+//    index to be 61 (00111101 binary).
+//
+//    This statement:
+//
+//        float f = pack_2half (h.xx);
+//
+//    does the following:
+//
+//                h.x:  00111101 01100000
+//                         |        |
+//                ---------+-----   |      
+//               |               |  |
+//               |         ------|--+------
+//               |         |     |         |
+//               V         V     V         V
+//        f: 00111101 01100000 00111101 01100000
+//
+//    And this statement:
+//
+//        half4 bytes = unpack_4ubyte (f);
+//
+//    does the following:
+//
+//        f: 00111101 01100000 00111101 01100000
+//                               |            |
+//                               |            |
+//                               V  treat as  V   
+//                              61  unsigned  96 
+//                               |   8-bit    |
+//                               |  integer   |
+//                               |            |
+//                               V  convert   V
+//                            61.0  to half   96.0
+//                               |            |
+//                               |            |  
+//                               V normalize  V
+//                            61.0            96.0
+//                            -----           -----
+//                            255.0           255.0
+//                               |            |
+//                               |            |
+//                               |            |
+//                               |            V
+//        bytes.x:               V     0.37646484375
+//        bytes.y:       0.2392578125
+//
+//    (etc. for bytes.z and bytes.w).
+//
+//    We then multiply by 256.0 to get the [0-256] range lookup
+//    for the texture:
+//
+//    bytes.x * 256.0 = 96.375
+//    bytes.y * 256.0 = 61.250
+//
+//    The GL_NEAREST filtering takes care of the rest.
+//
+//    Note that the half datatype can represent all integers from
+//    0 to 1024, so there are no "holes" in the conversion process.
+//
+//    For documentation on the pack_2half and unpack_4ubyte Cg
+//    library library functions, see pp. 227-9 of the Cg Toolkit 
+//    User's Manual, Release 1.1.
+//
+//---------------------------------------------------------------------
+
+half
+lookup (samplerRECT lut, half h)
+{
+    float f = pack_2half (h.xx);
+    half4 bytes = unpack_4ubyte (f);
+
+    return h1texRECT (lut, bytes.xy * 256.0);
+}
+
+
+//----------------------------------------------------------------
+//
+//    The display pipeline:
+//
+//    1. Look up the image texture to get the source pixel.
+//
+//    2. Apply exposure to each color channel (but not alpha).
+//
+//    3. Pass each color channel through a display lut.
+//
+//    4. Apply a gamma correction to all 4 channels.
+//
+//    The hardware takes care of the rest, scaling the
+//    half values from 0.0->1.0 to 0->255 framebuffer values
+//    and clamping anything above 1.0 to 255.
+//
+//----------------------------------------------------------------
+
+struct Out
+{
+    half4 color : COLOR;
+};
+
+Out
+main (float2 texCoord : TEXCOORD0,
+      uniform samplerRECT image,
+      uniform samplerRECT lutR,
+      uniform samplerRECT lutG,
+      uniform samplerRECT lutB,
+      uniform float gamma,
+      uniform float expMult)
+{
+    half4 c = h4texRECT (image, texCoord) * expMult;
+
+    c.r = lookup (lutR, c.r);
+    c.g = lookup (lutG, c.g);
+    c.b = lookup (lutB, c.b);
+
+    Out output;
+
+    output.color = pow (c, gamma);
+
+    return output;
+}

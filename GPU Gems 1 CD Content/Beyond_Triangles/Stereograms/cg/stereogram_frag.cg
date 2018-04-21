@@ -1,0 +1,48 @@
+struct vert2frag
+{
+  float4 pos : POSITION;
+  float4 texcoord : TEXCOORD0;
+};	
+
+struct frag2screen
+{
+  float4 color : COLOR;
+};
+
+frag2screen main_frag(
+  vert2frag IN,
+  uniform sampler2D resmap,   // result map
+  uniform sampler2D depthmap, // depth map
+
+  // [1.0/num_strips,1.0/(num_strips+1)]
+  uniform float4 strips_info, 
+  // depth factor (if negative, invert depth)
+  uniform float depth_factor) 
+{
+  frag2screen OUT;
+
+  // texture coordinate from result map
+  float2 uv=IN.texcoord.xy;
+
+  // transform texture coordinate into depth map space
+  // (removing first strip) and get depth value
+  uv.x=(IN.texcoord.x/strips_info.y-1.0)*strips_info.x;
+  float4 tex=tex2D(depthmap,uv);
+
+  // if factor negative, invert depth
+  if (depth_factor<0.0) 
+     tex=1.0-tex.x;
+ 
+  // compute displace factor 
+  // (depthmap_value*factor*strip_width)
+  float displace=tex.x*abs(depth_factor)*strips_info.y;
+
+  // transform texture coordinate from result map into
+  // previous strip translated by the displace factor
+  uv.x=IN.texcoord.x-strips_info.y+displace;
+
+  // assign output color from result map previous strip
+  OUT.color=tex2D(resmap,uv);
+
+  return OUT;
+}

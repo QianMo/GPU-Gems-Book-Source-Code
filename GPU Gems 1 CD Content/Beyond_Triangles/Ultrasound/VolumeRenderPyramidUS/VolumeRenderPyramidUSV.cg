@@ -1,0 +1,47 @@
+void VertexProgram(in float4 Position   : POSITION,
+                   out float4 hPosition : POSITION,
+                   out float4 hTex0     : TEX0,
+				   out float hClip0     : CLP0,
+				   out float hClip1     : CLP1,
+				   out float hClip2     : CLP2,
+				   out float hClip3     : CLP3,
+				   out float hClip4     : CLP4,
+				   out float hClip5     : CLP5,
+                   uniform float4 ZoomFactor,
+                   uniform float4 Pyramid,
+				   uniform float4 ClipPlane0,
+				   uniform float4 ClipPlane1,
+				   uniform float4 ClipPlane2,
+				   uniform float4 ClipPlane3,
+				   uniform float4 ClipPlane4,
+				   uniform float4 ClipPlane5,
+                   uniform float4x4 ModelView,
+                   uniform float4x4 ModelViewProj)
+{
+  // Compute the clip-space position
+  hPosition = mul(ModelViewProj, Position);
+
+  // Remove the zoom factor from the position coordinates
+  Position  = Position * ZoomFactor;
+
+  // Compute the texture coordinates using the Cartesian grid
+  hTex0     = mul(ModelView, Position);
+
+  // Save original texture coordinates
+  float4 hTex0_Orig = hTex0 - float4(0.5, 0.5, 0.0, 0.0);
+
+  // Compute the scale for the texture coordinates in the
+  // pyramidal grid
+  hTex0.w   = Pyramid.x + hTex0.z*Pyramid.y;
+
+  // Adjust for the texture coordinate offsets
+  hTex0.x   = hTex0.x - 0.5 + 0.5*hTex0.w;
+
+  // Clip pyramidal volume
+  hClip0    =  dot(hTex0_Orig, ClipPlane0);
+  hClip1    =  dot(hTex0_Orig, ClipPlane1);
+  hClip2    =  dot(hTex0_Orig, ClipPlane2);
+  hClip3    =  dot(hTex0_Orig, ClipPlane3);
+  hClip4    =  dot(hTex0_Orig, ClipPlane4);
+  hClip5    =  dot(hTex0_Orig, ClipPlane5);
+}

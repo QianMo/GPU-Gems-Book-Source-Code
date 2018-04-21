@@ -1,0 +1,23 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultSkin.fx"
+
+	ambient  {   0.0f   0.0f   0.0f 255.0f }
+	diffuse  { 150.0f 150.0f 150.0f 255.0f }
+	specular {  70.0f  70.0f  70.0f 255.0f }
+	emissive {   0.0f   0.0f   0.0f 255.0f }
+
+	power "16.0f"
+
+	diffusemap         "Teeth.jpg"
+	specularmap        "DefaultSpecular.fx"
+	normalmap          "Teeth_DOT3.jpg"
+}
+
+// end of file

@@ -1,0 +1,84 @@
+ABOUT THE OPENEXR LIBRARIES
+----------------------------
+
+Half is a class that encapsulates our 16-bit floating-point format.
+
+IlmImf is our "EXR" file format for storing 16-bit FP images.
+
+Imath is a math library.  IlmImf only uses a subset of it,
+but we're releasing the full library because it's easier for us to 
+maintain, and we think it'll be useful to others.
+
+Iex is an exception-handling library.
+
+Documentation on all of these libraries is incomplete.  See the .h files
+for API details.  Most of the interfaces are well-documented from
+a programmer's perspective.  See the IlmImfExamples directory for
+some code that demonstrates how to use the IlmImf library to read
+and write OpenEXR files.  The doc directory contains some high-level
+documentation and history about the OpenEXR format.
+
+If you have questions about using the OpenEXR libraries, you may want
+to join our developer mailing list.  See http://www.openexr.com for
+details.
+
+
+LICENSE
+-------
+
+The OpenEXR distribution is covered by a modified BSD license; see
+the file named COPYING (included in this distribution) for details.
+
+
+WHAT'S INCLUDED
+---------------
+
+The release includes exrdisplay, an image viewer for OpenEXR images; and
+exrheader, a utility for dumping header information from OpenEXR files.
+
+exrdisplay requires FLTK 1.1 or greater and OpenGL.  exrdisplay now
+supports fragment shaders if you have the Nvidia Cg SDK and a graphics
+card capable of running fp30 profile fragment shaders.  See
+exrdisplay/README for details.
+
+We have also released an OpenEXR display driver for Renderman and a
+plugin for Adobe Photoshop (on both Windows and MacOS).  These are
+packaged separately.  Go to our GNU Savannah web page to download
+them:
+
+http://savannah.nongnu.org/files/?group=openexr
+
+
+
+BUILDING OPENEXR
+----------------
+
+To build OpenEXR on GNU/Linux or other UNIX-like systems, do:
+
+./configure
+make
+make install
+
+If you have the Nvidia Cg SDK and you want to build support for
+fragment shaders into exrdisplay, specify the path to the SDK using
+the "--with-nvsdk-prefix" flag.
+
+See README.OSX for details on building OpenEXR in MacOS X.
+
+Do 'make check' to run confidence tests.  See the INSTALL file for more
+details or try "./configure --help".
+
+Other UNIX variants haven't been tested, but should be easy to build.
+Let us know if you're having problems porting OpenEXR to a particular
+platform.  See below for platform-specific notes.
+
+All include files needed to use the OpenEXR libraries are installed in the 
+OpenEXR subdirectory of the install prefix, e.g. /usr/local/include/OpenEXR.
+
+To build OpenEXR on Windows NT or greater, you have a few choices:
+
+* Use Cygwin and the 'configure' script, see above.
+* Use Visual C++ 6.0 with Intel's C++ compiler.
+* Use Visual Studio .NET 2003 with Microsoft's C++ compiler.
+
+See README.win32 for details.

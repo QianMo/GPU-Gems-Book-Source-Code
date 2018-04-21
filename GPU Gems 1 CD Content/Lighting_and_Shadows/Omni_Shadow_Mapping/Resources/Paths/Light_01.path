@@ -1,0 +1,55 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+path
+{
+	version 97
+	name "light_01"
+
+	// Nodes
+	nodeslist 5
+	{
+		node
+		{
+			{ 0 1000 650 }
+
+			{ 180 45 0 }
+
+			0
+		}
+		node
+		{
+			{ -650 1000 0 }
+			
+			{ 90 45 0 }
+
+			8
+		}
+		node
+		{
+			{ 0 1000 -650 }
+			
+			{ 0 45 0 }
+
+			16
+		}
+		node
+		{
+			{ 650 1000 0 }
+			
+			{ -90 45 0 }
+
+			24
+		}
+
+		node
+		{
+			{ 0 1000 650 }
+
+			{ 180 45 0 }
+
+			32
+		}
+	}
+}

@@ -1,0 +1,21 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultBlinn.fx"
+
+	ambient  {   0.0f   0.0f   0.0f 255.0f }
+	diffuse  { 240.0f 240.0f 240.0f 255.0f }
+	specular { 240.0f 240.0f 240.0f 255.0f }
+	emissive {   0.0f   0.0f   0.0f 255.0f }
+
+	diffusemap         "Mask_01.jpg"
+	specularmap        "Mask_01_Spec.jpg"
+	normalmap          "Mask_01_DOT3.jpg"
+}
+
+// end of file

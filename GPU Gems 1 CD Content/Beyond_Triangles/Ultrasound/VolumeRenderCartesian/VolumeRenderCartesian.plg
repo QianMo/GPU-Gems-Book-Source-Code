@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: VolumeRenderCartesian - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\TSumanaw\LOCALS~1\Temp\RSP1C1.tmp" with contents
+[
+/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Release/VolumeRenderCartesian.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\src\CgBook\FinalCode\VolumeRenderCartesian\VolumeRenderCartesian.cpp"
+]
+Creating command line "xicl6.exe @C:\DOCUME~1\TSumanaw\LOCALS~1\Temp\RSP1C1.tmp" 
+Creating temporary file "C:\DOCUME~1\TSumanaw\LOCALS~1\Temp\RSP1C2.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/VolumeRenderCartesian.pdb" /machine:I386 /out:"Release/VolumeRenderCartesian.exe" 
+.\Release\VolumeRenderCartesian.obj
+]
+Creating command line "xilink6.exe @C:\DOCUME~1\TSumanaw\LOCALS~1\Temp\RSP1C2.tmp"
+<h3>Output Window</h3>
+Compiling...
+VolumeRenderCartesian.cpp
+Linking...
+xilink6: executing 'C:\PROGRA~1\MICROS~2\VC98\bin\link.exe'
+
+
+
+<h3>Results</h3>
+VolumeRenderCartesian.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,16 @@
+//
+// A in B.
+//
+
+void
+main (float2 wpos    : WPOS,
+      out half4 c    : COLOR,
+      uniform float2 dim,
+      uniform samplerRECT A,
+      uniform samplerRECT B)
+{
+    half4 a = texRECT (A, wpos.xy);
+    half4 b = texRECT (B, wpos.xy);
+
+    c = b.a * a;
+}

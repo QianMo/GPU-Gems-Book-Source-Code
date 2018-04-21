@@ -1,0 +1,46 @@
+<March 03, 2000>
+================================================================
+Model Name:		TheTick
+Version:		Version 2
+Installation Directory:	baseq3\md3-thetick.pk3
+Model Author(s):	casManG
+Animation(s):		Paul Steed's Released .bip files (visor.bip)
+Address:		casManG@cschell.com; http://www.cschell.com/
+
+Model description:	The Tick!!!
+
+Other info:		Spoooooooooooooooooooon!!!!
+
+Additional Credits to:	<id Software>
+
+Author(s) notes:	This is now the final release of this model pending any animation changes. I have in included 6 different skins, including the CTF skins and the default (both the blue ctf skin and the default are the same).  I have also included bot support (thanks to QUAKE 3 BOT DESIGNER v1.1).
+
+Thanks to: 		"Yuma Antoine Decaux" <DGmaru@ingava.com> for helping me not freak out when the body parts were floating all over the place and nothing was working right :)
+
+
+================================================================
+* Play Information *
+
+Skins:			6
+Bot support:		Yes
+New Sounds:		No
+CTF Skins:		Yes
+
+* Construction *
+
+Poly Count: 		816 polys
+Vert Count: 		676 verts
+Skin Count: 		6
+Base: 			New Model based on "The Tick" Character by New England Comics.
+Editor used: 		3DS Max 2.5, Character Studio, Adobe Photoshop, notepad, NPherno's MD3 Compiler, 
+			Q3data.exe, Q3BD v1.1
+Known Bugs: 		
+
+* How to use this model *
+<INSTALLATION INFO>
+Unzip md3-thetick.pk3 into your baseq3 subfolder in the Quake3 Directory.  If you have any problems, just make sure that the "md3-thetick.pk3" and the "bot-thetick.pk3" are in the baseq3 folder in your Quake3 Directory. In order to use this model as a player model, it may be necessary to create a baseq3/models/players/thetick folder under the Quake3 directory, and place any file in it. The model can also be used by entering "model thetick" in the console.  To use the bot, you can enter "addbot thetick" in the console.  If you get an error telling you that thetick bot is not defined it is because you have another bot.pk3 from another model that was loaded after thetick bot.  To fix this, just rename "bot-thetick.pk3" to "zbot-thetick.pk3" which will cause it to load last and use the "bot.txt" which will make the bot work properly.
+
+* Copyright / Permissions *
+QUAKE(R) and QUAKE III Arena(R) are registered trademarks of id Software, Inc.
+
+This model may be freely distributed in any form, UNALTERED.  Which means, you can't remove/change the readme file, other files, or add your own stuff to it and pass it along. Copyright of the model, mapping and skin belong to casManG.  Copyright of "The Tick" Character and any related material belong to New England Comics.  

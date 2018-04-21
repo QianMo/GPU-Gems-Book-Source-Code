@@ -1,0 +1,14 @@
+The null_plainsky skybox is by Jauhn Dabz#, jauhn@yahoo.com, http://nullpoint.fragland.net.
+
+The Majestic skybox is by Mighty Pete* (http://www.geocities.com/Paris/LeftBank/8119/) and Adrian Farnsworth (mailto:zoon@derby-vi-service.demon.co.uk) 
+
+The desert skybox is by Dash* http://www.planetquake.com/dash/
+
+Other images and data are by Morgan McGuire# and Nick Musurca#.  
+
+In every case, the authors have put their work (*) in the public domain or (#) explicitly 
+granted permission for their work to be freely used and distributed in your 
+commercial and non-commercial projects.
+
+
+You can find more free skyboxes and textures at The Wadfather site http://www.planethalflife.com/wadfather/index-new.htm

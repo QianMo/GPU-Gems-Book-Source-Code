@@ -1,0 +1,1 @@
+Please open "metalReflTeapot.fxcomposer" with FX Composer.  FX Composer is available with the "Using FX Composer" chapter on this CD.

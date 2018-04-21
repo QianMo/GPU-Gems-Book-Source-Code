@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!--
+    Options for exrplay.  Parse this file with clo++.  See:
+        http://pmade.org/software/clo++/    
+-->
+<cloxx>
+    <program name="exrplay">
+    </program>
+
+    <config>
+	<autohelp/>
+    </config>
+    
+    <options>
+        <option id="builtin" type="flag">
+	    <name>builtin</name>
+	    <comment>
+	        Use the display mode's builtin shader, if one exists.
+	    </comment>
+	</option>
+
+	<option id="lut" type="string">
+	    <name>lut</name>
+	    <name>l</name>
+	    <comment>
+		Load a display LUT from the specified file.
+	    </comment>
+	</option>
+
+        <option id="rate" type="double" default="24">
+            <name>rate</name>
+            <name>r</name>
+            <comment>
+	        Frame rate of sequence (default is 24.0).
+	    </comment>
+            <range min="0"/>
+        </option>
+
+	<option id="usePdr" type="flag">
+	    <name>usepdr</name>
+	    <name>p</name>
+	    <comment>
+	        Use NVIDIA Pixel Data Range extension.
+	    </comment>
+	</option>
+
+	<option id="version" type="flag" autothrow="version">
+	    <name>version</name>
+	    <name>v</name>
+	    <comment>
+		Print the version and then exit.
+	    </comment>
+	</option>
+
+    </options>
+</cloxx>

@@ -1,0 +1,28 @@
+// C4D-DialogResource
+
+DIALOGSTRINGS DLG_FXRENDERER
+{
+  IDS_BUTTON2       "Render to Window; Open Window";
+  IDS_BUTTON        "Render to File (with Global Render Settings)";
+  IDS_CHECK1        "Automatically Update Rendering";
+  IDS_DIALOG        "C4Dfx Renderer";
+  IDS_MS_RADIO1024  "1024";
+  IDS_MS_RADIO128   "128";
+  IDS_MS_RADIO256   "256";
+  IDS_MS_RADIO512   "512";
+  IDS_MS_RADIO64    "64";
+  IDS_RADIO1        "Medium";
+  IDS_RADIO2        "Full";
+  IDS_RADIO         "Off";
+  IDS_STATIC10      "(c) 2003-2004 by J\u00F6rn Loviscach, www.l7h.cn";
+  IDS_STATIC11      "This is experimental software. Use at your own risk.";
+  IDS_STATIC12      "No warranty or liability of any kind.";
+  IDS_STATIC18      "Gruppe";
+  IDS_STATIC1       "Antialiasing";
+  IDS_STATIC22      "C4Dfx 0.80";
+  IDS_STATIC23      "Texture Map Size";
+  IDS_STATIC24      "Gruppe";
+  IDS_STATIC25      "Portions (c) by NVIDIA";
+  IDS_STATIC2       "Gruppe";
+  IDS_STATIC3       "Rendering";
+}

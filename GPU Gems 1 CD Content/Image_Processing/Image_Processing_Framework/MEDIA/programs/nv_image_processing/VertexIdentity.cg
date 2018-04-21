@@ -1,0 +1,23 @@
+
+
+        // vertexIdentity
+        //
+        // Description:
+        //      Transforms the vertex position according to 
+        //      model view matrix and hands on the texture
+        //      coordinates to the fragment stage.
+        //
+        void
+main(
+                in    float4  vPosition:        POSITION,
+                in    float4  vTexCoord:        TEXCOORD0,
+
+                out   float4  vOutputPosition:  POSITION,
+                out   float4  vOutputTexCoord:  TEXCOORD0, 
+                
+                const uniform float4x4          mModelView
+              )
+{
+    vOutputPosition = mul(mModelView, vPosition);
+    vOutputTexCoord = vTexCoord;
+}

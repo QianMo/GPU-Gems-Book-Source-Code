@@ -1,0 +1,52 @@
+# UNTESTED
+# this vertex program only extrudes vertices, it does
+# no silhouette calculations, this is useful for
+# shadow determination with the stencil buffer
+#
+# the light position is assumed to be in object space
+
+
+
+#pragma bind appin.Position = ATTR0
+// define inputs from application
+struct appin : application2vertex
+{
+	float4 Position;
+};
+
+
+#pragma bind vertout.HPosition = HPOS
+// define outputs from vertex shader
+struct vertout : vertex2fragment
+{
+	float4 HPosition;
+};
+
+
+vertout main(appin IN,
+                uniform float4 light,
+                uniform float4x4 ModelView,
+                uniform float4x4 ModelViewProj)
+{
+        vertout OUT;
+
+        # if we have a directional light and an extruded vertex
+        # we will not factor in the vertex position, ie
+        # vertexfactor will equal 0
+        float vertexfactor = clamp(IN.Position[3] + light[3], 0, 1);
+
+        # if the vertex is not extruded then we do not factor in the light,
+        # ie lightfactor will equal 0
+        float lightfactor = 1 - IN.Position[3];
+
+        float4 usedpoint = light * lightfactor + IN.Position * vertexfactor;
+
+        # transform model space point to homogeneous space
+        OUT.HPosition = mul(ModelViewProj, usedpoint);
+
+        return OUT;
+}
+
+
+
+

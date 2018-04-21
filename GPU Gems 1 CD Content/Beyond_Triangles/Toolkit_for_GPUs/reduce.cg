@@ -1,0 +1,13 @@
+#include "defines.h"
+
+
+float4 Reduce ( float2 texcoord : TEX0,
+                uniform samplerRECT img : texunit1 ) : COLOR
+{
+  float4 a, b, c, d;
+  a = f4texRECT( img, texcoord );
+  b = f4texRECT( img, texcoord + float2(0,1) );
+  c = f4texRECT( img, texcoord + float2(1,0) );
+  d = f4texRECT( img, texcoord + float2(1,1) );
+  return max( max(a,b), max(c,d) );
+} 

@@ -1,0 +1,159 @@
+//-----------------------------------------------------------------------------
+// File : geepUtil.cg
+//-----------------------------------------------------------------------------
+// Copyright 2003 Mark J. Harris and
+//     The University of North Carolina at Chapel Hill
+//-----------------------------------------------------------------------------
+// Permission to use, copy, modify, distribute and sell this software and its 
+// documentation for any purpose is hereby granted without fee, provided that 
+// the above copyright notice appear in all copies and that both that 
+// copyright notice and this permission notice appear in supporting 
+// documentation.  Binaries may be compiled with this software without any 
+// royalties or restrictions. 
+//
+// The author(s) and The University of North Carolina at Chapel Hill make no 
+// representations about the suitability of this software for any purpose. 
+// It is provided "as is" without express or implied warranty.
+/**
+ * @file geepUtil.cg
+ * 
+ * @todo <WRITE FILE DOCUMENTATION>
+ */
+//------------------------------------------------------------------------------
+// flatten3DTexCoords
+//------------------------------------------------------------------------------
+/**
+ * These methods convert from 3D texcoords into "flattened" 2D texture 
+ * coordinates, for 3D textures that are laid out as an array of 2D slices
+ * inside a 2D texture.
+ */ 
+
+
+float2 flatten3DTexCoords(float3 uvw, half slicesPerRow, half3 volumeRes)
+{
+  float2 uv;
+  float flooruvw = floor(uvw.z * volumeRes.z);
+  uv.x = uvw.x + fmod(flooruvw, slicesPerRow);
+  uv.y = uvw.y + floor(flooruvw / slicesPerRow);
+  uv *= volumeRes.xy;
+  return uv;
+}
+
+half2 flatten3DTexCoords(half3 uvw, half slicesPerRow, half3 volumeRes)
+{
+  half2 uv;
+  half flooruvw = floor(uvw.z * volumeRes.z);
+  uv.x = uvw.x + fmod(flooruvw, slicesPerRow);
+  uv.y = uvw.y + floor(flooruvw / slicesPerRow);
+  uv *= volumeRes.xy;
+  return uv;
+}
+
+
+//------------------------------------------------------------------------------
+// texRECTneighbors
+//------------------------------------------------------------------------------
+/**
+ * These methods automate the common task of sampling the four neighbors 
+ * surrounding a given texture coordinate. (offset by exactly one texel in
+ * the +/- s/t directions.
+ */ 
+
+void h4texRECTneighbors(samplerRECT tex, half2 s,
+                        out half4 left,
+                        out half4 right,
+                        out half4 bottom,
+                        out half4 top)
+{
+  left   = h4texRECT(tex, s - half2(1, 0)); 
+  right  = h4texRECT(tex, s + half2(1, 0));
+  bottom = h4texRECT(tex, s - half2(0, 1));
+  top    = h4texRECT(tex, s + half2(0, 1));
+}
+
+void h1texRECTneighbors(samplerRECT tex, half2 s,
+                        out half left,
+                        out half right,
+                        out half bottom,
+                        out half top)
+{
+  left   = h1texRECT(tex, s - half2(1, 0)); 
+  right  = h1texRECT(tex, s + half2(1, 0));
+  bottom = h1texRECT(tex, s - half2(0, 1));
+  top    = h1texRECT(tex, s + half2(0, 1));
+}
+
+
+void f4texRECTneighbors(samplerRECT tex, float2 s,
+                        out float4 left,
+                        out float4 right,
+                        out float4 bottom,
+                        out float4 top)
+{
+  left   = f4texRECT(tex, s - float2(1, 0)); 
+  right  = f4texRECT(tex, s + float2(1, 0));
+  bottom = f4texRECT(tex, s - float2(0, 1));
+  top    = f4texRECT(tex, s + float2(0, 1));
+}
+
+
+//------------------------------------------------------------------------------
+// texRECTbilerp
+//------------------------------------------------------------------------------
+/**
+ * These methods perform texture lookups at the four nearest neighbors of the 
+ * position s and bilinearly interpolate them.
+ */ 
+
+float4 f4texRECTbilerp(samplerRECT tex, float2 s)
+{
+  float4 st;
+  st.xy = floor(s - 0.5) + 0.5;
+  st.zw = st.xy + 1;
+  
+  float2 t = s - st.xy; //interpolating factors 
+    
+  float4 tex11 = f4texRECT(tex, st.xy);
+  float4 tex21 = f4texRECT(tex, st.zy);
+  float4 tex12 = f4texRECT(tex, st.xw);
+  float4 tex22 = f4texRECT(tex, st.zw);
+
+  // bilinear interpolation
+  return lerp(lerp(tex11, tex21, t.x), lerp(tex12, tex22, t.x), t.y);
+}
+
+
+half4 h4texRECTbilerp(samplerRECT tex, half2 s)
+{
+  half4 st;
+  st.xy = floor(s - 0.5) + 0.5;
+  st.zw = st.xy + 1;
+  
+  half2 t = s - st.xy; //interpolating factors 
+    
+  half4 tex11 = h4texRECT(tex, st.xy);
+  half4 tex21 = h4texRECT(tex, st.zy);
+  half4 tex12 = h4texRECT(tex, st.xw);
+  half4 tex22 = h4texRECT(tex, st.zw);
+
+  // bilinear interpolation
+  return lerp(lerp(tex11, tex21, t.x), lerp(tex12, tex22, t.x), t.y);
+}
+
+half h1texRECTbilerp(samplerRECT tex, half2 s)
+{
+  half4 st;
+  st.xy = floor(s - 0.5) + 0.5;
+  st.zw = st.xy + 1;
+  
+  half2 t = s - st.xy; //interpolating factors 
+    
+  half4 texels;
+  texels.x = h1texRECT(tex, st.xy);
+  texels.y = h1texRECT(tex, st.zy);
+  texels.z = h1texRECT(tex, st.xw);
+  texels.w = h1texRECT(tex, st.zw);
+
+  texels.xy = lerp(texels.xz, texels.yw, t.x);
+  return lerp(texels.x, texels.y, t.y);
+}

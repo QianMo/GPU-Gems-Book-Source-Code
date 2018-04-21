@@ -1,0 +1,10 @@
+// C4D-StringResource
+// Identifier	Text
+
+STRINGTABLE
+{
+	IDS_PREFS "C4Dfx Preferences";
+	IDS_FXCOMMAND "C4Dfx Renderer";
+	IDS_FXMATERIAL "C4Dfx Shader";
+	IDS_LIGHTTAG "C4Dfx Light Control";
+}

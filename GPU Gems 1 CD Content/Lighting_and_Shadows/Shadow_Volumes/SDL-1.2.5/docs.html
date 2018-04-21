@@ -1,0 +1,634 @@
+<HTML>
+<HEAD><TITLE>SDL Stable Release</TITLE></HEAD>
+<BODY BGCOLOR="#FFEBCD" TEXT="#000000">
+
+<IMG SRC="docs/images/rainbow.gif" ALT="[separator]" WIDTH="100%">
+<P>
+This source is stable, and is fully tested on all supported platforms.<br>
+Please send bug reports or questions to the SDL mailing list:<br>
+<a href="http://www.libsdl.org/mailing-list.php"
+        >http://www.libsdl.org/mailing-list.php</a><br>
+The latest stable release may be found on the
+	<a href="http://www.libsdl.org/">SDL website</A>.
+</P>
+<P>
+
+<H2> <A HREF="docs/index.html">API Documentation</A> </H2>
+<P>
+
+<H2>
+Major changes since SDL 1.0.0:
+</H2>
+<UL>
+	<LI> 1.2.5: Added an environment variable SDL_HAS3BUTTONMOUSE for Quartz
+	<LI> 1.2.5: Added initial support for Dreamcast (thanks HERO!) 
+	<LI> 1.2.5: Implemented resizing Cocoa windows (thanks Darrell!) 
+	<LI> 1.2.5: Updated Quartz video code for MacOS X 10.2 (thanks Darrell!) 
+	<LI> 1.2.5: Added an environment variable SDL_VIDEO_WINDOW_POS for X11
+	<LI> 1.2.5: Fixed mouse focus problems caused by X11 'unclutter' hack 
+	<LI> 1.2.5: Applied John's fix for left-handed mice under Windows. 
+	<LI> 1.2.5: Gamepads and other HID devices should work under MacOS X 
+	<LI> 1.2.5: Fixed missing cursor after shadow buffer flip (thanks Jan!) 
+	<LI> 1.2.5: Updated MacOS projects with "enums as int" build option 
+	<LI> 1.2.5: Added -benchmark flag to testvidinfo for testing video speed 
+	<LI> 1.2.5: Added accelerated YUV code to DirectFB driver (thanks Denis!) 
+	<LI> 1.2.5: Command line apps on MacOS X go to forground (thanks Max!) 
+	<LI> 1.2.5: Fixed aRts runtime sound daemon detection 
+	<LI> 1.2.5: Improved the Nano-X video support (thanks Greg!) 
+	<LI> 1.2.5: Updated Borland projects for Kylix 3 (thanks Dominique) 
+	<LI> 1.2.5: Added compile-time checking for the size of enums 
+	<LI> 1.2.5: Fixed offset bug in hardware accelerated fills and blits 
+	<LI> 1.2.5: Fixed serious bugs in BSD HID joystick code (thanks Krister!) 
+	<LI> 1.2.5: Added project files for embedded Visual C++ 4.0 
+	<LI> 1.2.5: Added SDL_BUTTON_WHEELUP (4) and SDL_BUTTON_WHEELDOWN (5) 
+	<LI> 1.2.5: Added SDL_GL_STEREO for stereoscopic OpenGL contexts 
+	<LI> 1.2.5: Added the environment variable SDL_VIDEO_X11_WMCLASS 
+	<LI> 1.2.5: Fullscreen windows are always topmost in Windows 
+	<LI> 1.2.5: Fixed mouse grab going fullscreen to windowed in Windows 
+	<LI> 1.2.5: Fixed VidMode error when running on XFree86 3.3 
+	<LI> 1.2.5: Fixed Quartz mouse motion and window centering bugs 
+	<LI> 1.2.5: Updated configure.in for automake 1.6.2 
+	<LI> 1.2.5: Fixed building Windows DLL with latest native Cygwin tools 
+	<LI> 1.2.5: Added a way to get the Windows OpenGL context in SDL_syswm.h 
+	<LI> 1.2.5: Removed DDFLIP_WAIT flag from DirectX flip for performance 
+	<LI> 1.2.5: Zeroed SDL_Surface::unused1 so glSDL will work on stock SDL 
+	<LI> 1.2.5: Only modifier key state is noted when X11 window opens 
+	<LI> 1.2.5: Added initial support for PicoGUI (thanks Micah!) 
+	<LI> 1.2.5: Fixed SDL_DisplayFormatAlpha() on RGB surfaces with alpha 
+	<LI> 1.2.5: Added pthread detection for HP-UX 11.X 
+	<LI> 1.2.5: SDL_Init(SDL_INIT_JOYSTICK) on MacOS X works with no joystick 
+	<LI> 1.2.5: Fixed DirectX software surface memory leak 
+	<LI> 1.2.5: Fixed video initialization crash on Windows CE 
+	<LI> 1.2.5: Updated the QNX audio code for QNX 6.2 (thanks Travis!) 
+	<LI> 1.2.5: Fixed building with pthread and pth support on UNIX 
+	<LI> 1.2.5: Added detection of several joysticks to Linux code 
+	<LI> 1.2.5: Fixed thread detection and joystick code for NetBSD 
+	<LI> 1.2.5: Added support for audio in the Atari port (thanks Patrice!) 
+	<LI> 1.2.5: Added check for ENOMEDIUM to the Linux CDROM code 
+	<LI> 1.2.5: Added YUV hardware acceleration on MacOS X (thanks Darrell!) 
+	<LI> 1.2.5: Fixed building shared libraries on MacOS X (thanks Max!) 
+	<LI> 1.2.5: Use secondary audio buffers in DirectSound by default 
+	<LI> 1.2.5: Fixed window tab on Windows taskbar after application quit 
+	<LI> 1.2.5: Fixed setting OpenGL mode multiple times on Windows 
+	<LI> 1.2.5: Added Zaurus PDA (Qtopia) support by David Hedbor 
+	<LI> 1.2.5: Removed README.OpenBSD - SDL works out of the box on OpenBSD 
+	<LI> 1.2.5: Fixed crash in QZ_SetCaption() (thanks Darrell) 
+	<LI> 1.2.5: Updated ALSA audio support for ALSA 0.9 
+	<LI> 1.2.5: Don't build RPM archives with ALSA library dependencies 
+	<LI> 1.2.5: SDL_PollEvent()/SDL_WaitEvent() return values now match docs 
+	<LI> 1.2.4: Added initial support for Atari (thanks Patrice!)
+	<LI> 1.2.4: Added support for building SDL for EPOC/SymbianOS 6.0
+	<LI> 1.2.4: SDL now compiles and works cleanly on stock BSDI
+	<LI> 1.2.4: Added support for joysticks on *BSD (thanks Wilbern!)
+	<LI> 1.2.4: Added support for Xi Graphics XME fullscreen extension
+	<LI> 1.2.4: Incorporated XFree86 extension libraries into the source
+	<LI> 1.2.4: Dynamically load sound daemon audio drivers on UNIX
+	<LI> 1.2.4: David Snopek added Borland compiler support
+	<LI> 1.2.4: Updated for Watcom and LCC compilers (thanks Jean-Pierre)
+	<LI> 1.2.4: Added a YUV overlay test program (thanks Jon!)
+	<LI> 1.2.4: Fixed gamma ramps in DirectX windowed and OpenGL modes
+	<LI> 1.2.4: John Popplewell fixed mousewheel support on Windows
+	<LI> 1.2.4: Disabled QueryPerformanceCounter() due to problems on Win2K
+	<LI> 1.2.4: Fixed Windows OpenGL mouse cursor/position mismatch bug
+	<LI> 1.2.4: Fixed display settings with ALT-tab and OpenGL on Windows
+	<LI> 1.2.4: Fixed timeout in Linux condition variable implementation
+	<LI> 1.2.4: Fixed bug in joystick detection code under Linux
+	<LI> 1.2.4: Fix crash with Linux supermount fstab entries (thanks Erno!)
+	<LI> 1.2.4: Fixed X11 crash updating rectangles of zero height (thanks Mattias!)
+	<LI> 1.2.4: Fixed spurious keypress at startup on BeOS
+	<LI> 1.2.4: MacOS audio locking has been implemented by Ryan Gordon
+	<LI> 1.2.4: Fixed "short jump out of range" error in MMX code (thanks Steven)
+	<LI> 1.2.4: Specify the SDL API calling convention (C by default)
+	<LI> 1.2.4: Updated autogen.sh for new versions of automake
+	<LI> 1.2.4: Fixed SDL 1.1 RPM dependency problem (thanks Edward!)
+	<LI> 1.2.3: Added X11 Xinerama support - fullscreen starts on screen 0
+	<LI> 1.2.3: Added platform independent OpenGL header - SDL_opengl.h
+	<LI> 1.2.3: Fixed flashing the screen when creating a window on BeOS
+	<LI> 1.2.3: Added double-buffering support for SVGAlib (thanks Kutak!)
+	<LI> 1.2.3: Fixed crash when using double-buffering with DGA
+	<LI> 1.2.3: Fixed resuming a paused CD on Win2K (thanks Aragorn)
+	<LI> 1.2.3: Improved MacOS international keyboard handling (thanks Max!)
+	<LI> 1.2.3: Added support for the GNU Pth thread lib (thanks Mandin!)
+	<LI> 1.2.3: Added the Undo key for the Atari keyboard (thanks Mandin!)
+	<LI> 1.2.3: Fixed XVideo on GeForce by using last available adaptor
+	<LI> 1.2.3: Added CD-ROM support for BSD/OS (thanks Steven!)
+	<LI> 1.2.3: Added library version information to the Windows DLL
+	<LI> 1.2.3: Added initial support for EPOC/Symbian OS (thanks Hannu!)
+	<LI> 1.2.3: Added a joystick driver for MacOS X (thanks Max!)
+	<LI> 1.2.3: Improved MacOS X international keyboard handling
+	<LI> 1.2.3: Added support for DirectFB video on Linux (thanks Denis!)
+	<LI> 1.2.3: Fixed IDE and SCSI CD-ROM detection on BeOS (thanks Caz!)
+	<LI> 1.2.3: Fixed the system dependent SDL_WINDOWID hack on Windows
+	<LI> 1.2.3: Added 640x480 as a scaled resolution for NTSC/PAL output 
+	<LI> 1.2.3: Added support for TV output on the Linux PlayStation Beta
+	<LI> 1.2.3: Added initial NVidia acceleration on framebuffer console
+	<LI> 1.2.3: Fixed audio format selection for OpenBSD (thanks Peter!)
+	<LI> 1.2.2: Fixed crash when quitting fullscreen mode on MacOS X
+	<LI> 1.2.2: Fixed fullscreen mouse events on MacOS X
+	<LI> 1.2.2: Now returns an error if unable to open audio on BeOS
+	<LI> 1.2.2: Fixed keyboard input translation on WinCE (thanks Rainer!)
+	<LI> 1.2.2: Now gets correct keyboard state when starting up on X11
+	<LI> 1.2.2: Improved the DGA 2.0 and framebuffer console drivers
+	<LI> 1.2.2: Improved the OpenBSD port (native audio default, etc.)
+	<LI> 1.2.2: Improved OSS audio driver support, thanks to 4Front Tech.
+	<LI> 1.2.2: Improved X11 fullscreen support, works better with KDE
+	<LI> 1.2.2: Improved SDL_GetTicks() resolution on W2K (thanks Holger!)
+	<LI> 1.2.2: Added FreeBSD VGL video driver from FreeBSD ports
+	<LI> 1.2.1: Added Linux PlayStation 2 Graphics Synthesizer support
+	<LI> 1.2.1: Added an audio driver that writes to disk (thanks Ryan!)
+	<LI> 1.2.1: Mouse wheel sends mouse button (4/5) events on Windows
+	<LI> 1.2.1: Added MacOS X Project Builder projects (thanks Darrell!)
+	<LI> 1.2.1: Added initial support for Quartz video (thanks Darrell!)
+	<LI> 1.2.1: Disabled Linux /dev/event joystick interface by default
+	<LI> 1.2.1: Added native OpenBSD audio driver (thanks vedge!)
+	<LI> 1.2.1: Added detection of Open Sound System on Solaris x86
+	<LI> 1.2.1: Added initial support for Nano-X (thanks Hsieh-Fu!)
+	<LI> 1.2.1: Fixed endian detection on IA64 architectures (thanks Bill!)
+	<LI> 1.2.1: Added --disable-dga configure option to disable DGA
+	<LI> 1.2.1: Fixed stuck keys when changing the video mode
+	<LI> 1.2.1: Fixed double-mouse event bug on Windows using OpenGL
+	<LI> 1.2.1: Fixed 320x200 video mode on framebuffer console
+	<LI> 1.2.1: Improved robustness for the ELO touchpad (thanks Alex!)
+	<LI> 1.2.1: Added support for building under Cygwin on Windows
+	<LI> 1.2.1: Added a dummy video driver for benchmarking (thanks Ryan!)
+	<LI> 1.2.1: Fixed fullscreen cursor offset bug on BeOS
+	<LI> 1.2.0: Added initial support for HP-UX (thanks Stephanie)
+	<LI> 1.2.0: Added initial support for BSDI (thanks Kurt)
+	<LI> 1.2.0: Fixed blitting 32-bit ARGB images to SDL_OPENGLBLIT screens
+	<LI> 1.2.0: Fixed automake build dependencies (thanks Markus!)
+	<LI> 1.2.0: Added 24 bpp support to software YUV display functions
+	<LI> 1.2.0: Don't bomb trying to get DGA mouse on XFree86 4.0
+	<LI> 1.2.0: Added initial support for OSF/Tru64 (thanks Anders)
+	<LI> 1.1.8: Fixed joystick hat motion on MacOS
+	<LI> 1.1.8: Don't detect mouse and keyboard as joystick on MacOS
+	<LI> 1.1.8: Check for OpenGL 1.2 before using 16-bit SDL_OPENGLBLIT
+	<LI> 1.1.8: Added support for /dev/sound/* in Linux 2.4
+	<LI> 1.1.8: Fixed crash when blitting to RLE encoded surfaces
+	<LI> 1.1.8: Fixed 8-bit audio on MacOS X
+	<LI> 1.1.8: Fixed keyboard handling on MacOS X and MacOS classic
+	<LI> 1.1.8: Fixed mouse cursor visibility when switching apps on MacOS
+	<LI> 1.1.8: Implemented semaphore support on MacOS X
+	<LI> 1.1.8: Worked around broken sem_getvalue() on MacOS X
+	<LI> 1.1.8: Fixed 16-bit big-endian audio on MacOS X and MacOS classic
+	<LI> 1.1.8: Fixed mutex locking on Linux glibc 2.0
+	<LI> 1.1.8: SDL_Quit() removes the parachute signal handlers
+	<LI> 1.1.8: Added NAS audio server support (thanks Erik!)
+	<LI> 1.1.8: Added SDL_NOFRAME for frameless windows (thanks Andreas)
+	<LI> 1.1.8: Added support for resizable windows on MacOS
+	<LI> 1.1.8: Added a function to query the surface clip rectangle
+	<LI> 1.1.8: Added a function to query the current event filter
+	<LI> 1.1.8: The X11 XVideo adapter is now locked (thanks Jeffrey)
+	<LI> 1.1.8: Improved the speed of fullscreen OpenGL on Windows
+	<LI> 1.1.8: Added ELO touchscreen support for fbcon (thanks Alex)
+	<LI> 1.1.8: Added accelerated MacOS X OpenGL support
+	<LI> 1.1.8: Surface lock and unlock operations can now be nested
+	<LI> 1.1.8: Optimized fillrect for PPC video memory (thanks Mattias)
+	<LI> 1.1.8: Work around "blackout" problem with XVideo acceleration
+	<LI> 1.1.8: Obtain correct key state on X11 focus (thanks Mattias)
+	<LI> 1.1.8: Fixed keyboard handling on the framebuffer console
+	<LI> 1.1.8: Added basic support for VGA16 framebuffer console
+	<LI> 1.1.8: Open a new virtual terminal if possible on fbcon
+	<LI> 1.1.8: Fixed default audio driver on FreeBSD (thanks Maxim)
+	<LI> 1.1.8: Fixed joystick crash on Windows (thanks Pete)
+	<LI> 1.1.7: Expanded documentation from the SDL Documentation Project
+	<LI> 1.1.7: Report X11 client message events if SYSWMEVENTS enabled
+	<LI> 1.1.7: Added support for a single hat on Windows joysticks
+	<LI> 1.1.7: The gamma ramp routines now take arrays of Uint16 values
+	<LI> 1.1.7: Added initial support for QNX RTP (thanks Patrick)
+	<LI> 1.1.7: Added ALSA sound driver (thanks Patrick Trainor)
+	<LI> 1.1.7: Added aRts UNIX sound driver (thanks Neil Stevens)
+	<LI> 1.1.7: Get keyboard modifier state on input focus on Win32
+	<LI> 1.1.7: SDL_ConvertSurface() now accepts SDL_RLEACCEL as a flag
+	<LI> 1.1.7: Added initial UnixWare 7 support (thanks rr)
+	<LI> 1.1.7: Added working YUY -> RGB conversion code (thanks Eugene)
+	<LI> 1.1.7: Fixed video initialization crash on IRIX
+	<LI> 1.1.7: Fixed MacOS fullscreen palette code (thanks Darrell)
+	<LI> 1.1.7: Fixed background brush flicker on Win32 (thanks Gautier)
+	<LI> 1.1.7: Fixed incorrect pitch when switching to window on Win32
+	<LI> 1.1.7: Fixed memory leak when switching video modes on Win32
+	<LI> 1.1.7: Init of fbcon shouldn't automatically set graphics mode
+	<LI> 1.1.6: Allow SDL_VIDEO_INIT when built without thread support
+	<LI> 1.1.6: Fixed palette problems with non-X11 fullscreen displays
+	<LI> 1.1.6: Fixed Win32 crash with SDL_OPENGLBLIT and GL functions
+	<LI> 1.1.6: Improved default MacOS millisecond time resolution
+	<LI> 1.1.6: Fixed X11 overlapping endian blit bug (thanks Mattias)
+	<LI> 1.1.6: Fixed starting directory on BeOS (thanks Samuel)
+	<LI> 1.1.6: Integrated FreeBSD SVGAlib support (thanks folks)
+	<LI> 1.1.6: Fixed middle-button handling on DirectInput
+	<LI> 1.1.6: Added SDL_GetThreadID() to get a specific thread's ID
+	<LI> 1.1.6: Worked around a crash in pthreads on RedHat 7
+	<LI> 1.1.6: Fixed a brown-bag crash in clipping code
+	<LI> 1.1.5: Convert from '/' to ':' opening files on MacOS
+	<LI> 1.1.5: Clean up empty output files on Win32 and MacOS 
+	<LI> 1.1.5: Run command dialog if command key on startup on MacOS
+	<LI> 1.1.5: Initial NetBSD support (thanks Krister Walfridsson)
+	<LI> 1.1.5: Expanded the YUV overlay to handle odd (ATI) hardware
+	<LI> 1.1.5: Fixed MacOS GL attribute selection (thanks Darrell)
+	<LI> 1.1.5: Implemented gamma correction on 8-bit hardware displays
+	<LI> 1.1.5: Performed logical/physical palette split (thanks Mattias)
+	<LI> 1.1.5: Added initial MacOS X support (thanks Stan)
+	<LI> 1.1.5: SDL_WarpMouse() now works on BeOS (thanks Christian)
+	<LI> 1.1.5: Windows GDI driver now supports 565 modes (thanks Ben)
+	<LI> 1.1.5: Correctly load OpenGL extensions on Win32 (thanks Beosil)
+	<LI> 1.1.5: Fixed crash with some threaded audio drivers
+	<LI> 1.1.5: Audio is now closed in SDL_Quit(), if necessary
+	<LI> 1.1.5: Win32 version now uses MSVC multi-threaded DLL runtime
+	<LI> 1.1.5: Replaced useless SDL_SetClipping() with SDL_SetClipRect()
+	<LI> 1.1.5: Added a flag to YUV overlays to show hardware support
+	<LI> 1.1.5: Added SDL_WasInit() to see what is currently initialized
+	<LI> 1.1.5: YUV overlays can now be accelerated with DirectX
+	<LI> 1.1.5: YUV overlays now have working pitch (thanks Vivien)
+	<LI> 1.1.5: Prompt the user if MacOS mode change may damage hardware
+	<LI> 1.1.5: Fixed DrawSprocket video mode lists and mode changes
+	<LI> 1.1.5: Added DrawSprocket acceleration of colorkey blits
+	<LI> 1.1.5: MacOS event handling is much more responsive by default
+	<LI> 1.1.5: MacOS modifier keys now generate key events
+	<LI> 1.1.5: Mattias Engdegård did the "Great Alpha Flip"
+	<LI> 1.1.5: Added SDL_DisplayFormatAlpha() for fast alpha blits
+	<LI> 1.1.5: Added SDL_MapRGBA() and SDL_GetRGBA() to handle alpha
+	<LI> 1.1.5: SDL_SetAlpha() now accepts the SDL_RLEACCEL flag
+	<LI> 1.1.5: Blit semantics involving alpha are now well defined
+	<LI> 1.1.5: Added support for X11 DirectColor visuals for gamma API
+	<LI> 1.1.5: Added initial AmigaOS support (thanks Gabriele Greco)
+	<LI> 1.1.5: Added an initial gamma correction API (thanks Daniel)
+	<LI> 1.1.5: Disable DGA mouse while X11 application is iconified
+	<LI> 1.1.5: Allow 16-bit audio on Solaris (thanks Mattias)
+	<LI> 1.1.5: Added RLE acceleration of alpha blits (thanks Mattias)
+	<LI> 1.1.5: New documentation from the SDL Documentation Project
+	<LI> 1.1.4: Work around window resize bug in KDE 1.2
+	<LI> 1.1.4: Command-click is interpreted as right click on MacOS
+	<LI> 1.1.4: Removed ESounD detection on Solaris
+	<LI> 1.1.4: Updated to libtool 1.3.5 and latest config.guess
+	<LI> 1.1.4: testgl now works on 8-bit displays under X11
+	<LI> 1.1.4: SDL_WINDOWID hack now works with OpenGL on Linux
+	<LI> 1.1.4: Builds correctly on UNIX without X11 installed
+	<LI> 1.1.4: Fixed default GL driver loading on Win32
+	<LI> 1.1.4: Implemented fullscreen toggle on BeOS (thanks David)
+	<LI> 1.1.4: No longer use DirectDraw with OpenGL modes on Win32
+	<LI> 1.1.4: Added support for 320x200x8 in SVGAlib (thanks Michele)
+	<LI> 1.1.4: Implemented resizable windows on BeOS (thanks David)
+	<LI> 1.1.4: RLE colorkey encoding reduces memory use (thanks Mattias)
+	<LI> 1.1.4: The CD track length variable is now 32-bits (thanks Martin)
+	<LI> 1.1.4: Fixed crashing bug in Win32 semaphores (thanks Markus)
+	<LI> 1.1.4: Disabled aggresive gcc optimizations on X86
+	<LI> 1.1.4: Added support for blitting with GL (thanks Daniel Vogel)
+	<LI> 1.1.4: Improved the speed of the 16-bit colorkey copy blit
+	<LI> 1.1.4: Fixed pthread condition variable timeout
+	<LI> 1.1.3: Use timeGetTime() instead of GetTickCount() on Win32
+	<LI> 1.1.3: Release mouse when popped out of fullscreen on X11
+	<LI> 1.1.3: IRIX 6.5 and FreeBSD 4.0 are now officially supported
+	<LI> 1.1.3: Added optimization flags when compiling on x86 with gcc
+	<LI> 1.1.3: On BeOS, change to app directory when launched by Tracker
+	<LI> 1.1.3: Hold the option key on launch to get dialog on MacOS
+	<LI> 1.1.3: Added DrawSprockets on MacOS (thanks Darrell Walisser)
+	<LI> 1.1.3: Added support for Linux 2.4 input interface (HID)
+	<LI> 1.1.3: Fixed 24-bpp blits on big-endian systems (thanks Mattias)
+	<LI> 1.1.3: Don't try to use DGA mouse support on XFree86 4.00
+	<LI> 1.1.3: Don't create an X11 shared memory buffer for GL displays
+	<LI> 1.1.3: Framebuffer console acceleration disabled (broken) on G200
+	<LI> 1.1.3: Allow maximize on resizable Win32 surfaces (thanks Randi)
+	<LI> 1.1.3: Much faster RLE colorkey blit (thanks Xark and Mattias)
+	<LI> 1.1.3: Fixed some problems with iconification and focus in X11
+	<LI> 1.1.3: Added IMPS/2 protocol support for framebuffer console
+	<LI> 1.1.3: Added user-resizable video mode support
+	<LI> 1.1.3: Added arbitrary scaling of YUV overlay surfaces
+	<LI> 1.1.3: Added support for semaphores and condition variables
+	<LI> 1.1.3: Added SDL_ASYNCBLIT flag for asynchronous video updates
+	<LI> 1.1.3: Don't let the WM place window in X11 fullscreen mode
+	<LI> 1.1.3: Unload GL library after X11 display has closed
+	<LI> 1.1.3: Fixed X11 error when a clipped rectangle is updated
+	<LI> 1.1.3: Fixed crash when surface memory can't be allocated
+	<LI> 1.1.3: Added a check for DirectX 5 audio (thanks Markus)
+	<LI> 1.1.3: Added inline MMX assembly for YUV -> RGB conversion
+	<LI> 1.1.3: Fixed startup crash in X11_RefreshDisplay()
+	<LI> 1.1.3: SDL_Init(SDL_INIT_AUDIO) no longer fails with no soundcard
+	<LI> 1.1.3: Initial YUV video overlay support (supports XvImages)
+	<LI> 1.1.3: Fixed BadMatch X11 error with GLX 1.3
+	<LI> 1.1.3: Worked around incompatibilities with XFree86 4.0 vidmode
+	<LI> 1.1.3: The audio Makefile no longer takes forever to create
+	<LI> 1.1.3: The joystick hat positions changed to constants
+	<LI> 1.1.3: Fixed overlapping copy blit with odd widths
+	<LI> 1.1.3: Fix for SDL_WINDOWID crash contributed by Mattias
+	<LI> 1.1.3: Speeded up 32-bit alpha channel blits by nearly 100%
+	<LI> 1.1.3: Added experimental DGA 2.0 support (set SDL_VIDEODRIVER)
+	<LI> 1.1.2: Fixed crash running on NT with a read-only filesystem
+	<LI> 1.1.2: Re-use thread creation mutex on glibc-2.0 systems
+	<LI> 1.1.2: SDL_WM_SetIcon() now uses icon colorkey if mask is NULL
+	<LI> 1.1.2: Win32 relative mouse mode fixes (thanks Randi Relander)
+	<LI> 1.1.2: Not being able to set audio frags is no longer fatal
+	<LI> 1.1.2: Added support for multiple timers (thanks Stephane Peter)
+	<LI> 1.1.2: Copy blits optimized using inline assembly on x86 Linux
+	<LI> 1.1.2: Copy blit can now handle overlapping blits
+	<LI> 1.1.2: Fixed GL direct rendering on Utah GLX (thanks John Fulmer)
+	<LI> 1.1.2: Added unofficial support for AIX (thanks Carsten Griwodz)
+	<LI> 1.1.2: Enabled X11 VidMode extension on remote displays
+	<LI> 1.1.2: Load libGL.so.1 under X11 if an app isn't linked with GL
+	<LI> 1.1.2: Don't restack windows in the X11 environment
+	<LI> 1.1.2: Multiple X11 visual support (thanks Mattias Engdegård)
+	<LI> 1.1.0: Internal event state is updated before filter is called
+	<LI> 1.1.0: Worked around DGA mouse cursor bug in Voodoo X server
+	<LI> 1.1.0: Added SDL OpenGL documentation (thanks Nicholas Vining)
+	<LI> 1.1.0: Added AAlib video driver support (thanks Stephane Peter)
+	<LI> 1.1.0: Added fullscreen support for Win32 GDI video driver
+	<LI> 1.1.0: Added SDL_GetAudioState() to get current audio status
+	<LI> 1.1.0: Added SDL_GetRelativeMouseState() to get relative motion
+	<LI> 1.1.0: Added 32-bit PII MMX optimized blitters from Hermes
+	<LI> 1.1.0: Added SDL_bool datatype for functions returning true/false
+	<LI> 1.1.0: Improved alpha blend speed (thanks Alexandre Courbot)
+	<LI> 1.1.0: Added function to queue events: SDL_PushEvent()
+	<LI> 1.1.0: Added user-defined event type to SDL_Event structure
+	<LI> 1.1.0: Added SDL_InitSubSystem() and SDL_QuitSubSystem()
+	<LI> 1.1.0: Added BDirectWindow fullscreen support on BeOS
+	<LI> 1.1.0: Added initial joystick support (Linux, Win32, BeOS, MacOS)
+	<LI> 1.1.0: The timer now runs in a separate thread if possible
+	<LI> 1.1.0: Added initial OpenGL support (Linux, Win32, BeOS, MacOS)
+	<LI> 1.0.9: Avoid potential crash in Win32 mouse handling (thanks Cliff)
+	<LI> 1.0.9: Fixed bug where /dev/dsp was incorrectly marked available
+	<LI> 1.0.9: Fixed DirectX crash if video height is larger than width
+	<LI> 1.0.9: Fixed win32 timer error message typo (thanks Martin Dvorak)
+	<LI> 1.0.8: Fixed deadlock if SDL_LockAudio() called from audio thread
+	<LI> 1.0.8: Fixed a race condition in thread creation
+	<LI> 1.0.7: Added detection for Linux supermount CD-ROM drives
+	<LI> 1.0.6: Added --static-libs option to sdl-config
+	<LI> 1.0.6: Fixed a clipping bug in the RLE colorkey blitting
+	<LI> 1.0.6: Mouse window manager routines implemented on MacOS
+	<LI> 1.0.6: Fixed SDL_HWPALETTE in fullscreen X11 video driver
+	<LI> 1.0.6: Improved relative mouse warping in X11 video driver
+	<LI> 1.0.6: DGA mouse mode is now enabled by SDL_VIDEO_X11_DGAMOUSE
+	<LI> 1.0.6: Grab input by default in fullscreen mode
+	<LI> 1.0.6: Detect hanging (incorrectly configured) Linux soundcard
+	<LI> 1.0.6: If ESPEAKER env variable is set, use ESD audio driver
+	<LI> 1.0.5: Fixed audio structure alignment for packing compilers
+	<LI> 1.0.5: Exposed SDL_AudioInit() and SDL_VideoInit()
+	<LI> 1.0.5: Added SDL_WM_ToggleFullScreen(), implemented for X11
+	<LI> 1.0.5: Removed ALT-Enter functionality - should be in apps
+	<LI> 1.0.5: The DSP audio driver is used by default on Linux
+	<LI> 1.0.4: Added optional DMA support for the Linux audio driver
+	<LI> 1.0.4: Fixed CD-ROM opening on the iBook under MacOS
+	<LI> 1.0.4: Fixed a crash in 8-bit mode when using X11 video
+	<LI> 1.0.4: Initial audio support on MacOS (thanks Darrell Walisser)
+	<LI> 1.0.4: The audio thread runs at high priority on Win32
+	<LI> 1.0.4: ESD audio support is now a separate selectable driver
+	<LI> 1.0.4: Initial OpenBSD support (thanks Federico Schwindt)
+	<LI> 1.0.4: Fixed hang when closing audio on Windows 2000
+	<LI> 1.0.4: Warn about monochrome X displays (thanks Christian Bauer)
+	<LI> 1.0.4: Fixed spurious X11 mouse focus events at ALT-ENTER
+	<LI> 1.0.4: Perform input ungrab at video quit, just in case
+	<LI> 1.0.4: Corrected X11 depth reporting in SDL_VideoModeOK()
+	<LI> 1.0.3: Disable mouse threshold when X11 mouse is in warp mode
+	<LI> 1.0.3: Fixed black-screen on exit in fbcon video driver
+	<LI> 1.0.3: Much improved console switching in fbcon video driver
+	<LI> 1.0.3: Fixed X11 UNICODE translation bug (thanks Andreas Arens)
+	<LI> 1.0.3: Fixed WaveOut mutex logic bug (thanks Markus Oberhum)
+	<LI> 1.0.3: Use X11 mouse warping when cursor hidden and input grabbed
+	<LI> 1.0.3: Doesn't try to use TrackMouseEvent() on Win95
+	<LI> 1.0.3: DirectColor support in fbcon driver (thanks Adam Meyerowitz)
+	<LI> 1.0.3: Fixed ALT-ENTER key state problem on X11
+	<LI> 1.0.2: Fixed Win32 code to run on VMWare with DIB video driver
+	<LI> 1.0.2: Added window manager function: SDL_WM_GrabInput()
+	<LI> 1.0.2: Added window manager function: SDL_WM_IconifyWindow()
+	<LI> 1.0.2: Added ALT-ENTER fullscreen toggle for X11 video driver
+	<LI> 1.0.2: X11 fullscreen mode uses DGA mouse if cursor is hidden
+	<LI> 1.0.2: New X11 fullscreen code doesn't require root
+	<LI> 1.0.2: Mouse focus and position is now updated at video mode set
+	<LI> 1.0.2: Mouse focus loss is now detected under Win32
+	<LI> 1.0.2: Menubar hiding is more robust on MacOS (thanks Matt Slott)
+	<LI> 1.0.2: Added CD-ROM support on MacOS (thanks Matt Slott)
+	<LI> 1.0.2: Added non-root fullscreen modes under X11 (thanks Stephane)
+	<LI> 1.0.2: Added docs for time functions (thanks Christian Biesinger)
+	<LI> 1.0.2: Squeezed a little more speed out of blitters (Duff's device)
+	<LI> 1.0.2: Added hardware acceleration for 3Dfx to fbcon driver.
+	<LI> 1.0.2: Added hardware acceleration for Matrox to fbcon driver.
+	<LI> 1.0.2: Windows mouse driver now recognizes the middle button.
+	<LI> 1.0.2: X11 driver now recognizes the "unix:0" display as local.
+	<LI> 1.0.2: Fixed a bug in DGA support which crashed some X servers.
+	<LI> 1.0.2: Added GPM repeater support (gpm -R) to fbcon driver
+	<LI> 1.0.2: Added support for hardware surfaces to fbcon driver
+	<LI> 1.0.2: Implemented console switching in fbcon driver
+	<LI> 1.0.2: Implemented graphics mode detection in fbcon driver
+	<LI> 1.0.2: Added SDL_EnableKeyRepeat() (thanks Jim Kutter)
+	<LI> 1.0.2: Enabled DirectSound on Windows 2000
+	<LI> 1.0.1: Fixed the frame buffer video driver on LinuxPPC
+	<LI> 1.0.1: Stopped using DirectSound on Windows NT.
+	<LI> 1.0.1: Stopped using DirectX when DINPUT.DLL is not installed.
+	<LI> 1.0.1: Added pthread detection to configure.in for FreeBSD.
+	<LI> 1.0.1: Updated the Solaris audio code for the 1.0 API
+	<LI> 1.0.1: Updated the MacOS code for the 1.0 internal API
+</UL>
+
+<H2>
+Major changes since SDL 0.10.0:
+</H2>
+<UL>
+	<LI> 0.11.5: Fixed mouse warping in fullscreen mode
+	<LI> 0.11.5: Added a new function SDL_GetVideoSurface()
+	<LI> 0.11.5: Renamed SDL_AllocSurface() SDL_CreateRGBSurface()
+	<LI> 0.11.5: Added a new function SDL_CreateRGBSurfaceFrom()
+	<LI> 0.11.4: Added support for multiple compiled-in video drivers
+	<LI> 0.11.3: Fixed 16 --> 32 bpp blitting - using C instead of Hermes. 
+	<LI> 0.11.3: Fixed double-buffering bug in the DirectX driver
+	<LI> 0.11.3: Added GGI video driver (thanks Jon Taylor)
+	<LI> 0.11.2: Added automake/aclocal/autoconf support
+	<LI> 0.11.1: Added an initial (buggy) MacOS CD-ROM driver
+	<LI> 0.11.1: Improved Linux CD-ROM detection
+	<LI> 0.11.1: Added a workaround for DGA mouse bug on Voodoo 3
+	<LI> 0.11.1: Fixed 24bpp --> 8bpp blit crash
+	<LI> 0.11.1: Fixed a bug in blit mapping when palette changed
+	<LI> 0.11.1: Added a Linux SBLive beta driver workaround
+	<LI> 0.11.1: Fixed Win32 cross-compile problem with mingw32
+	<LI> 0.11.1: Loss of keyboard focus now causes keys to be reset
+	<LI> 0.11.1: DGA DirectMouse is conditionally compiled (default off)
+</UL>
+
+<H2>
+Major changes since SDL 0.8.0:
+</H2>
+<UL>
+	<LI> 0.9.16: Made SDL error messages thread-safe
+	<LI> 0.9.15: If you have r/w access to /dev/mem, DGA works on Linux
+	<LI> 0.9.15: Added support for Linux on the ARM (Netwinder)
+	<LI> 0.9.14: Removed color cursor support, fixed b/w cursors
+	<LI> 0.9.14: Fixed long-standing X11 DGA colormap problem
+	<LI> 0.9.13: Added dynamic load function: SDL_SetLibraryPath()
+	<LI> 0.9.13: Added unofficial support for MacOS
+	<LI> 0.9.13: Added unofficial support for FreeBSD
+	<LI> 0.9.13: Added unofficial support for IRIX
+	<LI> 0.9.13: Updated support for BeOS from R3 to R4.5
+	<LI> 0.9.13: Added SDL_SetLibraryPath() function (thanks Karsten Laux)
+	<LI> 0.9.13: Fixed 8-bit audio conversion when using SDL_MixAudio()
+	<LI> 0.9.13: Fixed audio thread lingering when app dies on Linux
+	<LI> 0.9.13: Fixed color problem in X display to other-endian systems
+	<LI> 0.9.13: Finally able to detect X11 key repeat (thanks GII team!)
+	<LI> 0.9.13: Added support for Visual C++ 5.0 development environment
+	<LI> 0.9.13: Added support for Linux on the Alpha
+	<LI> 0.9.13: Added support for international keyboards (see WhatsNew)
+	<LI> 0.9.12: Added support for loading IMA ADPCM compressed WAV files
+	<LI> 0.9.12: Fixed bug when mixing 8-bit audio in SDL_MixAudio()
+	<LI> 0.9.12: Added Enlightenment Sound Daemon audio support on Linux
+	<LI> 0.9.12: Added MTRR support for Linux/X11 (thanks David Barth)
+	<LI> 0.9.12: Added support for LinuxPPC 5.0
+	<LI> 0.9.12: Fixed place where some audio conversions aren't detected
+	<LI> 0.9.12: Fixed serious bug in installation script
+	<LI> 0.9.12: Added SDL_FreeWAV() function for freeing DLL memory
+	<LI> 0.9.12: Fixed potential memory leak in SDL_LoadWAV_RW()
+	<LI> 0.9.11: Freeing video surface has no longer crashes SDL_Quit()
+	<LI> 0.9.11: Included new asm blitters from Hermes library 1.2.4
+	<LI> 0.9.11: SDL_WaitThread() now gets the thread's return status
+	<LI> 0.9.11: SDL_MixAudio() takes a larger volume range (0-128)
+	<LI> 0.9.11: SDL no longer changes the X11 keyboard repeat
+	<LI> 0.9.11: Added a data source abstraction for loading/saving data
+	<LI> 0.9.11: Added three built in data abstractions:<BR>
+	               SDL_RWFromFile(), SDL_RWFromFP(), SDL_RWFromMem()
+	<LI> 0.9.11: Added stdio-like functions for using data sources:<BR>
+	               SDL_RWseek(), SDL_RWread(), SDL_RWwrite(), SDL_RWclose()
+	<LI> 0.9.11: Replaced SDL_CalculateEndian() with SDL_BYTEORDER macro
+	<LI> 0.9.11: Endian swapping functions are now macros, for speed.
+	<LI> 0.9.11: Endian read/write functions now use data sources
+	<LI> 0.9.11: Added function SDL_LoadWAV_RW() for data sources
+	<LI> 0.9.11: Added function SDL_LoadBMP_RW() for data sources
+	<LI> 0.9.11: Added function SDL_SaveBMP_RW() for data sources
+	<LI> 0.9.10: Mixer no longer fails if timidity isn't installed
+	<LI> 0.9.10: Mixer restarts MOD files on play (thanks Bill Kendrick)
+	<LI> 0.9.10: Fixed occasional crashing of the mixer library
+	<LI> 0.9.10: Fixed icon display on Afterstep under Linux
+	<LI> 0.9.10: Fixed occasional crash in mixer example
+	<LI> 0.9.10: Linux cdrom list now comes from /etc/fstab
+	<LI> 0.9.10: Fixed support for UK keyboard (thanks John Elliott)
+	<LI> 0.9.10: The event queue is now thread-safe
+	<LI> 0.9.10: Added event queue pump function: SDL_PumpEvents()
+	<LI> 0.9.10: Added low level event function: SDL_PeepEvents()
+	<LI> 0.9.10: Added a new thread function: SDL_ThreadID()
+	<LI> 0.9.10: Fixed an audio rate conversion memory overrun
+	<LI> 0.9.10: Fixed crash with RLE acceleration on big surfaces
+	<LI> 0.9.10: Improved MacOS display driver - added fullscreen
+	<LI> 0.9.10: Removed spurious warnings from Linux X11 driver
+	<LI> 0.9.10: Fixed memory leak in SDL_InvalidateMap()
+	<LI> 0.9.10: Fixed right button of 2-button mice on Win32
+	<LI> 0.9.10: Enabled XFree86 mode changes on older servers
+	<LI> 0.9.9: SDL_LoadBMP() handles BMP files created with GIMP
+	<LI> 0.9.9: SDL_LoadWAV() handles WAV files with "LIST" chunks
+	<LI> 0.9.9: Fixed problem with audio underflow on Solaris
+	<LI> 0.9.9: Initial support for 4-speaker audio output devices
+	<LI> 0.9.8: Fixed corrupt VC++ 5.0 desktop file
+	<LI> 0.9.8: Now detects fixed version of Metro-X X11 server
+	<LI> 0.9.8: Fixed XFree86 DGA banked mode update
+	<LI> 0.9.8: Fixed mouse press viewport shift on XFree86 DGA
+	<LI> 0.9.7: Fixed problem with displaying remotely via X11
+	<LI> 0.9.7: Win32 uses software cursor when fullscreen
+	<LI> 0.9.7: Win32 mouse uses DirectInput when fullscreen
+	<LI> 0.9.7: Added OpenGL software rendering via Mesa (demos archive)
+	<LI> 0.9.7: Fixed memory leak in ADPCM WAV decoding
+	<LI> 0.9.6: Added CD-ROM audio API documentation
+	<LI> 0.9.6: Fixed potential BeOS audio-related crash
+	<LI> 0.9.6: Fixed crash when resetting the video mode in DirectX
+	<LI> 0.9.6: Fixed errors compiling with the SparcWorks compiler
+	<LI> 0.9.6: Replaced SDL_GetDisplayFormat() with SDL_GetVideoInfo()
+	<LI> 0.9.6: Added a new fast fill function: SDL_FillRect()
+	<LI> 0.9.6: Added blit acceleration flags to SDL_AllocSurface()
+	<LI> 0.9.6: Added new double-buffering function: SDL_Flip()
+	<LI> 0.9.6: Fixed problem with buggy Metro-X X11 server
+	<LI> 0.9.6: Fixed 8-bit audio on Solaris with dbri hardware
+	<LI> 0.9.6: Fixed alarm clock problem with Solaris pthreads
+	<LI> 0.9.6: Fixed BeOS compilation problem
+	<LI> 0.9.5: Added tools to create Win32 icons in directx/icon/
+	<LI> 0.9.5: You can now pass a NULL mask to SDL_WM_SetIcon()
+	<LI> 0.9.5: Added support files for compiling with VC++ 5.0
+	<LI> 0.9.5: Fixed icon color bug under Win32
+	<LI> 0.9.5: Re-added SDL_LowerBlit() - not safe for use on display
+	<LI> 0.9.5: Fixed 0.9.x cursor blit deadlock
+	<LI> 0.9.5: Added SDL_FPLoadWAV(), SDL_FPLoadBMP(), SDL_FPSaveBMP()
+	<LI> 0.9.5: Added Linux, Win32, and BeOS CD audio support
+	<LI> 0.9.5: MMX accelerated blit disabled -- temporarily broken
+	<LI> 0.9.4: Fixed endianness issue with BeOS x86 blitting
+	<LI> 0.9.4: Fixed quit interrupt delivery on BeOS
+	<LI> 0.9.4: Fixed dynamic loading on BeOS
+	<LI> 0.9.4: Fixed DirectX audio on Win98
+	<LI> 0.9.4: Fixed possible sound-related crash on Linux PPC
+	<LI> 0.9.3: Mouse motion arrives as absolute and relative coordinates
+	<LI> 0.9.3: Fixed Visual C++ structure packing
+	<LI> 0.9.3: Fixed UNIX dynamic link library installation
+	<LI> 0.9.2: DirectX audio no longer hangs when app loses focus
+	<LI> 0.9.2: Fixed DirectX HiColor crash (palette bug)
+	<LI> 0.9.1: Fixed DirectX &lt;ALT&gt; key handling
+	<LI> 0.9.1: Fixed DirectX windowed palette problems
+	<LI> 0.9.1: Removed SDL_MapSurface() and SDL_UnmapSurface()
+	<LI> 0.9.0: Initial port to IRIX 6.x
+	<LI> 0.9.0: Initial port to OSF/1 3.2       (no sound yet)
+	<LI> 0.9.0: MacOS port in progress
+</UL>
+
+<H2>
+Major changes since SDL 0.7:
+</H2>
+<UL>
+	<LI>	Separated the demos and examples into a separate archive
+	<LI>	Added support for loading Microsoft compressed WAV files
+	<LI>	Added "soft" application crash recovery (signal handlers)
+	<LI>	Fixed POSIX signal handling interaction with threads
+	<LI>	Fixed audio output on MKLinux
+	<LI>	Added dynamic library version checking
+	<LI>	Updated for DirectX 6.0
+	<LI>	Cleaned up dynamic linking and added static linking
+	<LI>	Added automatic audio format and rate conversion
+	<LI>	Optimized some blitter cases (8 --> 16/32 and 32 --> 16/8)
+	<LI>	Removed precalculated alpha blending acceleration
+	<LI>	Key and mouse button events are split into up/down events
+	<LI>	It is now much easier to set an optimal video mode
+</UL>
+
+<H2>
+Major changes since SDL 0.5:
+</H2>
+<UL>
+	<LI>	Ported to Solaris 2.6
+	<LI>	Added XFree86 Direct Graphic Access support
+	<LI>	Supports LinuxPPC without threads
+	<LI>	Completely rewritten video/surface API -- see SDL_video.h
+	<LI>	Completely rewritten event API
+	<LI>	Optimized black-white cursor creation
+	<LI>	Added support for run-length-encoded colorkeying
+	<LI>	Added support for hardware accelerated blits
+	<LI>	Added support for blitting from 1-bit surfaces (bitmaps)
+	<LI>	Added a function to simplify setting video modes
+	<LI>	Added support for loading WAV files
+	<LI>	Added endian swapping functions for memory values
+	<LI>	Added alpha blending using alpha value or channel
+	<LI>	Added precalculated alpha blending acceleration
+	<LI>	Added function to return current time in milliseconds
+	<LI>	New event type SDL_ACTIVEEVENT, to detect iconification
+	<LI>	New event type SDL_SYSWMEVENT, for custom window hooks
+	<LI>	Added a platform dependent function to get window handle
+	<LI>	Added a function to check the run-time version of SDL
+	<LI>	Added periodic timer support at 10 ms resolution
+	<LI>	Added support for the SDL_DEBUG environment variable
+	<LI>	Miscellaneous internal cleanups
+</UL>
+
+<H2>
+Major changes since SDL 0.4:
+</H2>
+<UL>
+	<LI>	SDL library code is now dynamically loaded
+	<LI>	Added support for pthreads (Linux glibc2)
+	<LI>	Removed SDL_mutexN() and SDL_mutexIncr()
+</UL>
+
+<H2>
+Major changes since SDL 0.3:
+</H2>
+<UL>
+	<LI>	Added support for DirectX 5.0
+	<LI>	Added support for surfaces in video memory
+	<LI>	Added support for source color-key blitting
+	<LI>	Added support for single-rectangle clipping
+	<LI>	Added support for warping (moving) the cursor
+	<LI>	Added support for color cursors
+	<LI>	Greatly simplified internal event queue
+	<LI>	Minor bug-fixes
+</UL>
+
+<P>
+<IMG SRC="docs/images/rainbow.gif" ALT="[separator]" WIDTH="100%">
+
+</BODY>
+</HTML>

@@ -1,0 +1,83 @@
+
+struct PerVertexInput
+{
+    float4 position : POSITION;
+    float  v        : BINORMAL;
+    float3 dPdvN    : TANGENT;
+    float3 hairNorm : NORMAL;
+};
+
+struct Output
+{
+    half4 position : POSITION;
+    half4 color    : COLOR0;
+};
+
+half3
+fnc_diffuselgt(half3 lightColor,
+               half3 Ln,
+               half3 Nn)
+{
+    return (lightColor * saturate(dot(Ln, Nn)));
+}
+
+const half3 lumFactor = half3(0.299f, 0.587f, 0.114f);
+
+Output vertexProgram(PerVertexInput IN,
+                         uniform float4x4 ModelViewProjMat,
+                         uniform float3 lightColor,
+                         uniform float3 lightFrom,
+                         uniform float3 lightAt,
+                         uniform float3 e,
+                         uniform float3 rootColor,
+                         uniform float3 tipColor,
+                         uniform float Kd,
+                         uniform float Ks,
+                         uniform float2 spec,
+                         uniform float2 iroughness,
+                         uniform float4 specData,  // start, end, start+fade, start-fade
+                         uniform float2 varFade,
+
+                         uniform float3 specularColor,
+                         uniform float3 staticAmbient,
+    
+                         uniform float hairColVar)
+{
+
+    Output OUT;
+
+    // Transform the position from model space to clip space
+    OUT.position = mul(ModelViewProjMat, IN.position);
+
+    half3 lDir = normalize(lightFrom - IN.position.xyz);
+    half3 vDir = normalize(e - IN.position.xyz);
+
+    half3 lightDir = normalize(lightFrom-lightAt);
+    half2 dots = half2(saturate(dot(IN.dPdvN,lDir)), saturate(dot(IN.dPdvN, vDir)));
+
+    half3 hairCol  = ((1.0f - IN.v) * rootColor) + (IN.v * tipColor);
+    half Kspec = Ks * min(       smoothstep( specData.x, specData.z, IN.v),
+                          1.0f - smoothstep( specData.y, specData.w, IN.v ) );
+
+    half2 aB = acos(dots);
+    half2 Kajiya = dots.x * dots.y + sin(aB.x) * sin(aB.y);
+
+    half2 powVal = spec * pow(Kajiya, iroughness); 
+    half3 Cspec = lightColor*powVal.x + lightColor*powVal.y;
+
+    half3 Cdiff = fnc_diffuselgt(lightColor,
+                                 lDir,
+                                 normalize(IN.hairNorm));
+
+    half darkening = (1.0f - (smoothstep( varFade.y, 
+                                          varFade.x,
+                                          abs( Kd*dot(Cdiff,lumFactor) )) * 
+                                          saturate(hairColVar)));
+    OUT.color.xyz = saturate( (Kd*Cdiff + staticAmbient) * hairCol * darkening + 
+                              (IN.v * Kspec * Cspec * specularColor));
+
+    return OUT;
+
+}
+
+

@@ -1,0 +1,14 @@
+void FragmentProgram(in float4 inTex : TEXCOORD0,
+                     out float4 sColor0 : COLOR0,
+                     const uniform sampler3D USTexture,
+                     const uniform sampler1D ColorMap)
+{
+  // Pre-multiply 'r' coordinate with the scale
+  inTex.yz = inTex.yz * inTex.ww;
+
+  // Projective 3D texture lookup
+  float val = tex3Dproj(USTexture, inTex.yzxw);
+
+  // Colormap look up
+  sColor0 = tex1D(ColorMap, val);
+}

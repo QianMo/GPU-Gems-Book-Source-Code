@@ -1,0 +1,90 @@
+
+float3
+fnc_diffuselgt(float3 lightColor,
+               float3 Ln,
+               float3 Nn)
+{
+    return (lightColor * saturate(dot(Ln, Nn)));
+}
+
+const float3 lumFactor = float3(0.299f, 0.587f, 0.114f);
+
+struct Input
+{
+    float4 position : POSITION;
+    float  v        : TEXCOORD0;
+    float3 L        : TEXCOORD1;
+    float3 V        : TEXCOORD2;
+    float3 T        : TEXCOORD3;
+    float3 nSN      : TEXCOORD4;
+};
+
+fragout fragmentProgram(Input IN,
+
+                        uniform float3 lightColor,
+
+                        uniform float Kd,
+                        uniform float Ks,
+                        uniform float2 spec,
+                        uniform float2 iroughness,
+                        uniform float3 specData,  // start, end, fade
+                        uniform float2 varFade,
+
+                        uniform float3 rootColor,
+                        uniform float3 tipColor,
+                        uniform float3 specularColor,
+                        uniform float3 staticAmbient,
+
+                        uniform float hairColVar)
+{
+
+    fragout OUT;
+
+    float3 S      = cross(IN.nSN, IN.T);
+    float3 N_hair = cross(IN.T, S);
+
+    float l = saturate(dot(IN.nSN, IN.T));
+
+    // When the hair is exactly perpendicular to the surface, use the surface normal,
+    // when the hair is exactly tangent to the surface, use the hair normal
+    // Otherwise, blend between the two normals in a linear fashion
+    
+    float3 hairNorm = normalize( (l*IN.nSN) + ((1.0f - l) * N_hair) );
+
+    // Make the specular only hit in certain parts of the hair--v is
+    // along the length of the hair
+
+    float Kspec = Ks * min(       smoothstep( specData.x, specData.x + specData.z, IN.v),
+                           1.0f - smoothstep( specData.y, specData.y - specData.z, IN.v ) );
+
+    float T_Dot_nL = saturate(dot(IN.T, IN.L));
+    float T_Dot_e  = saturate(dot(IN.T, IN.V));
+
+    float Alpha = acos(T_Dot_nL);
+    float Beta  = acos(T_Dot_e);
+
+    float Kajiya = T_Dot_nL * T_Dot_e + sin(Alpha) * sin(Beta);
+    float3 Cspec = (spec.x*lightColor*pow(Kajiya, iroughness.x)) +
+                   (spec.y*lightColor*pow(Kajiya, iroughness.y));
+
+    float3 Cdiff = fnc_diffuselgt(lightColor,
+                                  IN.L,
+                                  hairNorm);
+
+    float darkening = (1.0f - (smoothstep( varFade.y, 
+                                           varFade.x,
+                                           abs( Kd*dot(Cdiff,lumFactor) )) * 
+                                           saturate(hairColVar)));
+
+    float3 final_c = (((1.0f - IN.v) * rootColor) +  
+                       (IN.v         * tipColor)) * darkening;
+
+    OUT.col.xyz = saturate( (Kd*Cdiff + staticAmbient) * final_c + 
+                            (IN.v * Kspec * Cspec * specularColor));
+
+    return OUT;
+
+}
+
+
+

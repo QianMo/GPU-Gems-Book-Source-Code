@@ -1,0 +1,28 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "paramgl", "paramgl.vcproj", "{72874720-9AC0-42BF-9781-06CD68DAF674}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccProjectUniqueName0 = paramgl.vcproj
+		SccProjectName0 = paramgl
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Perforce\u0020SCM
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{72874720-9AC0-42BF-9781-06CD68DAF674}.Debug.ActiveCfg = Debug|Win32
+		{72874720-9AC0-42BF-9781-06CD68DAF674}.Debug.Build.0 = Debug|Win32
+		{72874720-9AC0-42BF-9781-06CD68DAF674}.Release.ActiveCfg = Release|Win32
+		{72874720-9AC0-42BF-9781-06CD68DAF674}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,69 @@
+__________________________________________________
+
+C4Dfx 0.80                              2004-01-11
+
+A Plug-in for Real-Time Shaders and Fast Rendering
+in Maxon Cinema 4D 8.5 on Microsoft(R) Windows(R)
+
+C4Dfx leverages modern graphics cards to render Cinema 4D scenes and animations both into AVI files and onto the screen (with automatic updating). To this end, the standard Cinema 4D material is emulated via pixel shaders. In addition, industry-standard .fx shaders can be loaded, edited, and rendered. The plug-in is tested with NVIDIA(R) GeForce FX(TM) 5900. Other graphics cards may or may not work, as the plug-in relies on several OpenGL(TM) extensions.
+
+(c) 2003-2004 by Jörn Loviscach, www.l7h.cn, j.loviscach@computer.org
+with exception of the CgFX library and the nv_dds code (C) by NVIDIA(R)
+
+___________________________________________________
+Installation_______________________________________
+
+* Copy the directory c4dfx together with its contents into the Cinema 4D plug-in directory.
+* Download and install the latest Cg_compiler.exe from NVIDIA(R) (www.nvidia.com -> Developer -> Cg -> Downloads).
+* Install a text editor such as the free Crimson Editor (www.crimsoneditor.com). Restart Cinema. Set the path and the command line for the editor on the C4Dfx tab on Cinema 4D's preferences dialog. For Crimson editor, the command line should be set to: /L:<LINE> "<FILE>"
+* For examples of .fx effects and .dds textures download for instance the CgFX Viewer or the Maya(R) plug-in from NVIDIA(R).
+
+___________________________________________________
+General Use________________________________________
+
+Select "C4Dfx Renderer" from the plug-in menu. Here you can choose from different levels of anti-aliasing and different resolutions of textures.
+
+To see an on-screen rendering, click "Render to Window" to open the renderer window or to update it if it's already open. A good idea is to move this window to another display and to show it fullscreen there. If "Automatically Update Rendering" is selected, any change in the scene will be tracked in the renderer window. This happens with a certain delay, depending on the complexity of the scene; in the meanwhile, a red x is put over the old image. If you resize the window, its content is scaled but not re-rendered, so that there is no delay. The rescaling causes jaggies; press "Render to Window" again to re-render the content at the new size.
+
+To render an AVI file with settings as given in Cinema 4D's "Render Settings" click onto "Render to File". A preview window will open showing the progress of the rendering. Its title bar shows which part of the process has already been completed. To stop the renderer, close the preview window. (Note that for performance reasons the preview window does not show the full resolution of the rendering.)Several file renderings may be started one after the other, without waiting for the first to finish. But remember to use a different output file path for each render job. Otherwise access conflicts may result or files may get overwritten.
+
+Each object has to possess a texture tag and a uvw tag. (The uvw tag is internal in parametric objects such as Cylinder or Extrude NURBS). To see which object is not rendered for what reason, open the Cinema 4D console from the "Window" menu.
+
+The following settings of the standard Cinema 4D material are emulated:
+* "Basic Properties": Color, Bump, Luminance, Specular, Specular Color, Environment
+* "Color": Color, Brightness, Texture
+* "Luminance": Color, Brightness
+* "Environment": Color, Brightness, Texture
+* "Bump": Strength, Texture
+* "Specular": Height, Width, Falloff, Inner Width
+* "Specular Color": Color, Brightness
+
+Note that the appearance of bump maps may differ between the Cinema 4D renderer and C4Dfx.
+
+These settings of Cinema 4D lights are used: Color, Brightness, Type, Shadow Type, Inner Angle, Outer Angle. If the Type is "Spot (Round)", a round cone is generated, else a point light. Shadows will only be generated for a light source, if its shadow type is not "None" and the light type is "Spot (Round)". Note that the shadows suffer from bad texture resolution, too: You may see black stripes on surfaces if you choose resolution below 1024x1024 in the C4Dfx dialog window. If you use scenes with untypically small or large dimensions, the shadow computation may suffer as well.
+
+When emulating the standard Cinema 4D material, only a limited number of light sources can be taken into account. Use the "C4Dfx Light Control" tag on light sources to optionally switch off illumination and/or computation of shadows. For efficiency reasons, these settings cannot be animated. Furthermore, shadows appear only on standard Cinema 4D materials, not on CgFX materials. The setting "Cast Shadows" of the Compositing Tag is obeyed.
+
+Some restrictions:
+* Only "perspective" is supported as projection mode for the camera.
+* Only one texture tag is used per object.
+* Phong breaks for normals are ignored.
+* Seams result from discontinuities of the uv coordinates seams.
+
+___________________________________________________
+Using .fx files____________________________________
+
+For each .fx file you want to use, create an C4Dfx material in the Material Manager. Use these materials on the corresponding objects. Every C4Dfx material allows you to select an .fx file and a technique in it. Depending on the .fx file, a number of parameters may be displayed. Most are straightforward to use.
+
+The default texture file names given in a .fx file will not be sufficient, because they include no full path. Therefore, you have to set the filenames of the texure by clicking onto the button "...". Only .dds textures can be used. NVIDIA(R)'s offers free .dds exporter and normal map generator plug-ins, and Microsoft(R)'s includes a .dds converter software in the DirectX(R) SDK.
+
+Light positions or directions and similar parameters are controlled by objects in the scene. Drag an object from Cinema 4D's object into the field of the parameter to create a link. For position parameters, the position of the linked object is used; for direction parameters, the direction of its z axis is used. This is straightforward to use with point light sources (position) and parallel light sources (direction).
+
+Via the buttons "Edit ...", "Reload" and "Reload with Default Values" you can (respectively) call the editor, load the .fx file again (in case it has been edited or replaced), or reset the parameters to their defaults given in the .fx file. If an error is detected in the .fx file, a dialog box allows you to open it in the editor at the line that contains the error. All errors found in .fx files are listed in Cinema 4D's console window, too.
+
+___________________________________________________
+Configuration Tips for Crimson Editor______________
+
+To enable syntax highlighting for .fx files, put the content of "for Crimson Editor" into the corresponding directories of Crimson Editor.
+
+Close all subwindows except the main text window. In the Preferences of Crimson Editor (Tools/Preferences) go to the category "File" and disable "Reload last working files on startup". In the "View" menu go to the submenu "Toolbars/Windows" and disable "File Selection Tab".

@@ -1,0 +1,47 @@
+//---------------------------------------------------------------
+//
+//    Simple display pipeline for OpenEXR images, implemented
+//    as an fp30 profile fragment shader.
+//
+//    Authors:
+//        Drew Hess <dhess@ilm.com>
+//
+//---------------------------------------------------------------
+
+//----------------------------------------------------------------
+//
+//    The display pipeline:
+//
+//    1. Look up the image texture to get the source pixel.
+//
+//    2. Apply exposure to each color channel (but not alpha).
+//
+//    3. Apply a gamma correction to all four channels.
+//
+//    The hardware takes care of the rest, scaling the
+//    half values from 0.0->1.0 to 0->255 framebuffer values
+//    and clamping anything above 1.0 to 255.
+//
+//----------------------------------------------------------------
+
+struct Out
+{
+    half4 color : COLOR;
+};
+
+Out
+main (float2 texCoord : TEXCOORD0,
+      uniform samplerRECT image,
+      uniform float gamma,
+      uniform float expMult)
+{
+    half4 pixel = h4texRECT (image, texCoord);
+
+    pixel.rgb *= expMult;
+
+    Out output;
+
+    output.color = pow (pixel, gamma);
+
+    return output;
+}

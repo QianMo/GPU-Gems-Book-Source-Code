@@ -1,0 +1,25 @@
+
+
+        // Night fragment shader.
+        void
+main(
+         in  float2    vTextureUV:   TEXCOORD0, 
+         out half4     vOutputColor: COLOR,
+
+         const uniform samplerRECT   oImage,
+         const uniform half4x4       mColorTransform, 
+         const uniform half3         vBlue,
+         const uniform half          nIntensity
+     )
+{
+    half4 vColor;
+    half  nLuminance;
+
+    vColor = texRECT(oImage, vTextureUV);
+    vColor = mul(mColorTransform, vColor);
+    vColor = max(vColor, half4(0.01, 0, 0, 1));
+    nLuminance = vColor.y * (1.33f * (1 + (vColor.y + vColor.z)/vColor.x) - 1.68f);
+
+    vOutputColor.xyz = vBlue * (nLuminance * nIntensity);
+    vOutputColor.w = vColor.w;
+}

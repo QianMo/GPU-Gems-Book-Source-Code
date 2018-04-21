@@ -1,0 +1,23 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultPhong.fx"
+
+	ambient  {   0.0f   0.0f   0.0f 255.0f }
+	diffuse  { 140.0f 140.0f 140.0f 255.0f }
+	specular { 180.0f 180.0f 180.0f 255.0f }
+	emissive {   0.0f   0.0f   0.0f 255.0f }
+
+	power "16.0f"
+
+	diffusemap         "Fabric_01.jpg"
+	specularmap        "Fabric_01_Spec.jpg"
+	normalmap          "Fabric_01_DOT3.jpg"
+}
+
+// end of file

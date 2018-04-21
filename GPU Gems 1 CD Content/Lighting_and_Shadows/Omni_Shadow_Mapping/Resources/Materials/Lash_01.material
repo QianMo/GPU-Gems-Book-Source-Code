@@ -1,0 +1,21 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultHair.fx"
+
+	diffuse  { 0.0f 0.0f 0.0f 250.0f }
+	specular { 0.0f 0.0f 0.0f 250.0f }
+
+	power "16.0f"
+
+	diffusemap "Lash_01.tga"
+
+	alphatexture 1
+}
+
+// end of file

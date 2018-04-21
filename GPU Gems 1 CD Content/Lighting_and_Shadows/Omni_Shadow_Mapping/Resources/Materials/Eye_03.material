@@ -1,0 +1,28 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultBlinnSphereMap.fx"
+
+	ambient  {   0.0f   0.0f   0.0f 255.0f }
+	diffuse  { 120.0f 120.0f 120.0f 255.0f }
+	specular {  20.0f  20.0f  20.0f 255.0f }
+	emissive {   0.0f   0.0f   0.0f 255.0f }
+
+	power "16.0f"
+
+	diffusemap         "Eye_03.jpg"
+	specularmap        "Eye_03_Spec.jpg"
+	normalmap          "Eye_03_DOT3.jpg"
+
+	reflectiontype   "1"
+	reflectionfactor "0.1"
+
+	spherereflectionmap  "Default_SphereMap.jpg"
+}
+
+// end of file

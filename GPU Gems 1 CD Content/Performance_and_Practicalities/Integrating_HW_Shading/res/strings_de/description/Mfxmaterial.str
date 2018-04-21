@@ -1,0 +1,12 @@
+STRINGTABLE Mfxmaterial
+{
+	Mfxmaterial "C4Dfx-Shader";
+
+	ID_FX_PARAMS_GRP "C4Dfx-Einstellungen";
+	FX_USEFORSHADOW "Zur Schattenberechnung benutzen";
+	FX_PATH "fx-Datei";
+	FX_EDIT "Bearbeiten ...";
+	FX_RELOAD "Neu laden";
+	FX_RELOAD_W_DEFAULT "Neu laden mit Standardwerten";
+	FX_TECHNIQUE "Technik";
+}

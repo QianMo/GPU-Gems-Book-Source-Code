@@ -1,0 +1,21 @@
+//
+// Project:     DX9 "Omnidirectional Shadow Mapping" Demo
+//
+
+material
+{
+	version 97
+
+	effect "DefaultBlinnDiffuseOnly.fx"
+
+	diffuse  { 120.0f 120.0f 120.0f 255.0f }
+
+	power "16.0f"
+
+	bumpscale "1.5f"
+
+	diffusemap         "Wood_01.jpg"
+	normalmap          "Wood_01_DOT3.jpg"
+}
+
+// end of file

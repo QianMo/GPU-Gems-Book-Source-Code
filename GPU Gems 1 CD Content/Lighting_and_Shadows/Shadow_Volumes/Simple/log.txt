@@ -1,0 +1,167 @@
+Application Log
+Start: Tue Jan 27 11:30:12 2004
+
+_____________________________________________________
+
+    ###    Initialization    ###
+
+Setting video mode
+Loading glMultiTexCoord2fARB extension(0x446fa4)
+Loading glMultiTexCoord1fARB extension(0x446f5c)
+Loading glMultiTexCoord2fvARB extension(0x446f1c)
+Loading glMultiTexCoord3fvARB extension(0x446edc)
+Loading glMultiTexCoord4fvARB extension(0x446e9c)
+Loading glMultiTexCoord1dARB extension(0x446e5c)
+Loading glMultiTexCoord2dvARB extension(0x446e1c)
+Loading glMultiTexCoord3dvARB extension(0x446ddc)
+Loading glMultiTexCoord4dvARB extension(0x446d9c)
+Loading glActiveTextureARB extension(0x446d60)
+Loading glClientActiveTextureARB extension(0x446d18)
+Loading wglSwapIntervalEXT extension(0x446cdc)
+Loading wglChoosePixelFormatARB extension(0x446c98)
+Loading wglAllocateMemoryNV extension(0x446c5c)
+Loading wglFreeMemoryNV extension(0x446c28)
+Loading glVertexArrayRangeNV extension(0x446be8)
+Loading glCompressedTexImage2DARB extension(0x446ba0)
+Loading glGetCompressedTexImageARB extension(0x446b54)
+Loading glGenFencesNV extension(0x446b24)
+Loading glDeleteFencesNV extension(0x446aec)
+Loading glSetFenceNV extension(0x446abc)
+Loading glFlushVertexArrayRangeNV extension(0x446a74)
+Loading glFinishFenceNV extension(0x446a40)
+Loading glGenProgramsARB extension(0x446a08)
+Loading glBindProgramARB extension(0x4469d0)
+Loading glDeleteProgramsARB extension(0x446994)
+Loading glProgramStringARB extension(0x446958)
+Loading glProgramEnvParameter4fARB extension(0x44690c)
+Loading glProgramLocalParameter4fARB extension(0x4468bc)
+Loading glProgramLocalParameter4fvARB extension(0x44686c)
+Loading glProgramEnvParameter4dvARB extension(0x446820)
+Loading glProgramLocalParameter4dvARB extension(0x4467d0)
+Loading glVertexAttribPointerARB extension(0x446788)
+Loading glEnableVertexAttribArrayARB extension(0x446738)
+Loading glDisableVertexAttribArrayARB extension(0x4466e8)
+Loading glPointParameterfARB extension(0x4466a8)
+Loading glPointParameterfvARB extension(0x446668)
+Loading glMultiDrawArraysEXT extension(0x446628)
+Loading glMultiDrawElementsEXT extension(0x4465e4)
+Loading glCombinerParameterfvNV extension(0x4465a0)
+Loading glCombinerParameterfNV extension(0x44655c)
+Loading glCombinerParameterivNV extension(0x446518)
+Loading glCombinerParameteriNV extension(0x4464d4)
+Loading glCombinerInputNV extension(0x44649c)
+Loading glCombinerOutputNV extension(0x446460)
+Loading glFinalCombinerInputNV extension(0x44641c)
+Loading glGetCombinerInputParameterfvNV extension(0x4463c8)
+Loading glGetCombinerInputParameterivNV extension(0x446374)
+Loading glGetCombinerOutputParameterfvNV extension(0x44631c)
+Loading glGetCombinerOutputParameterivNV extension(0x4462c4)
+Loading glGetFinalCombinerInputParameterfvNV extension(0x446264)
+Loading glGetFinalCombinerInputParameterivNV extension(0x446204)
+Loading glCombinerStageParameterfvNV extension(0x4461b4)
+Loading glGetCombinerStageParameterfvNV extension(0x446160)
+Loading glGenProgramsNV extension(0x44612c)
+Loading glDeleteProgramsNV extension(0x4460f0)
+Loading glBindProgramNV extension(0x4460bc)
+Loading glLoadProgramNV extension(0x446088)
+Loading glTrackMatrixNV extension(0x446054)
+Loading glProgramParameter4fvNV extension(0x446010)
+Loading glActiveStencilFaceEXT extension(0x445fcc)
+Loading glGetProgramParameterfvNV extension(0x445f84)
+Loading glGetProgramParameterdvNV extension(0x445f3c)
+Loading glBindBufferARB extension(0x445f08)
+Loading glDeleteBuffersARB extension(0x445ecc)
+Loading glGenBuffersARB extension(0x445e98)
+Loading glIsBufferARB extension(0x445e68)
+Loading glBufferDataARB extension(0x445e34)
+Loading glBufferSubDataARB extension(0x445df8)
+Loading glGetBufferSubDataARB extension(0x445db8)
+Loading glMapBufferARB extension(0x445d84)
+Loading glUnmapBufferARB extension(0x445d4c)
+Loading glGetBufferParameterivARB extension(0x445d04)
+Loading glGetBufferPointervARB extension(0x445cc0)
+Loading glDrawRangeElements extension(0x445c84)
+wglSwapIntervalEXT(0);
+Setting brightness to 1
+Getting HDC... 
+HDC acquired.
+Error setting brightness!
+Brightness set.
+Enabling separate specular lighting.
+
+Setting initial rendering state.
+
+Done setting initial state.
+Operating System: Windows 5.1 build 2600 Platform 2 Service Pack 1
+Processor Architecture: 1 x 32-bit Intel processor
+
+GL Vendor:      NVIDIA Corporation
+GL Renderer:    Quadro FX 1000/AGP/SSE/3DNOW!
+GL Version:     1.4.0
+Driver version: 6.14.10.4403
+
+GL extensions: "GL_ARB_depth_texture GL_ARB_fragment_program GL_ARB_imaging GL_ARB_multisample GL_ARB_multitexture GL_ARB_point_parameters GL_ARB_shadow GL_ARB_texture_border_clamp GL_ARB_texture_compression GL_ARB_texture_cube_map GL_ARB_texture_env_add GL_ARB_texture_env_combine GL_ARB_texture_env_dot3 GL_ARB_texture_mirrored_repeat GL_ARB_transpose_matrix GL_ARB_vertex_buffer_object GL_ARB_vertex_program GL_ARB_window_pos GL_S3_s3tc GL_EXT_abgr GL_EXT_bgra GL_EXT_blend_color GL_EXT_blend_func_separate GL_EXT_blend_minmax GL_EXT_blend_subtract GL_EXT_compiled_vertex_array GL_EXT_draw_range_elements GL_EXT_fog_coord GL_EXT_multi_draw_arrays GL_EXT_packed_pixels GL_EXT_point_parameters GL_EXT_rescale_normal GL_EXT_secondary_color GL_EXT_separate_specular_color GL_EXT_shadow_funcs GL_EXT_stencil_two_side GL_EXT_stencil_wrap GL_EXT_texture3D GL_EXT_texture_compression_s3tc GL_EXT_texture_cube_map GL_EXT_texture_edge_clamp GL_EXT_texture_env_add GL_EXT_texture_env_combine GL_EXT_texture_env_dot3 GL_EXT_texture_filter_anisotropic GL_EXT_texture_lod GL_EXT_texture_lod_bias GL_EXT_texture_object GL_EXT_vertex_array GL_HP_occlusion_test GL_IBM_texture_mirrored_repeat GL_KTX_buffer_region GL_NV_blend_square GL_NV_copy_depth_to_color GL_NV_depth_clamp GL_NV_fence GL_NVX_flush_hold GL_NV_float_buffer GL_NV_fog_distance GL_NV_fragment_program GL_NV_half_float GL_NV_light_max_exponent GL_NV_multisample_filter_hint GL_NV_occlusion_query GL_NV_packed_depth_stencil GL_NV_pixel_data_range GL_NV_point_sprite GL_NV_primitive_restart GL_NV_register_combiners GL_NV_register_combiners2 GL_NV_texgen_reflection GL_NV_texture_compression_vtc GL_NV_texture_env_combine4 GL_NV_texture_expand_normal GL_NV_texture_rectangle GL_NV_texture_shader GL_NV_texture_shader2 GL_NV_texture_shader3 GL_NV_vertex_array_range GL_NV_vertex_array_range2 GL_NV_vertex_program GL_NV_vertex_program1_1 GL_NV_vertex_program2 GL_NVX_ycrcb GL_SGIS_generate_mipmap GL_SGIS_texture_lod GL_SGIX_depth_texture GL_SGIX_shadow GL_WIN_swap_hint WGL_EXT_swap_control "
+
+_____________________________________________________
+
+    ###    Video Status    ###
+
+Capability    Minimum   Desired   Received  Ok?
+-------------------------------------------------
+* RENDER DEVICE 
+Depth         16 bits   24 bits   24 bits   ok
+Stencil        8 bits    8 bits    8 bits   ok
+Alpha                              8 bits   ok
+Red                                8 bits   ok
+Green                              8 bits   ok
+Blue                               8 bits   ok
+TextureUnits                 8      4:  8   UNSUPPORTED
+FSAA                       1: 1     0:17    UNSUPPORTED
+Width                  800 pixels           ok
+Height                 600 pixels           ok
+Mode                   Windowed             ok
+
+* JOYSTICK
+Number                                 0    ok
+
+Done initializing RenderDevice.
+
+_____________________________________________________
+
+    ###    Network Startup    ###
+
+Starting WinSock networking.
+
+Network:
+  localhost = RFERNANDO-DT.nvidia.com (172.16.194.235)
+  WinSock 2.0
+  Status: Running
+  Loaded winsock specification version 257 (514 is the highest available)
+  32767 sockets available
+  Largest UDP datagram packet size is 65467 bytes
+
+_____________________________________________________
+
+    ###    Testing Network    ###
+
+Open Socket                  Ok
+Enable UDP Broadcast         Ok
+Testing UDP Broadcast        Ok
+_____________________________________________________
+
+    ###        ###
+
+_____________________________________________________
+
+    ###    Network Cleanup    ###
+
+Network cleaned up.
+Restoring gamma.
+Getting HDC... 
+HDC acquired.
+Shutting down SDL.
+_____________________________________________________
+
+    ###    Shutdown    ###
+
+Closing log file

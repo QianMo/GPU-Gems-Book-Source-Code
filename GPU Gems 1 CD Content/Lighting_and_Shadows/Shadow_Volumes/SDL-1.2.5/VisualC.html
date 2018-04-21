@@ -1,0 +1,235 @@
+<HTML>
+
+
+
+<HEAD>
+
+
+
+<TITLE> Using SDL with Microsoft Visual C++ 5 and 6 </TITLE>
+
+
+
+</HEAD>
+
+
+
+<BODY>
+
+
+
+<H1> Using SDL with Microsoft Visual C++ 5 and 6 </H1>
+
+<H3>
+     by <A HREF="mailto:snowlion@sprynet.com"> Lion Kimbro </A>
+</H3>
+
+
+
+<p>
+    You can either use the precompiled libraries from
+    <A HREF="http://www.libsdl.org/download.php">
+    the SDL Download web site </A>,
+    or you can build SDL yourself.
+</p>
+
+
+<H3> Building SDL </H3>
+
+<P>
+     Unzip the <CODE>VisualC.zip</CODE> file into the directory
+     that contains this file (<CODE>VisualC.html</CODE>).
+</P>
+
+<P>
+     Be certain that you unzip <CODE> VisualC.zip </CODE>
+     into <strong>this</strong> directory and not any other
+     directory. If you are using WinZip, be careful to
+     make sure that it extracts to <strong>this</strong>
+     folder, because it's convenient feature of
+     unzipping to a folder with the name of the
+     file currently being unzipped will get you in
+     trouble if you use it right now. And that's all
+     I have to say about that.
+</P>
+
+<P>
+     Now that it's unzipped, go into the VisualC directory
+     that is created, and double-click on the VC++
+     workspace file &quot;<CODE>SDL.dsw</CODE>&quot;.
+     This should open up VisualC.
+</P>
+
+<P>
+     You may be prompted at this point to upgrade the
+     workspace, should you be using a more recent version
+     of Visual C++. If so, allow the workspace to be
+     upgraded.
+</P>
+
+
+<P>
+     Build the <CODE>.dll</CODE> and <CODE>.lib</CODE> files.
+</P>
+
+<P>
+     This is done by right clicking on each project in turn
+     (Projects are listed in the Workspace panel in the
+     FileView tab), and selecting &quot;Build&quot;.
+</P>
+
+<P>
+     You may get a few warnings, but you should not get
+     any errors. You do have to have at least the DirectX
+     5 SDK installed, however. (I believe...) The latest
+     version of DirectX can be downloaded or purchased
+     on a cheap CD (my recommendation) from
+     <A HREF="http://www.microsoft.com"> Microsoft </A>.
+</P>
+
+<P>
+    Later, we will refer to the following .lib and .dll
+    files that have just been generated:
+</P>
+
+    <list>
+    <li> SDL.dll
+    <li> SDL.lib
+    <li> SDLmain.lib
+    </list>
+
+<P>
+    Search for these using the Windows Find (Windows-F)
+    utility, if you don't already know where they should be.
+    For those of you with a clue, look inside the Debug
+    or Release directories of the subdirectories of the
+    VisualC folder. (It might be easier to just use
+    Windows Find if this sounds confusing. And don't worry
+    about needing a clue; we all need visits from the
+    clue fairy frequently.)
+</P>
+
+
+
+<H3> Creating a Project with SDL </H3>
+
+<P>
+     Create a project as a Win32 Application.
+</P>
+
+<P>
+     Create a C++ file for your project.
+</P>
+
+<P>
+     Set the C runtime to "Multi-threaded DLL" in the menu:
+     <CODE> Project|Settings|C/C++ tab|Code Generation|Runtime Library </CODE>.
+</P>
+
+<P>
+     Add the SDL <CODE>include</CODE> directory to your list
+     of includes in the menu:
+     <CODE> Project|Settings|C/C++ tab|Preprocessor|Additional include directories </CODE>.
+</P>
+
+<P>
+     The &quot;include directory&quot; I am referring to is the
+     <CODE>include</CODE> folder within the main SDL
+     directory (the one that this HTML file located
+     within.
+</P>
+
+<P>
+     Now we're going to use the files that we had created
+     earlier in the Build SDL step.
+</P>
+
+<P>
+     Copy the following files into your Project directory:
+</P>
+
+     <list>
+     <li> SDL.dll </li>
+     </list>
+
+<P>
+     Copy the following files into your Project directory,
+     and <em>add them to your Project</em> as well:
+</P>
+
+     <list>
+     <li> SDL.lib </li>
+     <li> SDLmain.lib </li>
+     </list>
+
+<P>
+     (To add them to your project, right click on your
+     project, and select &quot;Add files to project&quot;)
+</P>
+
+<P>
+     (I believe that it's not necessary to actually
+     copy the .lib files into your directory; you only
+     have to be certain that you add them to your Project.
+     If someone is so inclined, correct this document, or
+     <A HREF="mailto:snowlion@sprynet.com">
+     e-mail me </A>,
+     and I'll fix this document.)
+</P>
+
+
+
+<H3> SDL 101, First Day of Class </H3>
+
+<P>
+     Now create the basic body of your project.
+     The body of your program should take the following form:
+
+<CODE>
+<PRE>
+#include &quot;SDL.h&quot;
+
+int main( int argc, char* argv[] )
+{
+  // Body of the program goes here.
+  return 0;
+}
+</PRE>
+</CODE>
+</P>
+
+<H3> That's it! </H3>
+
+<P>
+     I hope that this document has helped you get
+     through the most difficult part of using the
+     SDL: installing it. Suggestions for improvements
+     to this document should be sent to the writers
+     of this document.
+</P>
+
+<P>
+     Thanks to Paulus Esterhazy (pesterhazy@gmx.net), for the work on VC++ port.
+</P>
+
+<P>
+     This document was originally called &quot;VisualC.txt&quot;,
+     and was written by 
+     <A HREF="mailto:slouken@libsdl.org">Sam Lantinga</A>.
+</P>
+
+<P>
+     Later, it was converted to HTML and expanded into
+     the document that you see today by 
+     <A HREF="mailto:snowlion@sprynet.com">Lion Kimbro</A>.
+</P>
+
+
+
+</BODY>
+
+
+
+</HTML>
+
+

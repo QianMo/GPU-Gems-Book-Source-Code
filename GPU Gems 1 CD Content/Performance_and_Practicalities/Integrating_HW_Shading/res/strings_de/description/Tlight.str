@@ -1,0 +1,7 @@
+STRINGTABLE Tlight
+{
+	Tlight	"C4Dfx-Lichtsteuerung";
+
+	INCLUDELIGHT "Light beleuchtet";
+	INCLUDESHADOW "Licht wirft Schatten";
+}

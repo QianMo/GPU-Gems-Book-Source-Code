@@ -1,0 +1,44 @@
+
+struct PerVertexInput
+{
+    float4 position : POSITION;
+    float3 nSN      : NORMAL;
+    float3 T        : TANGENT;
+    float  v        : BINORMAL;
+};
+
+struct Output
+{
+    float4 position : POSITION;
+    float  v        : TEXCOORD0;
+    float3 L        : TEXCOORD1;
+    float3 V        : TEXCOORD2;
+    float3 T        : TEXCOORD3;
+    float3 nSN      : TEXCOORD4;
+};
+
+Output vertexProgram(PerVertexInput IN,
+                     uniform float4x4 ModelViewProjMat,
+                     uniform float3 lightFrom,
+                     uniform float3 lightAt,
+                     uniform float3 e)
+{
+
+    Output OUT;
+
+    // Transform the position from model space to clip space
+    OUT.position = mul(ModelViewProjMat, IN.position);
+
+    // Dynamically generated fragment attributes
+    OUT.L   = normalize(lightFrom - IN.position.xyz);
+    OUT.V   = normalize(e - IN.position.xyz);
+
+    // Attributes passed from the application
+    OUT.T   = normalize(IN.T);
+    OUT.nSN = IN.nSN;
+    OUT.v   = IN.v;
+
+    return OUT;
+
+}
+

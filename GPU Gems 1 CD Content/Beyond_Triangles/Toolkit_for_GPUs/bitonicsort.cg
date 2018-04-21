@@ -1,0 +1,28 @@
+float2 convert1dto2d( float coord1d, float width ){
+  float2 coord2d;
+  coord2d.y = coord1d/width;
+  coord2d.x = floor(frac(coord2d.y) * width);
+  coord2d.y = floor(coord2d.y);
+  return coord2d;
+}
+
+
+float BitonicSort( varying float2 elem2d : WPOS,
+                   uniform samplerRECT sortedlist : texunit2,
+                   uniform float offset,
+                   uniform float pbufinfo,
+                   uniform float stage,
+                   uniform float stepno ) : COLOR
+{
+  elem2d = floor(elem2d);
+  float elem1d = elem2d.y*pbufinfo.x + elem2d.x;
+  half csign = (fmod(elem1d, stage) < offset) ? 1 : -1;
+  half cdir = (fmod(floor(elem1d/stepno), 2) == 0) ? 1 : -1;
+  float val0 = f1texRECT( sortedlist, elem2d );
+  float adr1d = csign*offset + elem1d;
+  float2 adr2d = convert1dto2d(adr1d, pbufinfo.x);
+  float val1 = f1texRECT( sortedlist, adr2d );
+  float cmin = (val0.x < val1.x) ? val0 : val1;
+  float cmax = (val0.x > val1.x) ? val0 : val1;
+  return (csign == cdir) ? cmin : cmax;
+}

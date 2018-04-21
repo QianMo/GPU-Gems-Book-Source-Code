@@ -1,0 +1,26 @@
+
+
+        // Gauss fragment shader.
+        void
+main(
+         in  float2    vUV:  TEXCOORD0, 
+         out half4     vOut: COLOR,
+
+         const uniform samplerRECT oImage,
+         const uniform samplerRECT oKernel
+    )
+{
+    int i, j;
+    half4 vSum = half4(0, 0, 0, 0);
+
+    vUV -= float2(N_MAX_RADIUS, N_MAX_RADIUS);
+    for (i = N_MAX_RADIUS-N_RADIUS; i <= N_MAX_RADIUS+N_RADIUS; i++)
+        for (j = N_MAX_RADIUS-N_RADIUS; j <= N_MAX_RADIUS+N_RADIUS; j++)
+        {
+            float2 vOffset = float2(i,j);
+            vSum += texRECT(oImage, vUV + vOffset) 
+                  * texRECT(oKernel, vOffset);
+        }
+
+    vOut = vSum;
+}

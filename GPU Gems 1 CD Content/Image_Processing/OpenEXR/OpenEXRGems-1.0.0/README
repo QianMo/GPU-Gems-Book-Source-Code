@@ -1,0 +1,122 @@
+ABOUT OPENEXR GEMS
+------------------
+
+This directory contains the source code for the OpenEXR Gems software
+distribution.
+
+OpenEXR Gems is a collection of demos that demonstrate what's possible
+by combining the OpenEXR file format with NVIDIA's Cg programming
+language and the appropriate video card.
+
+Because the OpenEXR and Cg use the same 16-bit floating point format
+(called "half"), the contents of an OpenEXR image can be used directly
+as a texture of type GL_HALF_FLOAT_NV and manipulated by a Cg fragment
+shader on hardware that supports the half data type.  Likewise, 16-bit
+FP pbuffers can be stored directly into OpenEXR images.
+
+
+LICENSE
+-------
+
+The OpenEXR Gems distribution is covered by a modified BSD license,
+the same one used by the OpenEXR software distribution.  See the file
+named COPYING for details.
+
+
+REQUIREMENTS
+------------
+
+The OpenEXR Gems require:
+
+OpenEXR 1.0.5 or better
+OpenGL 1.4 or better with NVIDIA extensions
+GLUT
+Cg 1.1 or better
+A video card capable of running NVIDIA fp30 profile fragment shaders.
+
+Currently, the OpenEXR Gems have only been tested on GNU/Linux with
+gcc 3.3.  They shouldn't be difficult to port to other versions of
+gcc, OS X or Windows, however.  Send email to the OpenEXR developer
+mailing list (openexr-devel@nongnu.org) if you wish to contribute
+patches to the Gems to make them work on either of those platforms.
+
+
+COMPILING AND INSTALLING
+------------------------
+
+On most GNU/Linux systems, you can compile and install the OpenEXR
+gems by typing:
+
+./configure
+make
+make install
+
+If the configure script can't find Cg or OpenEXR, type './configure --help'
+for information on how to supply the correct paths to the build
+system.
+
+NOTE: Debian GNU/Linux places the NVIDIA OpenGL headers in
+/usr/share/doc/nvidia-glx-dev/include.  If you're compiling OpenEXR
+Gems on a Debian GNU/Linux system, you'll need to set the CXXFLAGS
+environment variable to "-I /usr/share/doc/nvidia-glx-dev/include"
+before running the configure script, so that the build system can find
+the NVIDIA headers.  The Mesa OpenGL headers do not contain the OpenGL
+extensions required to compile OpenEXR Gems.
+
+
+WHAT'S INCLUDED
+---------------
+
+exrplay:
+
+exrplay loads a sequence of OpenEXR images and plays them back.  It
+can change the exposure or gamma correction of the images in real
+time.  It also supports real-time display look-up tables.  These can
+be used, for example, to add film look to the images as they're played
+back.  A sample film look LUT is included.
+
+The host CPU simply loads the OpenEXR image sequence and maps each
+image to an RGBA 16-bit-per-channel floating-point texture.  All the
+display conversion calculations are performed by a fragment shader.
+Exposure, display lookups, and gamma correction are performed
+per-pixel in linear light space using 16-bit floating-point precision.
+Only at the last step in the fragment shader are the 16-bit pixel
+components converted to 8-bit framebuffer values.
+
+exrplay comes with two fragment shaders: Display.cg and DisplayLut.cg.
+exrplay looks in PREFIX/share/OpenEXRGems to find these shaders,
+where PREFIX is /usr/local by default, unless overridden by the
+--prefix option to the configure script.  This path can be overridden
+at runtime by setting the EXRPLAY_CG_PATH environment variable.
+
+exrplay can also optionally use NVIDIA's pixel data range extension
+for faster playback of frames out of AGP memory.
+
+exrplay supports a few keystroke commands during playback:
+
+  E/e   - increase/decrease exposure by one-half stop
+  G/g   - increase/decrease gamma by 0.1
+  space - pause/play
+  q     - quit
+
+
+exrcomp:
+
+exrcomp is a simple command-line utility which composites OpenEXR
+images.  It supports in, out, and over operations.  All compositing is
+done with a fragment shader.
+
+exrcomp looks in PREFIX/share/OpenEXRGems to find its Cg shaders,
+unless overridden at runtime by setting the EXRCOMP_CG_PATH
+environment variable.  The in, out, and over shaders are named
+CompIn.cg, CompOut.cg, and CompOver.cg, respectively.
+
+
+CAVEATS
+-------
+
+At the time of this writing, the most recent release of the NVIDIA
+GNU/Linux drivers is build 4496.  This version has a performance issue
+with 16-bit FP textures, so 'exrplay' and 'exrcomp' may not perform at
+full speed with this driver.  NVIDIA is aware of the issue and will
+correct it in a subsequent release.

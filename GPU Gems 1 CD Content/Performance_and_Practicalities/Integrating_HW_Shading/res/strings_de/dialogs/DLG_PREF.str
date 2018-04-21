@@ -1,0 +1,13 @@
+// C4D-DialogResource
+
+DIALOGSTRINGS DLG_PREF
+{
+  IDS_BUTTON   "Setzen ...";
+  IDS_DIALOG   "C4Dfx-Voreinstellungen";
+  IDS_STATIC1  "Kommandozeile";
+  IDS_STATIC2  "Group";
+  IDS_STATIC6  "Group";
+  IDS_STATIC7  "";
+  IDS_STATIC8  "<FILE> und <LINE> sind Variablen";
+  IDS_STATIC   "Editor f\u00FCr .fx-Dateien";
+}

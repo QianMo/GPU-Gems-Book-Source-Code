@@ -1,0 +1,47 @@
+#include "defines.h"
+
+float2 convert1dto2d( float coord1d, float width ){
+  float2 coord2d;
+  coord2d.y = coord1d/width;
+  coord2d.x = floor(frac(coord2d.y) * width);
+  coord2d.y = floor(coord2d.y);
+  return coord2d;
+}
+
+float Search( float curpos, float elem, float stride, uniform samplerRECT data, float texw ){
+  float2 adr2d = convert1dto2d( curpos, texw );
+  float val = f1texRECT( data, adr2d );
+  float dir = (elem <= val) ? -1.0 : 1.0;
+  return dir*stride + curpos;
+}
+
+float SearchFinal( float curpos, float elem, float stride, uniform samplerRECT data, float texw ){
+  float2 adr2d = convert1dto2d( curpos, texw );
+  float val = f1texRECT( data, adr2d );
+  float dir = (elem <= val) ? 0.0 : 1.0;
+  return dir*stride + curpos;
+}
+
+
+float BinarySearch( varying float2 elem2d : WPOS,
+                    uniform float stride,
+                    uniform float pbufinfo,
+                    uniform float sortbufinfo,
+                    uniform samplerRECT sortlist : texunit1) : COLOR
+{
+  elem2d = floor(elem2d);
+  float elem1d = elem2d.y*pbufinfo + elem2d.x;
+  float curpos = stride;
+
+  //loop over logn - 1 search passes -- hardcoded logn
+  for(int i=0; i<LOGN-1; i++){
+    stride = floor(stride*0.5);
+    curpos = Search( curpos, elem1d, stride, sortlist, sortbufinfo );
+  }
+
+  //last two passes are special
+  curpos = Search(curpos, elem1d, 1.0, sortlist, sortbufinfo ); //logn-th pass
+  curpos = SearchFinal(curpos, elem1d, 1.0, sortlist, sortbufinfo ); // last pass
+
+  return curpos;
+}

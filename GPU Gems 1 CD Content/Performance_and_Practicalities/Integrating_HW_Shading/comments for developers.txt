@@ -1,0 +1,21 @@
+Technical Comments about C4Dfx 0.8
+
+* The project files are for MSVC++ SP 5 and the Cinema 4D 8.5 SDK.
+
+* nv_dds.cpp is file a from NVIDIA's Cg demos.
+
+* MatrixMath.h is strongly inspired by some routines from NVIDIA's Cg demos.
+
+* In the context of Cinema 4D the macros Bool, TRUE, NULL, Real, LONG are used. Outside of the context of Cinema 4D, the code does not use macros but bool, true, 0, float, long.
+
+* Outside of C4D, the code relies on new/delete, not on Cinema 4D's checked variants.
+
+* The code demands a historical (non-ISO) C++ compiler: "for" does not hide its first statement. And in case of an error, "new" returns 0 instead of throwing an exception.
+
+* Exceptions are not used, because the Cinema 4D SDK does not use them, too. (This results in warnings for some files using the STL.)
+
+* The code does not obey a clear-cut rule concerning "const" and the choice of references as opposed to pointers.
+
+* The error messages should be internationalized (which is very easy with Cinema 4D from the programming side) and should be less technical.
+
+* The file c4d_pmain.cpp of the SDK has to be edited in order to retrieve the Windows instance handle, see WinHack.h.

@@ -1,0 +1,1 @@
+Please open "Scene_colorCurves.fx", which comes with FX Composer.  (You can find FX Composer on the CD, for the "Using FX Composer" chapter.)
