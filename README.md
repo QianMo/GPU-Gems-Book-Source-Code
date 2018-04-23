@@ -1,3 +1,5 @@
+![](Media/cover.jpg)
+
 # GPU-Gems-CD-Content
 
 CD Content ( Source Code ) of Book <GPU Gems 1~3>
