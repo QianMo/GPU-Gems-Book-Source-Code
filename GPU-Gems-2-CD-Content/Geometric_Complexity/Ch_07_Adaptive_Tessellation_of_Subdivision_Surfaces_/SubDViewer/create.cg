@@ -1,0 +1,17 @@
+// create.cg
+//
+// create a patch using index information in texture 1 and
+// vertex data in texture 0
+
+struct vpconn {
+	float4 COL : COL;
+};
+
+float4 main(float2 srcCoord : TEX0, uniform samplerRECT vertexTexMap : TEXUNIT0,
+    uniform samplerRECT indexTexMap : TEXUNIT1) : COL
+{
+    float2 index;
+
+    index = texRECT(indexTexMap, srcCoord) * 255 + 0.5;
+    return texRECT(vertexTexMap, index);
+}

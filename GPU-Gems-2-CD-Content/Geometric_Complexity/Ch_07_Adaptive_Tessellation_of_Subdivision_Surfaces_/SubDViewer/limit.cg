@@ -1,0 +1,54 @@
+// limit.cg
+
+// calculate the position on the limit surface corresponding to a vertex using
+// its position and that of its 8 neighbors.
+// If the vertex is extraordinary then read its value out of the extraordinary point
+// buffer instead
+
+// This shader also looks up the displacement value too, but it does not
+// add the displacement since it does not know the surface normal
+
+uniform float4 dmapScale : dmapScale;
+
+float4 main(float4 offsetCoord : TEX0,
+    float4 dmapCoordOffset : TEX1,
+    float4 dstCoord : WPOS,
+    uniform samplerRECT srcTexMap : TEXUNIT0,
+    uniform samplerRECT offsetMap : TEXUNIT1,
+    uniform samplerRECT dispMap : TEXUNIT2,
+    uniform samplerRECT epTexMap : TEXUNIT3) : COL
+{
+    float4 f, e;
+    float4 pos;
+    float2 patchCoord = dstCoord.xy - texRECT(offsetMap, offsetCoord.zw).xy;
+    float4 offset = texRECT(offsetMap, offsetCoord.xy).xyzw;
+    float2 srcCoord = dstCoord.xy + offset.xy;
+    float3 dmapCoord = texRECT(offsetMap, offsetCoord.xy + float2(0, 34)).xyz;
+    float displacement = 0;
+    float flipBinormal = sign(offset.z);
+    float4 v;
+
+    f = texRECT(srcTexMap, srcCoord + float2(-1, 1)) +
+        texRECT(srcTexMap, srcCoord + float2(1, 1)) +
+        texRECT(srcTexMap, srcCoord + float2(-1, -1)) +
+        texRECT(srcTexMap, srcCoord + float2(1, -1));
+        
+    e = texRECT(srcTexMap, srcCoord + float2(0, 1)) +
+        texRECT(srcTexMap, srcCoord + float2(-1, 0)) +
+        texRECT(srcTexMap, srcCoord + float2(1, 0)) +
+        texRECT(srcTexMap, srcCoord + float2(0, -1));
+    v = texRECT(srcTexMap, srcCoord);
+
+    pos = (v * 16 + f + e * 4) * (1/36.0);
+    
+    // if v is an extraordinary point then use the limit value in the
+    // extraordinary point buffer instead
+
+    if (v.w)
+        pos = texRECT(epTexMap, float2(v.w*1024, 0.5));
+
+#if DMAP
+    displacement = texRECT(dispMap, dmapCoord.xy + patchCoord*dmapCoord.z).x*128 * dmapScale.x;
+#endif
+    return float4(pos.xyz, pack_2half(float2(flipBinormal, displacement)));
+}

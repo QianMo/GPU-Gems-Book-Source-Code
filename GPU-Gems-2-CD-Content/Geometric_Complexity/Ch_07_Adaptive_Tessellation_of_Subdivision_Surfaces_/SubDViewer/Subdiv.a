@@ -1,0 +1,87 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile fp30
+# source file: c:\3d\SubDViewer\subdiv.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT0
+#semantic main.offsetTexMap : TEXUNIT2
+#semantic main.epTexMap : TEXUNIT3
+#var float4 srcCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 offsetCoord : $vin.TEX1 : TEX1 : 1 : 1
+#var samplerRECT srcTexMap : TEXUNIT0 : texunit 0 : 2 : 1
+#var samplerRECT offsetTexMap : TEXUNIT2 : texunit 2 : 3 : 1
+#var samplerRECT epTexMap : TEXUNIT3 : texunit 3 : 4 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0.xy, f[TEX1], TEX2, RECT;
+ADDR  R0.xy, f[TEX0], R0;
+FLRR  R0.zw, R0.xyxy;
+ADDR  R4.xy, R0.zwzw, {0.5, 0, 0, 0}.x;
+ADDR  R0.zw, R4.xyxy, {-1, 0, 0, 0}.xyxy;
+TEX   R2, R0.zwzw, TEX0, RECT;
+TEX   R1, R4, TEX0, RECT;
+FRCR  R0.xy, R0;
+SGTR  H0.xy, R0, {0.25, 0, 0, 0}.x;
+MAXR  R0.z, R2.w, R1.w;
+MULR  R0.x, R0.z, H0.y;
+ADDR  R0.y, -H0.x, {1, 0, 0, 0}.x;
+MULR  R2.w, R0.x, R0.y;
+ADDR  R0.xy, R4, {0, -1, 0, 0};
+TEX   R0, R0, TEX0, RECT;
+MAXR  R0.w, R0, R1;
+MULR  R0.w, R0, H0.x;
+ADDR  R3.x, -H0.y, {1, 0, 0, 0};
+MADR  R0.w, R0, R3.x, R2;
+SGTRC HC.x, R0.w, {1, 0, 0, 0};
+MOVR  R2.w, R0;
+MULR  R0.w, R1, H0.x;
+MULR  R2.w(LE.x), R0, H0.y;
+SNER  H0.z, R2.w, {0, 0, 0, 0}.x;
+SGER  H0.w, R2, {9, 0, 0, 0}.x;
+MULXC HC.x, H0.z, H0.w;
+MOVR  R0.w, R2;
+ADDR  R0.w(GT.x), R2, {-8, 0, 0, 0}.x;
+MOVRC RC.x, H0.z;
+MOVR  R3.y, R0.w;
+FRCR  R0.w, R2;
+MULR  R3.x, R0.w, {1024, 0, 0, 0};
+ADDR  R3.xy, R3, f[TEX0].zwzw;
+TEX   o[COLR].xyz, R3, TEX3, RECT;
+MULR  R3.xyz, H0.x, {-0.375, 0.25, 0.125, 0};
+ADDR  R3.xyz, R3, {0.5, 0, 0, 0}.xxyw;
+MULR  R1.xyz, R1, R3.y;
+MADR  R2.xyz, R2, R3.x, R1;
+ADDR  R1.xy, R4, {1, 0, 0, 0};
+TEX   R1.xyz, R1, TEX0, RECT;
+MADR  R1.xyz, R1, R3.z, R2;
+MULR  R2.xyz, R0, R3.y;
+ADDR  R0.xy, R4, {-1, 0, 0, 0}.x;
+TEX   R0.xyz, R0, TEX0, RECT;
+MADR  R2.xyz, R0, R3.x, R2;
+ADDR  R0.xy, R4, {1, -1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+MADR  R2.xyz, R0, R3.z, R2;
+MULR  R0.xyz, H0.y, {-0.375, 0.25, 0.125, 0};
+ADDR  R0.xyw, R0.xyzz, {0.5, 0, 0, 0}.xxzy;
+MULR  R1.xyz, R1, R0.y;
+MADR  R1.xyz, R2, R0.x, R1;
+ADDR  R0.xy, R4, {0, 1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+MULR  R2.xyz, R0, R3.y;
+ADDR  R0.xy, R4, {-1, 1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+MADR  R0.xyz, R0, R3.x, R2;
+ADDR  R2.xy, R4, {1, 0, 0, 0}.x;
+TEX   R2.xyz, R2, TEX0, RECT;
+MOVR  o[COLR].w, R2;
+MADR  R0.xyz, R2, R3.z, R0;
+MADR  R0.xyz, R0, R0.w, R1;
+MOVR  R0.w, {0, 0, 0, 0}.x;
+MOVR  o[COLR](EQ.x), R0;
+END
+# 65 instructions, 5 R-regs, 1 H-regs
+# 65 inst, (5 mov, 11 tex, 0 complex, 49 math)
+# non-mov args: 0 18 25 16 1
+# mov args:     0 5 0 0 0

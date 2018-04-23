@@ -1,0 +1,112 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile fp30
+# source file: c:\3d\SubDViewer\normal.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT0
+#semantic main.offsetMap : TEXUNIT1
+#semantic main.epTexMap : TEXUNIT3
+#semantic main.tcMap : TEXUNIT2
+#var float4 offsetCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 scale : $vin.TEX1 : TEX1 : 1 : 1
+#var float4 dstCoord : $vin.WPOS : WPOS : 2 : 1
+#var samplerRECT srcTexMap : TEXUNIT0 : texunit 0 : 3 : 1
+#var samplerRECT offsetMap : TEXUNIT1 : texunit 1 : 4 : 1
+#var samplerRECT epTexMap : TEXUNIT3 : texunit 3 : 5 : 1
+#var samplerRECT tcMap : TEXUNIT2 : texunit 2 : 6 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+ADDR  R0.xy, f[WPOS], {0, -68, 0, 0};
+TEX   R5, f[TEX0], TEX1, RECT;
+ADDR  R5.xy, R0, R5;
+ADDR  R0.xy, R5, {-1, 1, 0, 0};
+TEX   R2.xyz, R0, TEX0, RECT;
+ADDR  R0.xy, R5, {1, -1, 0, 0};
+ADDR  R1.xy, R5, {-1, 0, 0, 0}.x;
+TEX   R1.xyz, R1, TEX0, RECT;
+TEX   R0.xyz, R0, TEX0, RECT;
+ADDR  R3.xyz, R0, -R1;
+ADDR  R4.xyz, R2, -R1;
+ADDR  R1.xy, R5, {1, 0, 0, 0}.x;
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R4.xyz, R4, R1;
+ADDR  R0.xyz, R4, -R0;
+ADDR  R1.xyz, R3, R1;
+ADDR  R2.xyz, R1, -R2;
+ADDR  R1.xy, R5, {1, 0, 0, 0};
+TEX   R1.xyz, R1, TEX0, RECT;
+MADR  R2.xyz, R2, {0.25, 0, 0, 0}.x, R1;
+ADDR  R1.xy, R5, {-1, 0, 0, 0};
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R2.xyz, R2, -R1;
+ADDR  R1.xy, R5, {0, 1, 0, 0};
+TEX   R1.xyz, R1, TEX0, RECT;
+MADR  R1.xyz, R0, {0.25, 0, 0, 0}.x, R1;
+ADDR  R0.xy, R5, {0, -1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+ADDR  R0.xyz, R1, -R0;
+MULR  R1.xyz, R2.zxyw, R0.yzxw;
+MADR  R0.xyz, R2.yzxw, R0.zxyw, -R1;
+DP3R  R0.w, R0, R0;
+RSQR  R0.w, R0.w;
+MULR  R0.xyz, R0.w, R0;
+TEX   R0.w, R5, TEX0, RECT;
+MULR  R1.x, R0.w, {1024, 0, 0, 0};
+MOVR  R1.y, {1.5, 0, 0, 0}.x;
+MOVRC RC.x, R0.w;
+TEX   R0.xyz(NE.x), R1, TEX3, RECT;
+ADDR  R1.zw, f[WPOS].xyxy, {0.5, -67.5, 0, 0}.xyxy;
+TEX   R1.xy, f[TEX0].zwzw, TEX1, RECT;
+ADDR  R4.zw, |R5|, {-1, 0, 0, 0}.xyxy;
+ADDR  R3.xy, R1.zwzw, -R1;
+ADDR  R1.xy, R4.zwzw, {1.5, 257.5, 0, 0};
+TEX   R2.xyz, R1, TEX2, RECT;
+ADDR  R1.xy, R4.zwzw, {0.5, 257.5, 0, 0};
+TEX   R1.xyz, R1, TEX2, RECT;
+ADDR  R3.xy, R3, {-0.5, 0, 0, 0}.x;
+ADDR  R2.xyz, R2, -R1;
+MULR  R4.xy, R3, f[TEX1].x;
+MADR  R3.xyz, R4.x, R2, R1;
+ADDR  R1.xy, R4.zwzw, {1.5, 256.5, 0, 0};
+ADDR  R2.xy, R4.zwzw, {0.5, 256.5, 0, 0};
+TEX   R1.xyz, R1, TEX2, RECT;
+TEX   R2.xyz, R2, TEX2, RECT;
+ADDR  R1.xyz, R1, -R2;
+MADR  R1.xyz, R4.x, R1, R2;
+ADDR  R2.xyz, R3, -R1;
+MADR  R1.xyz, R4.y, R2, R1;
+MULR  R2.xyz, R0.zxyw, R1.yzxw;
+MADR  R1.xyz, R0.yzxw, R1.zxyw, -R2;
+MULR  R2.xyz, R1.zxyw, R0.yzxw;
+MADR  R1.xyz, R1.yzxw, R0.zxyw, -R2;
+DP3R  R0.w, R1, R1;
+RSQR  R0.w, R0.w;
+MULR  H0.xyz, R0.w, R1;
+PK2H  o[COLR].z, H0.yzzw;
+MOVH  H0.y, H0.x;
+MOVH  H0.x, R0.z;
+PK2H  o[COLR].x, R0;
+ADDR  R0.xy, R4.zwzw, {1.5, 0, 0, 0}.x;
+PK2H  o[COLR].y, H0;
+ADDR  R0.zw, R4, {0.5, 1.5, 0, 0}.xyxy;
+TEX   R1.xy, R0.zwzw, TEX2, RECT;
+TEX   R0.xy, R0, TEX2, RECT;
+ADDR  R0.xy, R0, -R1;
+MADR  R0.xy, R4.x, R0, R1;
+ADDR  R0.zw, R4, {0.5, 0, 0, 0}.x;
+ADDR  R1.xy, R4.zwzw, {1.5, 0.5, 0, 0};
+TEX   R1.xy, R1, TEX2, RECT;
+TEX   R2.xy, R0.zwzw, TEX2, RECT;
+ADDR  R0.zw, R1.xyxy, -R2.xyxy;
+MADR  R0.zw, R4.x, R0, R2.xyxy;
+ADDR  R0.xy, R0, -R0.zwzw;
+MADR  R0.xy, R4.y, R0, R0.zwzw;
+MULR  R0.xy, R0, {0.5, 0, 0, 0}.x;
+PK2US o[COLR].w, R0;
+END
+# 87 instructions, 6 R-regs, 1 H-regs
+# 87 inst, (3 mov, 19 tex, 2 complex, 63 math)
+# non-mov args: 0 4 53 27 0
+# mov args:     0 3 0 0 0

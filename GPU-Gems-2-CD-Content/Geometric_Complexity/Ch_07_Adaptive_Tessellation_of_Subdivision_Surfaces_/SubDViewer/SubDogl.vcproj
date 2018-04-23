@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="SubDViewer"
+	SccProjectName="Perforce Project"
+	SccAuxPath=""
+	SccLocalPath="."
+	SccProvider="MSSCCI:Perforce SCM">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory=".\Release"
+			IntermediateDirectory=".\Release"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				StringPooling="TRUE"
+				RuntimeLibrary="4"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile=".\Release/SubDogl.pch"
+				AssemblerListingLocation=".\Release/"
+				ObjectFile=".\Release/"
+				ProgramDataBaseFileName=".\Release/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib odbc32.lib odbccp32.lib"
+				OutputFile="SubDViewer.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				ProgramDatabaseFile=".\Release/SubDogl.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/SubDogl.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory=".\Debug"
+			IntermediateDirectory=".\Debug"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile=".\Debug/SubDogl.pch"
+				AssemblerListingLocation=".\Debug/"
+				ObjectFile=".\Debug/"
+				ProgramDataBaseFileName=".\Debug/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib  odbc32.lib odbccp32.lib"
+				OutputFile=".\Debug/SubDViewer.exe"
+				LinkIncremental="0"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\Debug/SubDogl.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="TRUE"
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Debug/SubDogl.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
+			<File
+				RelativePath=".\subd\cctantable.cpp">
+			</File>
+			<File
+				RelativePath="Script1.rc">
+			</File>
+			<File
+				RelativePath=".\shader.cpp">
+			</File>
+			<File
+				RelativePath=".\shadeSurface.cg">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader $(InputPath)"
+						CommandLine="cgc -new -profile fp30 $(InputPath) -DNORMAL_MAP=0 -o  \Temp\ShadeSurface.a
+cgc -new -profile fp30 $(InputPath) -DNORMAL_MAP=1 -o  \Temp\ShadeSurfaceN.a
+"
+						Outputs="\Temp\ShadeSurface.a;\Temp\ShadeSurfaceN.a"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader $(InputPath)"
+						CommandLine="cgc -new -profile fp30 $(InputPath) -DNORMAL_MAP=0 -o ShadeSurface.a
+cgc -new -profile fp30 $(InputPath) -DNORMAL_MAP=1 -o ShadeSurfaceN.a
+"
+						Outputs="ShadeSurface.a;ShadeSurfaceN.a"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\shadeSurfaceV.cg">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling vertex shader $(InputPath)"
+						CommandLine="cgc -new -profile vp30 $(InputPath) -o  \Temp\ShaderSurfaceV.a
+"
+						Outputs="\Temp\ShaderSurfaceV.a"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling vertex shader $(InputPath)"
+						CommandLine="cgc -new -profile vp30 $(InputPath) -o  ShaderSurfaceV.a
+"
+						Outputs="ShaderSurfaceV.a"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\subd\subd.cpp">
+			</File>
+			<File
+				RelativePath="SubDogl.cpp">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="2"
+						PreprocessorDefinitions=""/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="0"
+						PreprocessorDefinitions=""
+						BasicRuntimeChecks="3"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\subd\tess.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl">
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\subd\subdinternal.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+		<File
+			RelativePath=".\createPatch.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  CreatePatch.a
+"
+					Outputs="CreatePatch.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  CreatePatch.a
+"
+					Outputs="CreatePatch.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\epflat.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -o  EPFlat.a
+"
+					Outputs="EPFlat.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -o  EPFlat.a
+"
+					Outputs="EPFlat.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\eplimit.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPLimit.a
+"
+					Outputs="EPLimit.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPLimit.a
+"
+					Outputs="EPLimit.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\epnormal.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPNormal.a
+"
+					Outputs=" EPNormal.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPNormal.a
+"
+					Outputs=" EPNormal.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\epsubdivE.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPSubdivE.a
+"
+					Outputs="EPSubdivE.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPSubdivE.a
+"
+					Outputs="EPSubdivE.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\epsubdivF.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPSubdivF.a
+"
+					Outputs="EPSubdivF.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  EPSubdivF.a
+"
+					Outputs="EPSubdivF.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\eptangent.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o EPTangent.a
+"
+					Outputs=" EPTangent.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o EPTangent.a
+"
+					Outputs=" EPTangent.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\flatTest.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -DFLAT2=0  -DDMAP=0 -o FlatTest.a
+cgc -profile fp30 $(InputPath) -DFLAT2=1  -DDMAP=0 -o FlatTest2.a
+cgc -profile fp30 $(InputPath) -DFLAT2=0 -DDMAP=1 -o DFlatTest.a
+cgc -profile fp30 $(InputPath) -DFLAT2=1 -DDMAP=1 -o DFlatTest2.a
+"
+					Outputs="FlatTest.a; FlatTest2.a; DFlatTest.a; DFlatTest2.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -DFLAT2=0  -DDMAP=0 -o FlatTest.a
+cgc -profile fp30 $(InputPath) -DFLAT2=1  -DDMAP=0 -o FlatTest2.a
+cgc -profile fp30 $(InputPath) -DFLAT2=0 -DDMAP=1 -o DFlatTest.a
+cgc -profile fp30 $(InputPath) -DFLAT2=1 -DDMAP=1 -o DFlatTest2.a
+"
+					Outputs="FlatTest.a; FlatTest2.a; DFlatTest.a; DFlatTest2.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\limit.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -DDMAP=0 -o  Limit.a
+cgc -profile fp30 $(InputPath) -DDMAP=1 -o DLimit.a
+"
+					Outputs="Limit.a; DLimit.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -profile fp30 $(InputPath) -DDMAP=0 -o  Limit.a
+cgc -profile fp30 $(InputPath) -DDMAP=1 -o DLimit.a
+"
+					Outputs="Limit.a; DLimit.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\normal.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling Shader  $(InputPath) "
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o Normal.a
+"
+					Outputs="Normal.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling Shader  $(InputPath) "
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o Normal.a
+"
+					Outputs="Normal.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\packflat.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  PackFlat.a
+"
+					Outputs="PackFlat.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  PackFlat.a
+"
+					Outputs="PackFlat.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\subdiv.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  Subdiv.a
+"
+					Outputs="Subdiv.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o  Subdiv.a
+"
+					Outputs="Subdiv.a"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\tangent.cg">
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o Tangent.a
+"
+					Outputs="Tangent.a"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Compiling shader $(InputPath)"
+					CommandLine="cgc -new -profile fp30 $(InputPath) -o Tangent.a
+"
+					Outputs="Tangent.a"/>
+			</FileConfiguration>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

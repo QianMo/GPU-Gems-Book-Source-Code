@@ -1,0 +1,26 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile fp30
+# source file: c:\3d\SubDViewer\createPatch.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.vertexTexMap : TEXUNIT2
+#semantic main.indexTexMap : TEXUNIT1
+#var float2 srcCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var samplerRECT vertexTexMap : TEXUNIT2 : texunit 2 : 1 : 1
+#var samplerRECT indexTexMap : TEXUNIT1 : texunit 1 : 2 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0, f[TEX0], TEX1, RECT;
+MADR  R0, R0, {255, 0.1, 0, 0}.x, {255, 0.1, 0, 0}.y;
+FLRR  R0, R0;
+MADR  R0.z, R0.w, {256, 0, 0, 0}.x, R0;
+ADDR  R0.xy, R0, {0.5, 0, 0, 0}.x;
+TEX   o[COLR].xyz, R0, TEX2, RECT;
+MULR  o[COLR].w, R0.z, {0.0004882813, 0, 0, 0}.x;
+END
+# 7 instructions, 1 R-regs, 0 H-regs
+# 7 inst, (0 mov, 2 tex, 0 complex, 5 math)
+# non-mov args: 0 2 3 0 2
+# mov args:     0 0 0 0 0

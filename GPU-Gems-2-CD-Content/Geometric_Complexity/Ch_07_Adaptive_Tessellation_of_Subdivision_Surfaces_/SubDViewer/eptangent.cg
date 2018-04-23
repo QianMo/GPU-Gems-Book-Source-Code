@@ -1,0 +1,27 @@
+// eptangent.cg
+
+// calculate a tangent used to orient a bump or normal map using the
+// texture coordinate information stored in tanInputMap and the
+// vertex data in the extraordinary point texture map
+
+float4 main(float4 srcCoord : TEX0, 
+            uniform samplerRECT tanInputMap : TEXUNIT0,
+            uniform samplerRECT epMap : TEXUNIT1) : COL
+{
+    float4 u1 = texRECT(tanInputMap, srcCoord.xy);
+    float4 u2 = texRECT(tanInputMap, srcCoord.xz);
+    float2 epCoord = texRECT(tanInputMap, srcCoord.xw).xy;
+    float3 t0 = texRECT(epMap, epCoord).xyz;
+    float3 t1 = texRECT(epMap, epCoord + float2(0, 1)).xyz;
+    float3 t2 = texRECT(epMap, epCoord + float2(0, 2)).xyz;
+    float3 t3 = texRECT(epMap, epCoord + float2(0, 3)).xyz;
+    float3 t4 = texRECT(epMap, epCoord + float2(0, 4)).xyz;
+    float3 t5 = texRECT(epMap, epCoord + float2(0, 5)).xyz;
+    float3 t6 = texRECT(epMap, epCoord + float2(0, 6)).xyz;
+    float3 t7 = texRECT(epMap, epCoord + float2(0, 7)).xyz;
+    float3 t8 = texRECT(epMap, epCoord + float2(0, 7)).xyz;
+    
+    return normalize(t1*u1.x + t2*u1.y + t3*u1.z + t4*u1.w +
+        t5*u2.x + t6*u2.y + t7*u2.z + t8*u2.w -
+        (dot(u1, 1) + dot(u2, 1))*t0).xyzx;
+}

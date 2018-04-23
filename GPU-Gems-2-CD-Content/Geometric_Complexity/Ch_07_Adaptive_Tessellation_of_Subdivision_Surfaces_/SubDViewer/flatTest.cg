@@ -1,0 +1,112 @@
+// flat.cg
+// peform a flatness test on the top and left edges of a face
+
+uniform float4 flatScale : flatScale;
+uniform float4 dmapScale : dmapScale;
+
+float isFlat(float3 a, float3 b, float3 c, float3 d, float disp, float dscale2)
+{
+    float3 v1, v2;
+    float distance;
+    
+    // multiply the flat distance in pixels by the z value at the midpoint
+    // of the face to get a 3D distance (flatScale.x is scaled by 0.5 already)
+    // Note that if the vertices are not in eye space then the view plane normal
+    // can be used: dot(b + c, viewplane)
+    // the maximum displacement (times 2) is added to take into account the
+    // case that the displacement puts the geometry much closer to the view plane
+
+    distance = flatScale.x * (b.z + c.z + dscale2);
+
+    // mirror the flatness test around the near clip plane to avoid overtessellating
+    // geometry that will be clipped anyway, but still provide a smooth transition
+    // for geometry that crosses the near clip plane
+
+    if (distance < flatScale.y)
+        distance = flatScale.z - distance;
+        
+    // take the displacement value into account
+    distance -= disp;
+#if FLAT2       // for geometry that has not been subdivided yet - handle S-curves
+    v1 = a + c - 2*b;
+    v2 = b + d - 2*c;
+    return (float) (dot(v1, v1) + dot(v2, v2) < distance*abs(distance));
+#else
+    v1 = a + d - b - c;
+    return (float) (dot(v1, v1) < distance*abs(distance));
+#endif
+}
+
+// extract the extraoridinary point coordinates from a floating point value
+
+float2 cvt(float index)
+{
+    float2 result;
+
+    result.y = index;
+    result.x = frac(index)*1024;
+    
+    return result;
+}
+
+float4 main(float4 offsetCoord : TEX0,
+    float4 dstCoord : WPOS,
+    float4 epCoord : TEX1,
+    uniform samplerRECT srcTexMap : TEXUNIT0,
+    uniform samplerRECT epTexMap : TEXUNIT1,
+#if DMAP
+    uniform samplerRECT dMaxMap : TEXUNIT3,
+#endif
+    uniform samplerRECT offsetTexMap : TEXUNIT2) : COL
+{
+    float4 s0, s2, s3, s4, s5, s7, s10;
+    // use the destination coordinate and the offset value
+    // to calculate the source coordinate in the patch
+    float4 srcCoords = dstCoord.xyxy + texRECT(offsetTexMap, offsetCoord.xy);
+    float2 srcCoord = srcCoords.xy;
+#if DMAP
+#if FLAT2
+    float4 d = texRECT(dMaxMap, srcCoords.zw) * dmapScale.z;
+#else
+    float4 d = texRECT(dMaxMap, srcCoords.zw) * dmapScale.y;
+#endif
+    float d2 = dmapScale.w;
+#else
+    float4 d = 0;
+    float d2 = 0;
+#endif
+
+#if DMAP
+    if (srcCoords.z < 0)
+        d = 0;
+#endif
+
+    // read the 7 vertices needed to test the flatness at the top and left
+    // of a face in a patch
+ 
+    s0 = texRECT(srcTexMap, srcCoord + float2(0, -1));
+    s2 = texRECT(srcTexMap, srcCoord + float2(-1, 0));
+    s3 = texRECT(srcTexMap, srcCoord);
+    s4 = texRECT(srcTexMap, srcCoord + float2(1, 0));
+    s5 = texRECT(srcTexMap, srcCoord + float2(2, 0));
+    s7 = texRECT(srcTexMap, srcCoord + float2(0, 1));
+    s10 = texRECT(srcTexMap, srcCoord + float2(0, 2));
+    
+    // If a vertex has a corresponding value in the extraordinary point buffer
+    // then use it instead thus making sure that the same flatness value
+    // will be calculated for shared edges
+
+    if (s0.w > 1)
+        s0 = texRECT(epTexMap, cvt(s0.w)+epCoord.xy);
+    if (s10.w > 1)
+        s10 = texRECT(epTexMap, cvt(s10.w)+epCoord.xy);
+    if (s2.w > 1)
+        s2 = texRECT(epTexMap, cvt(s2.w)+epCoord.xy);
+    if (s5.w > 1)
+        s5 = texRECT(epTexMap, cvt(s5.w)+epCoord.xy);
+
+    // write out the flatness value for the top and left of this face
+
+    return float2(isFlat(s2.xyz, s3.xyz, s4.xyz, s5.xyz, d.x, d2), 
+                isFlat(s0.xyz, s3.xyz, s7.xyz, s10.xyz, d.w, d2)).xyxy;
+}

@@ -1,0 +1,123 @@
+
+#include "subdinternal.h"
+#include "subd.h"
+#include <malloc.h>
+#include <math.h>
+#include <windows.h>
+#include <windowsx.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <GL/gl.h>
+#include "../glext.h"
+#include "../wglext.h"
+
+#define SEGMENT_SIZE ((1<<MAX_DEPTH) + 3)
+#define PATCH_BUFFER_HEIGHT     SEGMENT_SIZE
+
+GPUBUffer *PatchBuffer;
+
+void LoadMeshTextures(unsigned char *patchIndexBuffer,
+    int patchIndexW, int patchIndexH,
+    float4 *texCoordBuffer, int texCoordW, int texCoordH,
+    uchar *dmapTexture, int dmapW, int dmapH,
+    uchar *dmapMaxTexture, int dmapMaxW, int dmapMaxH)
+{
+}
+
+static void init()
+{
+    PatchBuf = createGPUBuffer(PATCH_BUFFER_WIDTH, PATCH_BUFFER_HEIGHT, 32, 4);
+    LoadShaders();
+    CreateTextures();
+}
+
+static void loadVertices(float4 *vlist, int vertices)
+{
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_RECTANGLE_NV, 13);
+
+    if (vertices >> 8)
+        glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 256, vertices>>8,
+            GL_RGBA, GL_FLOAT, vlist);
+    if (vertices & 255)
+        glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, vertices>>8, vertices & 255, 1,
+            GL_RGBA, GL_FLOAT, vlist+256*(vertices>>8));
+}
+
+void Tessellate(Patch *patchList, pvector *vlist, int vertices,
+	unsigned char *patchIndexBuffer, SubdEnum state);
+{
+    HDC hdc = wglGetCurrentDC();
+	HGLRC hglrc = wglGetCurrentContext();
+
+    if (!PatchBuf) {
+        init();
+    }
+    if (!vlist)
+        return;
+    resultBufferHeight = _subd_vertex_list_size / (PATCH_BUFFER_WIDTH * sizeof(float4));
+    setDstGPUBuffer(PatchBuf);
+    if (state == SUBD_START) {
+        loadVertices(vlist, vertices);
+        // set temporary next patch pointer
+        for (p = patchList; p; p = p->nextPatch)
+            p->next = p->nextPatch;
+
+        CurrentDepth = -1;
+        patchesToLoad = patchList;
+        flatList = NULL;
+    }
+    resultYOffset = 0;
+
+    for (;;) {
+        if (!flatList) {    // if not continuing tessellation
+            while (CurrentDepth >= 0 && toDo[CurrentDepth] == NULL)
+                CurrentDepth--;
+            if (CurrentDepth < 0) {   // No patches in patch buffers
+                if (!patchesToLoad)
+                    break;          // all done
+                CurrentDepth = 0;
+                toDo[0] = patchesToLoad;
+                patchesToLoad = createPatches(patchesToLoad);
+            }
+
+            if (CurrentDepth == _subd_subdiv_level) {
+                flatList = toDo[CurrentDepth];
+                toDo[CurrentDepth] = NULL;
+            }
+            else if (_subd_adaptive_flag) {
+            }
+        }
+
+        // write out vertex data of patch on flat patch list
+
+        if (flatList) {
+            if (state != SUBD_CONTINUE)
+                h = calcLimit(flatList, CurrentDepth, Limit_Shader);
+            state = SUBD_DONE;      // anything but SUBD_CONTINUE
+            if (resultYOffset + h > resultBufferHeight) {   // no more room
+                wglMakeCurrent(hdc, hglrc);
+                _subd_stop_tessellating = true;
+                _subd_vertex_ptr = _subd_vertex_list[0] + vertexYOffset*PATCH_BUFFER_WIDTH*4;
+                return;
+            }
+            readFromGPUBuffer(PatchBuf,
+                (float4*) _subd_vertex_list[0] + vertexYOffset*PATCH_BUFFER_WIDTH, 0, 0,
+                PATCH_BUFFER_WIDTH, h, _subd_vertex_bufobj[0]);
+            calcNormals(flatList, buf[i], segment[i], TanBuf, OutBuf);
+            readFromGPUBuffer(PatchBuf,
+                (float4*) _subd_vertex_list[1] + vertexYOffset*PATCH_BUFFER_WIDTH, 0, 0,
+                PATCH_BUFFER_WIDTH, h, _subd_vertex_bufobj[1]);
+            tessPatches(flatList, CurrentDepth, vertexYOffset);
+            resultYOffset += h;
+            flatList = NULL;
+        }
+
+        if (toDo[CurrentDepth]) {        // subdivide patches on to do list
+            p = toDo[CurrentDepth];
+            toDo[CurrentDepth+1] = p;
+            toDo[CurrentDepth] = SubdividePatches(p, CurrentDepth, CurrentDepth+1); 
+            CurrentDepth++;
+        }
+    }
+}

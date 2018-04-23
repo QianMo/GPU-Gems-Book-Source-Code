@@ -1,0 +1,26 @@
+// tangent.cg
+
+// calculate the tangent used for normal map orientation using 4 neighboring vertices
+// and their texture coordinates
+
+float4 main(float4 offsetCoord : TEX0,
+            float4 dstCoord : WPOS,
+            uniform samplerRECT srcTexMap : TEXUNIT0,
+            uniform samplerRECT offsetMap : TEXUNIT1,
+            uniform samplerRECT tcMap : TEXUNIT2,
+            uniform samplerRECT epTanMap : TEXUNIT3) : COL
+{
+    float2 srcCoord = dstCoord.xy + texRECT(offsetMap, offsetCoord.xy).xy;
+    float2 u = texRECT(tcMap, dstCoord.xy).zw;
+    float3 t1 = texRECT(srcTexMap, srcCoord.xy + float2(1, 0)).xyz -
+        texRECT(srcTexMap, srcCoord.xy - float2(1, 0)).xyz;
+    float3 t2 = texRECT(srcTexMap, srcCoord.xy + float2(0, 1)).xyz -
+        texRECT(srcTexMap, srcCoord.xy - float2(0, 1)).xyz;
+    float3 result;
+    
+    result = normalize(t1 * u.x + t2 * u.y);
+    if (u.y > 1.1) // extraordinary point - use the value in the ep buffer
+        result = texRECT(epTanMap, u).xyz;
+
+    return result.xyzx;
+}

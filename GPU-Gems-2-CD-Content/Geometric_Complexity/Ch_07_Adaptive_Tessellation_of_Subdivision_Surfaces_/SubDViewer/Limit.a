@@ -1,0 +1,64 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -profile fp30 -DDMAP=0
+# source file: c:\3d\SubDViewer\limit.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT0
+#semantic main.offsetMap : TEXUNIT1
+#semantic main.dispMap : TEXUNIT2
+#semantic main.epTexMap : TEXUNIT3
+#semantic dmapScale : DMAPSCALE
+#var float4 offsetCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 dmapCoordOffset :  :  : 1 : 0
+#var float4 dstCoord : $vin.WPOS : WPOS : 2 : 1
+#var samplerRECT srcTexMap : TEXUNIT0 : texunit 0 : 3 : 1
+#var samplerRECT offsetMap : TEXUNIT1 : texunit 1 : 4 : 1
+#var samplerRECT dispMap : TEXUNIT2 :  : 5 : 0
+#var samplerRECT epTexMap : TEXUNIT3 : texunit 3 : 6 : 1
+#var float4 dmapScale : DMAPSCALE :  : -1 : 0
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R3.xyz, f[TEX0], TEX1, RECT;
+ADDR  R3.xy, f[WPOS], R3;
+ADDR  R0.xy, R3, {0, 1, 0, 0};
+ADDR  R1.xy, R3, {-1, 0, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R1.xyz, R0, R1;
+ADDR  R0.xy, R3, {1, 0, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+ADDR  R2.xyz, R1, R0;
+ADDR  R0.xy, R3, {-1, 1, 0, 0};
+ADDR  R1.xy, R3, {1, 0, 0, 0}.x;
+TEX   R0.xyz, R0, TEX0, RECT;
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R1.xyz, R0, R1;
+ADDR  R0.xy, R3, {-1, 0, 0, 0}.x;
+TEX   R0.xyz, R0, TEX0, RECT;
+ADDR  R1.xyz, R1, R0;
+ADDR  R0.xy, R3, {1, -1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+ADDR  R1.xyz, R1, R0;
+TEX   R0, R3, TEX0, RECT;
+MADR  R0.xyz, R0, {16, 0, 0, 0}.x, R1;
+ADDR  R1.xy, R3, {0, -1, 0, 0};
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R1.xyz, R2, R1;
+MADR  R0.xyz, R1, {4, 0, 0, 0}.x, R0;
+MULR  o[COLR].xyz, R0, {0.02777778, 0, 0, 0}.x;
+MULR  R0.x, R0.w, {1024, 0, 0, 0};
+MOVR  R0.y, {0.5, 0, 0, 0}.x;
+MOVRC RC.x, R0.w;
+TEX   o[COLR].xyz(NE.x), R0, TEX3, RECT;
+SGTR  H0.x, R3.z, {0, 0, 0, 0};
+SLTR  H0.y, R3.z, {0, 0, 0, 0}.x;
+ADDR  H0.x, H0, -H0.y;
+MOVR  H0.y, {0, 0, 0, 0}.x;
+PK2H  o[COLR].w, H0;
+END
+# 37 instructions, 4 R-regs, 1 H-regs
+# 37 inst, (2 mov, 10 tex, 0 complex, 25 math)
+# non-mov args: 0 5 20 10 0
+# mov args:     0 2 0 0 0

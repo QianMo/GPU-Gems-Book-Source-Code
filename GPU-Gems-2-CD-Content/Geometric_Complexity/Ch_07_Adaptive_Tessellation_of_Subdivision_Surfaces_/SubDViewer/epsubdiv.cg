@@ -1,0 +1,49 @@
+// epsubdiv.cg
+
+float4 main(float4 srcCoord : TEX0,
+    float4 wCoordMirror : TEX1,
+    uniform samplerRECT srcTexMap : TEXUNIT0,
+    uniform samplerRECT wTexMap : TEXUNIT1) : COL
+{
+    float2 wCoord;
+    float2 mirror = wCoordMirror.zw;
+    float3 result;
+    float4 w0, w1, w2, w3, w4;
+    float4 sCoord;
+
+    wCoord = wCoordMirror.xy + abs(floor(srcCoord.xy) - srcCoord.zw) * float2(2, 3) + float2(0.5, 0.5);
+    w0 = texRECT(srcTexMap, wCoord); 
+    w1 = texRECT(srcTexMap, wCoord + float2(0, 1)); 
+    w2 = texRECT(srcTexMap, wCoord + float2(0, 2));
+    w3 = texRECT(srcTexMap, wCoord + float2(1, 0));
+    w4 = texRECT(srcTexMap, wCoord + float2(1, 1));
+    
+    sCoord = srcCoord.zwzz + float4(0, 0, 1, 2) * mirror.x;
+    result = texRECT(srcTexMap, sCoord.xy - float2(mirror.x, 0)).xyz * w0.x;
+    result += texRECT(srcTexMap, sCoord.xy).xyz * w0.y;
+    result += texRECT(srcTexMap, sCoord.zy).xyz * w0.z;
+    result += texRECT(srcTexMap, sCoord.wy).xyz * w0.w;
+
+    sCoord.y += mirror.y;
+    result += texRECT(srcTexMap, sCoord.xy - float2(mirror.x, 0)).xyz * w1.x;
+    result += texRECT(srcTexMap, sCoord.xy).xyz * w1.y;
+    result += texRECT(srcTexMap, sCoord.zy).xyz * w1.z;
+    result += texRECT(srcTexMap, sCoord.wy).xyz * w1.w;
+
+    sCoord.y += mirror.y;
+    result += texRECT(srcTexMap, sCoord.xy - float2(mirror.x, 0)).xyz * w2.x;
+    result += texRECT(srcTexMap, sCoord.xy).xyz * w2.y;
+    result += texRECT(srcTexMap, sCoord.zy).xyz * w2.z;
+#if 1
+    sCoord = srcCoord.zwzz + float4(3, 0, 4, 5) * mirror.x;
+    result += texRECT(srcTexMap, sCoord.xy).xyz * w3.x;
+    result += texRECT(srcTexMap, sCoord.zy).xyz * w3.y;
+    result += texRECT(srcTexMap, sCoord.wy).xyz * w3.z; 
+    
+    sCoord.y += mirror.y;
+    result += texRECT(srcTexMap, sCoord.xy).xyz * w4.x;
+    result += texRECT(srcTexMap, sCoord.zy).xyz * w4.y;
+    result += texRECT(srcTexMap, sCoord.wy).xyz * w4.z;
+#endif
+    return result.xyzx;
+}

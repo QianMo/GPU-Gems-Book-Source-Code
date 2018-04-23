@@ -1,0 +1,76 @@
+
+// packflat.cg
+//
+// pack flatness information from 4 floats to 1 byte
+//
+
+float packIt(float3 s0, float3 s1, float3 s2, float3 s3, float3 s4) {
+    return pack_4ubyte(
+            float4(
+            dot(s0, float3(1.0/255, 2.0/255, 4.0/255)) + s1.y*(8.0/255),
+            dot(s1, float3(1.0/255, 2.0/255, 4.0/255)) + s2.y*(8.0/255),
+            dot(s2, float3(1.0/255, 2.0/255, 4.0/255)) + s3.y*(8.0/255),
+            dot(s3, float3(1.0/255, 2.0/255, 4.0/255)) + s4.y*(8.0/255)
+       )
+       ); 
+}
+
+float4 main(float4 dstCoord : WPOS,
+    samplerRECT srcMap : TEXUNIT1) : COL
+{
+    float2 srcCoord;
+    float3 a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16;
+
+    srcCoord.x = (dstCoord.x - 0.5)*16 + 0.5;
+    srcCoord.y = dstCoord.y;
+    
+    a0.xy = texRECT(srcMap, srcCoord + float2(0, 0)).xy;
+    a1.xy = texRECT(srcMap, srcCoord + float2(1, 0)).xy;
+    a2.xy = texRECT(srcMap, srcCoord + float2(2, 0)).xy;
+    a3.xy = texRECT(srcMap, srcCoord + float2(3, 0)).xy;
+    
+    a4.xy = texRECT(srcMap, srcCoord + float2(4, 0)).xy;
+    a5.xy = texRECT(srcMap, srcCoord + float2(5, 0)).xy;
+    a6.xy = texRECT(srcMap, srcCoord + float2(6, 0)).xy;
+    a7.xy = texRECT(srcMap, srcCoord + float2(7, 0)).xy;
+    
+    a8.xy = texRECT(srcMap, srcCoord + float2(8, 0)).xy;
+    a9.xy = texRECT(srcMap, srcCoord + float2(9, 0)).xy;
+    a10.xy = texRECT(srcMap, srcCoord + float2(10, 0)).xy;
+    a11.xy = texRECT(srcMap, srcCoord + float2(11, 0)).xy;
+
+    a12.xy = texRECT(srcMap, srcCoord + float2(12, 0)).xy;
+    a13.xy = texRECT(srcMap, srcCoord + float2(13, 0)).xy;
+    a14.xy = texRECT(srcMap, srcCoord + float2(14, 0)).xy;
+    a15.xy = texRECT(srcMap, srcCoord + float2(15, 0)).xy;
+    
+    a16.xy = texRECT(srcMap, srcCoord + float2(16, 0)).xy;
+
+    a0.z = texRECT(srcMap, srcCoord + float2(0, 1)).x;
+    a1.z = texRECT(srcMap, srcCoord + float2(1, 1)).x;
+    a2.z = texRECT(srcMap, srcCoord + float2(2, 1)).x;
+    a3.z = texRECT(srcMap, srcCoord + float2(3, 1)).x;
+    
+    a4.z = texRECT(srcMap, srcCoord + float2(4, 1)).x;
+    a5.z = texRECT(srcMap, srcCoord + float2(5, 1)).x;
+    a6.z = texRECT(srcMap, srcCoord + float2(6, 1)).x;
+    a7.z = texRECT(srcMap, srcCoord + float2(7, 1)).x;
+    
+    a8.z = texRECT(srcMap, srcCoord + float2(8, 1)).x;
+    a9.z = texRECT(srcMap, srcCoord + float2(9, 1)).x;
+    a10.z = texRECT(srcMap, srcCoord + float2(10, 1)).x;
+    a11.z = texRECT(srcMap, srcCoord + float2(11, 1)).x;
+
+    a12.z = texRECT(srcMap, srcCoord + float2(12, 1)).x;
+    a13.z = texRECT(srcMap, srcCoord + float2(13, 1)).x;
+    a14.z = texRECT(srcMap, srcCoord + float2(14, 1)).x;
+    a15.z = texRECT(srcMap, srcCoord + float2(15, 1)).x;
+    
+    return float4(
+            packIt(a0, a1, a2, a3, a4),
+            packIt(a4, a5, a6, a7, a8),
+            packIt(a8, a9, a10, a11, a12),
+            packIt(a12, a13, a14, a15, a16)
+        );
+}
+

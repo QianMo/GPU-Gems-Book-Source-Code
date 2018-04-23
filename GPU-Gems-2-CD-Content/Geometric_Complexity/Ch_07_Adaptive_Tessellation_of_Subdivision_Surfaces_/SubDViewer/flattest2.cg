@@ -1,0 +1,89 @@
+// flat.cg
+// peform a flatness test on the edges of a face before first subdivide
+
+#define DMAP 0
+
+uniform float4 flatScale : flatScale;
+uniform float4 dmapScale : dmapScale;
+
+float isFlat(float3 a, float3 b, float3 c, float3 d, float disp, float dscale2)
+{
+    float3 v1, v2;
+    float distance;
+    
+    distance = flatScale.x * (b.z + c.z + dscale2);
+
+    if (distance < flatScale.y)
+        distance = flatScale.z - distance;
+    distance -= disp;
+#if FLAT2
+    v1 = a + c - 2*b;
+    v2 = b + d - 2*c;
+    return (float) (dot(v1, v1) + dot(v2, v2) < distance*abs(distance));
+#else
+    v1 = a + d - b - c;
+    return (float) (dot(v1, v1) < distance*abs(distance));
+#endif
+}
+
+float2 cvt(float index)
+{
+    float2 result;
+
+    result.y = index;
+    result.x = frac(index)*1024;
+    
+    return result;
+}
+
+float4 main(float4 offsetCoord : TEX0,
+    float4 dstCoord : WPOS,
+    float4 epCoord : TEX1,
+    uniform samplerRECT srcTexMap : TEXUNIT0,
+    uniform samplerRECT epTexMap : TEXUNIT1,
+    uniform samplerRECT offsetTexMap : TEXUNIT2) : COL
+{
+    float4 s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
+    float4 d = 0;
+    float d2 = 0;
+    float2 srcCoord = dstCoord.xy + texRECT(offsetTexMap, offsetCoord.xy).xy;
+
+    s0 = texRECT(srcTexMap, srcCoord + float2(0, -1));
+    s1 = texRECT(srcTexMap, srcCoord + float2(1, -1));
+
+    s2 = texRECT(srcTexMap, srcCoord + float2(-1, 0));
+    s3 = texRECT(srcTexMap, srcCoord);
+    s4 = texRECT(srcTexMap, srcCoord + float2(1, 0));
+    s5 = texRECT(srcTexMap, srcCoord + float2(2, 0));
+
+    s6 = texRECT(srcTexMap, srcCoord + float2(-1, 1));
+    s7 = texRECT(srcTexMap, srcCoord + float2(0, 1));
+    s8 = texRECT(srcTexMap, srcCoord + float2(1, 1));
+    s9 = texRECT(srcTexMap, srcCoord + float2(2, 1));
+
+    s10 = texRECT(srcTexMap, srcCoord + float2(0, 2));
+    s11 = texRECT(srcTexMap, srcCoord + float2(1, 2));
+
+#if 1
+    if (s0.w > 1)
+        s0 = texRECT(epTexMap, cvt(s0.w) + epCoord.zw);
+    if (s1.w > 1)
+        s1 = texRECT(epTexMap, cvt(s1.w) + epCoord.xy);
+    if (s2.w > 1)
+        s2 = texRECT(epTexMap, cvt(s2.w) + epCoord.xy);
+    if (s5.w > 1)
+        s5 = texRECT(epTexMap, cvt(s5.w) + epCoord.zw);
+        
+    if (s6.w > 1)
+        s6 = texRECT(epTexMap, cvt(s6.w) + epCoord.zw);
+    if (s9.w > 1)
+        s9 = texRECT(epTexMap, cvt(s9.w) + epCoord.xy);
+    if (s10.w > 1)
+        s10 = texRECT(epTexMap, cvt(s10.w) + epCoord.xy);
+    if (s11.w > 1)
+        s11 = texRECT(epTexMap, cvt(s11.w) + epCoord.zw);
+#endif
+
+    return float2(isFlat(s2.xyz, s3.xyz, s4.xyz, s5.xyz, d.x, d2), 
+                isFlat(s0.xyz, s3.xyz, s7.xyz, s10.xyz, d.w, d2)).xyxy;
+}

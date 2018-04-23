@@ -1,0 +1,43 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SubDogl - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\mike\LOCALS~1\Temp\RSP2.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /Fp"Debug/SubDogl.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\3D\SubDogl\SubDogl.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\mike\LOCALS~1\Temp\RSP2.tmp" 
+Creating temporary file "C:\DOCUME~1\mike\LOCALS~1\Temp\RSP3.tmp" with contents
+[
+opengl32.lib subd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/SubDogl.pdb" /debug /machine:I386 /out:"Debug/SubDogl.exe" /pdbtype:sept /libpath:"\3D\home\SSculpt\subd\Release" 
+.\Debug\SubDogl.obj
+.\Debug\Script1.res
+]
+Creating command line "link.exe @C:\DOCUME~1\mike\LOCALS~1\Temp\RSP3.tmp"
+<h3>Output Window</h3>
+Compiling...
+SubDogl.cpp
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(93) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\3d\subdogl\subdogl.cpp(177) : warning C4101: 'i' : unreferenced local variable
+c:\3d\subdogl\subdogl.cpp(317) : warning C4101: 'b' : unreferenced local variable
+c:\3d\subdogl\subdogl.cpp(317) : warning C4101: 'r' : unreferenced local variable
+c:\3d\subdogl\subdogl.cpp(317) : warning C4101: 'g' : unreferenced local variable
+Linking...
+
+
+
+<h3>Results</h3>
+SubDogl.exe - 0 error(s), 10 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,4 @@
+keyframes monsterfrog\\monsterfrog_mapped_%02d.obj 100
+normalmap monsterfrog\\monsterfrog-n.bmp
+dmap monsterfrog\\monsterfrog-d.bmp
+dmapscale 2.99

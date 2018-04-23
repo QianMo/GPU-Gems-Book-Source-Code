@@ -1,0 +1,29 @@
+// shadeSurfaceV.cg - vertex shader for rendering tessellated surface
+
+struct vout {
+    float4 pos : POSITION;
+    float3 tex0 : TEXCOORD0;
+    float3 tex1 : TEXCOORD1;
+    float4 tex2 : TEXCOORD2;
+    float4 tex3 : TEXCOORD3;
+};
+
+vout main(float4 pos : POSITION,
+    float3 normal : TEXCOORD0,
+    float3 tangent : TEXCOORD1,
+    float4 tex2 : TEXCOORD2,
+    float4 tex3 : TEXCOORD3,
+    uniform float4x4 ModelViewProj : register(c0))
+{
+    vout O;
+    float flipBinormal = tex3.x;
+    float displacement = tex3.y;
+
+    O.pos = mul(ModelViewProj, float4(pos.xyz + displacement*normal, pos.w));
+    O.tex0 = normal;
+    O.tex1 = tangent;
+    O.tex2 = tex2;
+    O.tex3.xyz = cross(normal, tangent) * flipBinormal;
+    
+    return O;
+}

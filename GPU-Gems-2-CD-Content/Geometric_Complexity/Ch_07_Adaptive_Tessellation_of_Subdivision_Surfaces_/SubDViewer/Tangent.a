@@ -1,0 +1,45 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile fp30
+# source file: c:\3d\SubDViewer\tangent.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT0
+#semantic main.offsetMap : TEXUNIT1
+#semantic main.tcMap : TEXUNIT2
+#semantic main.epTanMap : TEXUNIT3
+#var float4 offsetCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 dstCoord : $vin.WPOS : WPOS : 1 : 1
+#var samplerRECT srcTexMap : TEXUNIT0 : texunit 0 : 2 : 1
+#var samplerRECT offsetMap : TEXUNIT1 : texunit 1 : 3 : 1
+#var samplerRECT tcMap : TEXUNIT2 : texunit 2 : 4 : 1
+#var samplerRECT epTanMap : TEXUNIT3 : texunit 3 : 5 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0.xy, f[TEX0], TEX1, RECT;
+ADDR  R0.xy, f[WPOS], R0;
+ADDR  R0.zw, R0.xyxy, {1, 0, 0, 0}.xyxy;
+TEX   R1.xyz, R0.zwzw, TEX0, RECT;
+ADDR  R0.zw, R0.xyxy, {-1, 0, 0, 0}.xyxy;
+TEX   R2.xyz, R0.zwzw, TEX0, RECT;
+ADDR  R2.xyz, R1, -R2;
+ADDR  R1.xy, R0, {0, -1, 0, 0};
+ADDR  R0.xy, R0, {0, 1, 0, 0};
+TEX   R0.xyz, R0, TEX0, RECT;
+TEX   R1.xyz, R1, TEX0, RECT;
+ADDR  R0.xyz, R0, -R1;
+TEX   R1.zw, f[WPOS], TEX2, RECT;
+MULR  R0.xyz, R0, R1.w;
+MADR  R0.xyz, R2, R1.z, R0;
+DP3R  R0.w, R0, R0;
+RSQR  R0.w, R0.w;
+MULR  R0.xyz, R0.w, R0;
+SGTRC HC.x, R1.w, {1.1, 0, 0, 0};
+TEX   R0.xyz(GT.x), R1.zwzw, TEX3, RECT;
+MOVR  o[COLR], R0.xyzx;
+END
+# 21 instructions, 3 R-regs, 0 H-regs
+# 21 inst, (1 mov, 6 tex, 1 complex, 13 math)
+# non-mov args: 0 2 11 7 0
+# mov args:     0 0 0 0 1

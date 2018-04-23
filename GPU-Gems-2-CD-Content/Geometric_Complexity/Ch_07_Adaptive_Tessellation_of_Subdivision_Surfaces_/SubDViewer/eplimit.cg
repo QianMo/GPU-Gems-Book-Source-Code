@@ -1,0 +1,44 @@
+// eplimit.cg
+
+// calculate the point on the limit surface at an extraorinary vertex
+// the weight values are passed in the varying inputs
+// This shader could be made more efficient for lower valences by skipping vertices
+// whose weights are 0
+
+// This shader is also used to compute a new extraordnary point position
+// corresponding to a subdivision step
+
+float4 main(float4 position : WPOS,
+    float4 srcCoord : TEX0,
+    float4 w1 : TEX1,
+    float4 w2 : TEX2,
+    float4 w3 : TEX3,
+    float4 w4 : TEX4,
+    uniform samplerRECT srcTexMap : TEXUNIT3) : COL
+{
+    float2 sCoord = position.xy + srcCoord.xy;
+    float4 result;
+
+    result = srcCoord.w * texRECT(srcTexMap, sCoord) +
+        w1.x * texRECT(srcTexMap, sCoord + float2(0, 1)) +
+        w1.y * texRECT(srcTexMap, sCoord + float2(0, 2)) +
+        w1.z * texRECT(srcTexMap, sCoord + float2(0, 3)) +
+        w1.w * texRECT(srcTexMap, sCoord + float2(0, 4));
+    result += 
+        w2.x * texRECT(srcTexMap, sCoord + float2(0, 5)) +
+        w2.y * texRECT(srcTexMap, sCoord + float2(0, 6)) +
+        w2.z * texRECT(srcTexMap, sCoord + float2(0, 7)) +
+        w2.w * texRECT(srcTexMap, sCoord + float2(0, 8));
+    result += 
+        w3.x * texRECT(srcTexMap, sCoord + float2(0, 9)) +
+        w3.y * texRECT(srcTexMap, sCoord + float2(0, 10)) +
+        w3.z * texRECT(srcTexMap, sCoord + float2(0, 11)) +
+        w3.w * texRECT(srcTexMap, sCoord + float2(0, 12));
+    result += 
+        w4.x * texRECT(srcTexMap, sCoord + float2(0, 13)) +
+        w4.y * texRECT(srcTexMap, sCoord + float2(0, 14)) +
+        w4.z * texRECT(srcTexMap, sCoord + float2(0, 15)) +
+        w4.w * texRECT(srcTexMap, sCoord + float2(0, 16));
+
+    return result.xyzx;
+}

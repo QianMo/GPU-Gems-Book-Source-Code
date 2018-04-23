@@ -1,0 +1,43 @@
+// epflat.cg
+// prepare extra-ordinary point information for flatness test by
+// averaging 2 points we assure that patches on either side of an edge
+// will use the same values when calculating flatness
+//
+// For example, if vertex V is an extraordinary point of valence 5
+// then we use the average of A and B (midpoint between them) when
+// calculating the flatness of the edge between patch 1 and patch 2
+//
+//    A  |
+//     \ | patch 1
+//       V------
+//     / | patch 2
+//    B  |
+//
+// For comparison, in the non-extraordinary point case we simply use A
+//       |
+//       | patch 1
+//   A - V------
+//       | patch 2
+//       |
+//
+
+float4 main(float4 srcCoord : TEX0,
+    float4 srcCoord2 : TEX1,
+    float4 position : WPOS,
+    uniform samplerRECT srcTexMap : TEXUNIT3) : COL
+{
+    float y0 = srcCoord.w+0.5;
+    float2 p = position.xy + srcCoord.zy;
+    float2 offset = srcCoord2.xy;
+    float2 p2;
+    float valence = srcCoord.x;
+    float4 result;
+
+    p2 = p + offset;
+    if (p2.y <= y0)
+        p2.y += valence;
+    if (p2.y > y0 + valence)
+        p2.y -= valence;
+
+    return 0.5*(texRECT(srcTexMap, p) + texRECT(srcTexMap, p2));
+}

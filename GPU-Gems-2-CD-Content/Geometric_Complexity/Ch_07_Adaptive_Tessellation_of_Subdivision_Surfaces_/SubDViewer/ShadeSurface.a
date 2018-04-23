@@ -1,0 +1,37 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile fp30 -DNORMAL_MAP=0
+# source file: c:\3d\SubDViewer\shadeSurface.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.bmap : TEXUNIT1
+#semantic lightDirection : LIGHTDIRECTION
+#var float3 normal : $vin.TEX0 : TEX0 : 0 : 1
+#var float2 uv :  :  : 1 : 0
+#var float3 tangent :  :  : 2 : 0
+#var float3 binormal :  :  : 3 : 0
+#var sampler2D bmap : TEXUNIT1 :  : 4 : 0
+#var float4 lightDirection : LIGHTDIRECTION :  : -1 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+DECLARE lightDirection;
+MOVR  R0.xy, {0, 1, 0, 0};
+ADDR  R0.xyz, lightDirection, R0.xxyw;
+DP3R  R0.w, R0, R0;
+RSQR  R0.w, R0.w;
+MULR  R1.xyz, R0.w, R0;
+DP3R  R0.x, f[TEX0], f[TEX0];
+RSQR  R0.x, R0.x;
+MULR  R0.xyz, R0.x, f[TEX0];
+DP3R_SAT R0.w, R0, R1;
+DP3R_SAT R0.x, R0, lightDirection;
+MULR_SAT R0.y, R0.z, {0.2, 0, 0, 0}.x;
+POWR  R0.w, R0.w, {10, 0, 0, 0}.x;
+MADR  R0.x, R0, {0.5, 0, 0, 0}, R0.y;
+MADR  o[COLR], R0.w, {0.1, 0, 0, 0}.x, R0.x;
+END
+# 14 instructions, 2 R-regs, 0 H-regs
+# 14 inst, (1 mov, 0 tex, 3 complex, 10 math)
+# non-mov args: 0 5 0 7 1
+# mov args:     0 0 1 0 0

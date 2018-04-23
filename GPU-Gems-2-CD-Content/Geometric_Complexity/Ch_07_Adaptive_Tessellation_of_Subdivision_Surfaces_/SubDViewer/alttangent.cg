@@ -1,0 +1,26 @@
+// tangent.cg
+
+float4 main(float4 uCoord : TEX0,
+            uniform samplerRECT srcTexMap : TEXUNIT0,
+            uniform samplerRECT uMap : TEXUNIT2) : COL
+{
+    float4 u1 = texRECT(uMap, uCoord.xy);
+    float4 u2 = texRECT(uMap, uCoord.xz);
+    float4 srcCoord = texRECT(uMap, uCoord.xw);
+    float3 result;
+    
+    result = texRECT(srcTexMap, srcCoord.xy + float2(-1, 0)).xyz * u1.x +
+        texRECT(srcTexMap, srcCoord.xy + float2(1, 0)).xyz * u1.y +
+        texRECT(srcTexMap, srcCoord.xy + float2(0, -1)).xyz * u1.z +
+        texRECT(srcTexMap, srcCoord.xy + float2(0, 1)).xyz * u1.w;
+
+    //if (offset) {
+        result += texRECT(srcTexMap, srcCoord.zy).xyz * u2.x + 
+            texRECT(srcTexMap, srcCoord.zy + float2(1, 0)).xyz * u2.y + 
+            texRECT(srcTexMap, srcCoord.zy + float2(2, 0)).xyz * u2.z + 
+            texRECT(srcTexMap, srcCoord.zy + float2(3, 0)).xyz * u2.w;
+   // }
+    
+    return normalize(result - 
+        (dot(u1, 1) + dot(u2, 1))*texRECT(srcTexMap, srcCoord.xy).xyz).xyzx;
+}

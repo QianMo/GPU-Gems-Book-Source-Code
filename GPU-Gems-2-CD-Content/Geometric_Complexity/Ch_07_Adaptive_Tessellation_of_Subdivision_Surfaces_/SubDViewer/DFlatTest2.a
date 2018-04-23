@@ -1,0 +1,110 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -profile fp30 -DFLAT2=1 -DDMAP=1
+# source file: c:\3d\SubDViewer\flatTest.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT0
+#semantic main.epTexMap : TEXUNIT1
+#semantic main.dMaxMap : TEXUNIT3
+#semantic main.offsetTexMap : TEXUNIT2
+#semantic flatScale : FLATSCALE
+#semantic dmapScale : DMAPSCALE
+#var float4 offsetCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 dstCoord : $vin.WPOS : WPOS : 1 : 1
+#var float4 epCoord : $vin.TEX1 : TEX1 : 2 : 1
+#var samplerRECT srcTexMap : TEXUNIT0 : texunit 0 : 3 : 1
+#var samplerRECT epTexMap : TEXUNIT1 : texunit 1 : 4 : 1
+#var samplerRECT dMaxMap : TEXUNIT3 : texunit 3 : 5 : 1
+#var samplerRECT offsetTexMap : TEXUNIT2 : texunit 2 : 6 : 1
+#var float4 flatScale : FLATSCALE :  : -1 : 1
+#var float4 dmapScale : DMAPSCALE :  : -1 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+DECLARE dmapScale;
+DECLARE flatScale;
+TEX   R8, f[TEX0], TEX2, RECT;
+ADDR  R2, f[WPOS].xyxy, R8;
+ADDR  R0.xy, R2, {0, -1, 0, 0};
+TEX   R0, R0, TEX0, RECT;
+MOVR  R3.xyz, R0;
+FRCR  R0.x, R0.w;
+MULR  R0.x, R0, {1024, 0, 0, 0};
+MOVR  R0.y, R0.w;
+ADDR  R0.xy, R0, f[TEX1];
+SGTRC HC.x, R0.w, {1, 0, 0, 0};
+TEX   R3.xyz(GT.x), R0, TEX1, RECT;
+ADDR  R0.xy, R2, {0, 2, 0, 0};
+TEX   R0, R0, TEX0, RECT;
+MOVR  R4.xyz, R0;
+FRCR  R0.x, R0.w;
+MOVR  R0.y, R0.w;
+MULR  R0.x, R0, {1024, 0, 0, 0};
+SGTRC HC.x, R0.w, {1, 0, 0, 0};
+ADDR  R0.xy, R0, f[TEX1];
+TEX   R4.xyz(GT.x), R0, TEX1, RECT;
+ADDR  R0.xy, R2, {-1, 0, 0, 0};
+TEX   R0, R0, TEX0, RECT;
+MOVR  R1.y, R0.w;
+SGTRC HC.x, R0.w, {1, 0, 0, 0};
+FRCR  R0.w, R0;
+MULR  R1.x, R0.w, {1024, 0, 0, 0};
+ADDR  R1.xy, R1, f[TEX1];
+TEX   R0.xyz(GT.x), R1, TEX1, RECT;
+ADDR  R1.xy, R2, {2, 0, 0, 0};
+TEX   R1, R1, TEX0, RECT;
+FRCR  R0.w, R1;
+MOVR  R5.y, R1.w;
+MULR  R5.x, R0.w, {1024, 0, 0, 0};
+SGTRC HC.x, R1.w, {1, 0, 0, 0};
+ADDR  R5.xy, R5, f[TEX1];
+TEX   R1.xyz(GT.x), R5, TEX1, RECT;
+ADDR  R5.xy, R2, {0, 1, 0, 0};
+TEX   R6.xyz, R5, TEX0, RECT;
+TEX   R5.xyz, R2, TEX0, RECT;
+ADDR  R0.w, R5.z, R6.z;
+ADDR  R0.w, R0, dmapScale;
+MULR  R1.w, R0, flatScale.x;
+MOVR  R0.w, R1;
+SLTRC HC.x, R1.w, flatScale.y;
+ADDR  R2.xy, R2, {1, 0, 0, 0};
+TEX   R7.xyz, R2, TEX0, RECT;
+ADDR  R0.w(GT.x), -R1, flatScale.z;
+ADDR  R1.w, R5.z, R7.z;
+ADDR  R1.w, R1, dmapScale;
+MULR  R2.x, R1.w, flatScale;
+MOVR  R1.w, R2.x;
+SLTRC HC.x, R2, flatScale.y;
+ADDR  R1.w(GT.x), -R2.x, flatScale.z;
+SLTRC HC.x, f[WPOS], -R8.z;
+TEX   R8.xw, R2.zwzw, TEX3, RECT;
+MOVR  R2.xy, {0, 0, 0, 0}.x;
+ADDR  R1.xyz, R5, R1;
+MULR  R2.xy(LE.x), R8.xwzw, dmapScale.z;
+ADDR  R0.xyz, R0, R7;
+MADR  R0.xyz, -R5, {2, 0, 0, 0}.x, R0;
+MADR  R1.xyz, -R7, {2, 0, 0, 0}.x, R1;
+DP3R  R0.x, R0, R0;
+DP3R  R0.y, R1, R1;
+ADDR  R0.x, R0, R0.y;
+ADDR  R0.y, R1.w, -R2.x;
+MULR  R0.y, R0, |R0|;
+SLTR  H0.xy, R0.x, R0.y;
+ADDR  R0.xyz, R5, R4;
+MADR  R0.xyz, -R6, {2, 0, 0, 0}.x, R0;
+MOVX  o[COLR].xz, H0.xyyw;
+ADDR  R1.xyz, R3, R6;
+MADR  R1.xyz, -R5, {2, 0, 0, 0}.x, R1;
+DP3R  R0.x, R0, R0;
+DP3R  R1.x, R1, R1;
+ADDR  R0.y, R0.w, -R2;
+ADDR  R0.x, R1, R0;
+MULR  R0.y, R0, |R0|;
+SLTR  H0.xy, R0.x, R0.y;
+MOVX  o[COLR].yw, H0.xxzy;
+END
+# 79 instructions, 9 R-regs, 1 H-regs
+# 79 inst, (11 mov, 9 tex, 0 complex, 59 math)
+# non-mov args: 0 29 22 16 1
+# mov args:     0 6 3 2 0

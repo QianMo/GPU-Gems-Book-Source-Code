@@ -1,0 +1,15 @@
+// createPatch.cg
+//
+// create a patch using index information in texture 1 and
+// vertex data in texture 2
+
+float4 main(float2 srcCoord : TEX0, uniform samplerRECT vertexTexMap : TEXUNIT2,
+    uniform samplerRECT indexTexMap : TEXUNIT1) : COL
+{
+    float4 index = floor(texRECT(indexTexMap, srcCoord) * 255 + 0.1);
+    // if this vertex is an extraordinary point or shares an edge
+    // with an extraordinary point then save its corresponding location
+    // in the extraordinary point buffer in the w component
+    float epIndex = index.z + index.w * 256;
+    return float4(texRECT(vertexTexMap, index.xy + 0.5).xyz, epIndex*(1.0/2048));
+}

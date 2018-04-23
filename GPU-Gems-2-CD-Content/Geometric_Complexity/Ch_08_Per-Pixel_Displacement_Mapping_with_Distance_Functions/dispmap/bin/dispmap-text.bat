@@ -1,0 +1,1 @@
+dispmap.exe text-height.png text-color.png text-normal.png

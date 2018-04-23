@@ -1,0 +1,1 @@
+dispmap.exe stone-height.png stone-color.png stone-normal.png

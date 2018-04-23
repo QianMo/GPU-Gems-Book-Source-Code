@@ -1,0 +1,27 @@
+// shadeSurface.cg
+
+uniform float4 lightDirection : lightDirection;
+
+float4 main(float3 normal : TEX0,
+    float2 uv : TEX2,
+    float3 tangent : TEX1,
+    float3 binormal : TEX3,
+    uniform sampler2D bmap : TEXUNIT1) : COL
+{
+    float3 h = normalize(lightDirection.xyz + float3(0, 0, 1));
+    float3 n;
+    float specular;
+    float diffuse;
+    float3 nm;
+    
+#if NORMAL_MAP
+    nm = tex2D(bmap, uv*(2.0/65535)).xyz*2 - 1;
+    n = normalize(nm.x*tangent + nm.y*binormal + nm.z*normal);
+#else
+    n = normalize(normal);
+#endif
+    specular  = pow(saturate(dot(n, h)), 10);
+    diffuse = saturate(dot(n, lightDirection.xyz));
+
+    return 0.5f*diffuse + saturate(0.2 * n.z) + 0.1*specular;
+}

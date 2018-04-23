@@ -1,0 +1,38 @@
+!!VP2.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -new -profile vp30
+# source file: c:\3d\SubDViewer\shadeSurfaceV.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.ModelViewProj : C0
+#var float4 pos : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float3 normal : $vin.ATTR8 : ATTR8 : 1 : 1
+#var float3 tangent : $vin.ATTR9 : ATTR9 : 2 : 1
+#var float4 tex2 : $vin.ATTR10 : ATTR10 : 3 : 1
+#var float4 tex3 : $vin.ATTR11 : ATTR11 : 4 : 1
+#var float4x4 ModelViewProj : C0 : c[0], 4 : 5 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float3 main.tex0 : $vout.TEX0 : TEX0 : -1 : 1
+#var float3 main.tex1 : $vout.TEX1 : TEX1 : -1 : 1
+#var float4 main.tex2 : $vout.TEX2 : TEX2 : -1 : 1
+#var float4 main.tex3 : $vout.TEX3 : TEX3 : -1 : 1
+BB1:
+MOV   o[TEX0].xyz, v[8];
+MOV   o[TEX1].xyz, v[9];
+MOV   o[TEX2], v[10];
+MOV   R0.w, v[0];
+MOV   R0.xyz, v[8];
+MOV   R1.xyz, v[9];
+MUL   R2.xyz, v[8].zxyw, R1.yzxw;
+MUL   R0.xyz, v[11].y, R0;
+ADD   R0.xyz, R0, v[0];
+MAD   R1.xyz, v[8].yzxw, R1.zxyw, -R2;
+DP4   o[HPOS].w, R0, c[3];
+DP4   o[HPOS].z, R0, c[2];
+DP4   o[HPOS].y, R0, c[1];
+DP4   o[HPOS].x, R0, c[0];
+MUL   o[TEX3].xyz, R1, v[11].x;
+END
+# 15 instructions, 3 R-regs

@@ -1,0 +1,114 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "File"
+    BEGIN
+        MENUITEM "Open ...",                    ID_FILEOPEN
+        MENUITEM "Save map mesh...",            ID_SAVE_MAPMESH
+        MENUITEM "Exit",                        ID_FILE_EXIT
+    END
+    POPUP "Surface"
+    BEGIN
+        POPUP "Quality"
+        BEGIN
+            MENUITEM "2.0",                         ID_SURFACE_QUALITY_2
+            MENUITEM "1.0",                         ID_SURFACE_QUALITY_1
+            MENUITEM "0.75",                        ID_SURFACE_QUALITY_075
+            MENUITEM "0.5",                         ID_SURFACE_QUALITY_05
+            , CHECKED
+            MENUITEM "0.25",                        ID_SURFACE_QUALITY_025
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Adaptive Tessellation",       ID_SURFACE_ADAPTIVETESSELLATION
+        , CHECKED
+        POPUP "Maximum Subdivision"
+        BEGIN
+            MENUITEM "0",                           ID_MAXIMUMSUBDIVISION_0
+            MENUITEM "1",                           ID_MAXIMUMSUBDIVISION_1
+            MENUITEM "2",                           ID_MAXIMUMSUBDIVISION_2
+            MENUITEM "3",                           ID_MAXIMUMSUBDIVISION_3
+            MENUITEM "4",                           ID_MAXIMUMSUBDIVISION_4
+            MENUITEM "5",                           ID_MAXIMUMSUBDIVISION_5
+            , CHECKED
+            MENUITEM "6",                           ID_SURFACE_QUALITY_2
+        END
+        MENUITEM "Wireframe",                   ID_WIREFRAME
+        MENUITEM SEPARATOR
+        POPUP "Show"
+        BEGIN
+            MENUITEM "Subdivision Surface",         ID_SHOW_SURFACE, CHECKED
+            MENUITEM "Control Mesh",                ID_SHOW_CONTROL
+            MENUITEM "Surface && Control Mesh",     ID_SHOW_SURFACE_AND_CONTROL
+
+        END
+    END
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

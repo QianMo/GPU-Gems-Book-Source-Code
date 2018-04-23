@@ -1,0 +1,25 @@
+// epsubdivF.cg
+
+// perform the subdivision math for the "face" points around an extraordinary point
+
+float4 main(float4 srcCoord : TEX0,
+    float4 position : WPOS,
+    uniform samplerRECT srcTexMap : TEXUNIT3) : COL
+{
+    float2 p0 = float2(position.x, srcCoord.y+0.5);
+    float2 p = position.xy + srcCoord.zy - float2(0, 8);
+    float2 p_down;
+    float valence = srcCoord.x;
+    float4 result;
+
+    p_down = p + float2(0, 1);
+    if (p_down.y > p0.y + valence)
+        p_down.y -= valence;
+        
+    result = 0.25*(texRECT(srcTexMap, p) +
+                    texRECT(srcTexMap, p0) +
+                    texRECT(srcTexMap, p_down) +
+                    texRECT(srcTexMap, p + float2(0, 8)));
+        
+    return result.xyzx;
+}

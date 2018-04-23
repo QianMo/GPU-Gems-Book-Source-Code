@@ -1,0 +1,63 @@
+// subdiv.cg
+
+// This shader is used to subdivide patches
+// it has been modified from the shader in GPU Gems II to use
+// an offset value from a texture so that many patches can be subdivided
+// by drawing a single quad
+// Extraordinary points are handled by substituting the vertex position
+// from the extraordinary point buffer when appropriate
+
+float4 main(float4 srcCoord : TEX0, float4 offsetCoord : TEX1,
+uniform samplerRECT srcTexMap : TEXUNIT0,
+uniform samplerRECT offsetTexMap : TEXUNIT2,
+uniform samplerRECT epTexMap : TEXUNIT3) : COL
+{
+    float3 wh, wv;
+    float4 s1, s2, s3;
+    float2 f;
+    srcCoord.xy += texRECT(offsetTexMap, offsetCoord.xy).xy;
+    float epIndex;
+    float4 srcData0, srcData1, srcData2;
+    float edgeIndex;
+
+    f = frac(srcCoord.xy) > 0.25;
+    srcCoord.xy = floor(srcCoord.xy) + 0.5;
+    
+    wh = float3(0.5, 0.5, 0.0) + f.x*float3(1.0/8.0 - 0.5, 6.0/8.0 - 0.5, 1.0/8.0);
+    wv = float3(0.5, 0.5, 0.0) + f.y*float3(1.0/8.0 - 0.5, 6.0/8.0 - 0.5, 1.0/8.0);
+    
+    srcData0 = texRECT(srcTexMap, srcCoord.xy + float2(0, 0));
+    srcData1 = texRECT(srcTexMap, srcCoord.xy + float2(0, -1));
+    srcData2 = texRECT(srcTexMap, srcCoord.xy + float2(-1, 0));
+    
+    // if this new point corresponds to an extraordinary point or an
+    // edge vertex of an extraordinary point then set epIndex appropriately
+    epIndex = srcData0.w * f.x * f.y;
+    edgeIndex = max(srcData1.w, srcData0.w)*f.x*(1-f.y) +
+        max(srcData2.w, srcData0.w) * f.y * (1-f.x);
+    if (edgeIndex > 1)
+        epIndex = edgeIndex;
+  
+    s1 = texRECT(srcTexMap, srcCoord.xy + float2(-1, -1)) * wh.x +
+         srcData1 * wh.y +
+         texRECT(srcTexMap, srcCoord.xy + float2(1, -1)) * wh.z;
+
+    s2 = srcData2 * wh.x +
+         srcData0 * wh.y +
+         texRECT(srcTexMap, srcCoord.xy + float2(1, 0)) * wh.z;
+
+    s3 = texRECT(srcTexMap, srcCoord.xy + float2(-1, 1)) * wh.x +
+         texRECT(srcTexMap, srcCoord.xy + float2(0, 1)) * wh.y +
+         texRECT(srcTexMap, srcCoord.xy + float2(1, 1)) * wh.z;
+         
+    if (epIndex) {      // use the extra-ordinary point buffer value instead
+        float2 epCoord;
+        epCoord.y = epIndex;
+        if (epCoord.y >= 9)
+            epCoord.y -= 8;
+        epCoord.x = frac(epIndex)*1024;
+        return float4(texRECT(epTexMap, epCoord+srcCoord.zw).xyz, epIndex);
+    }
+    else
+        return float4(s1.xyz * wv.x + s2.xyz * wv.y + s3.xyz * wv.z, 0);
+}

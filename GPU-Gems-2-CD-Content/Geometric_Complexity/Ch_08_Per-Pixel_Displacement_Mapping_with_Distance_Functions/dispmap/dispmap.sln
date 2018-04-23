@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dispmap", "dispmap.vcproj", "{E5B960F4-F261-4730-83C3-04B340E40818}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{E5B960F4-F261-4730-83C3-04B340E40818}.Debug.ActiveCfg = Debug|Win32
+		{E5B960F4-F261-4730-83C3-04B340E40818}.Debug.Build.0 = Debug|Win32
+		{E5B960F4-F261-4730-83C3-04B340E40818}.Release.ActiveCfg = Release|Win32
+		{E5B960F4-F261-4730-83C3-04B340E40818}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

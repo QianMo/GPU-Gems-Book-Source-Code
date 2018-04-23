@@ -1,0 +1,71 @@
+// normal.cg
+
+// calculate the normal corresponding to a vertex using its 8 neighbors
+// if the vertex is extraordinary then use the normal from the extraordinary point
+// buffer instead.
+
+// This shader also calculates the texture coordinate and normal map tangent at
+// the vertex using bilinear interpolation
+
+float4 main(float4 offsetCoord : TEX0,
+    float4 scale : TEX1,
+    float4 dstCoord : WPOS,
+    uniform samplerRECT srcTexMap : TEXUNIT0,
+    uniform samplerRECT offsetMap : TEXUNIT1,
+    uniform samplerRECT epTexMap : TEXUNIT3,
+    uniform samplerRECT tcMap : TEXUNIT2) : COL
+{
+    float4 s0, s1, s2, s3, s5, s6, s7, s8;
+    float4 t1;
+    float4 t2;
+    float3 ta0, ta1;
+    float4 result;
+    float3 normal;
+    float3 tangent;
+    float2 f;
+    float2 patchCoord = dstCoord.xy - float2(0 - 0.5, 68 - 0.5)
+        - texRECT(offsetMap, offsetCoord.zw).xy;
+    float2 srcCoord = dstCoord.xy - float2(0, 68)
+        + texRECT(offsetMap, offsetCoord.xy).xy;
+    float2 tcCoord = abs(texRECT(offsetMap, offsetCoord.xy).zw) - float2(1, 0);
+    float2 tCoord, tc0, tc1;
+    float epIndex;
+
+    s0 = texRECT(srcTexMap, srcCoord + float2(-1, -1));
+    s1 = texRECT(srcTexMap, srcCoord + float2(0, -1));
+    s2 = texRECT(srcTexMap, srcCoord + float2(1, -1));
+
+    s3 = texRECT(srcTexMap, srcCoord + float2(-1, 0));
+    s5 = texRECT(srcTexMap, srcCoord + float2(1, 0));
+
+    s6 = texRECT(srcTexMap, srcCoord + float2(-1, 1));
+    s7 = texRECT(srcTexMap, srcCoord + float2(0, 1));
+    s8 = texRECT(srcTexMap, srcCoord + float2(1, 1));
+    
+    epIndex = texRECT(srcTexMap, srcCoord).w;
+
+    t1 = (s2 - s0 + s8 - s6) * 0.25 + s5 - s3;
+    t2 = (s6 - s0 + s8 - s2) * 0.25 + s7 - s1;
+    normal = normalize(cross(t1.xyz, t2.xyz));
+    if (epIndex)
+        normal = texRECT(epTexMap, float2(epIndex*1024, 1.5)).xyz;
+    f = (patchCoord - 0.5) * scale.x;
+    tc0 = lerp(texRECT(tcMap, tcCoord + 0.5).xy, 
+            texRECT(tcMap, tcCoord + float2(1.5, 0.5)).xy, f.x);
+    tc1 = lerp(texRECT(tcMap, tcCoord + float2(0.5, 1.5)).xy, 
+            texRECT(tcMap, tcCoord + float2(1.5, 1.5)).xy, f.x);
+    tCoord = lerp(tc0, tc1, f.y);
+    
+    ta0 = lerp(texRECT(tcMap, tcCoord + float2(0.5, 256.5)).xyz, 
+            texRECT(tcMap, tcCoord + float2(1.5, 256.5)).xyz, f.x);
+    ta1 = lerp(texRECT(tcMap, tcCoord + float2(0.5, 257.5)).xyz, 
+            texRECT(tcMap, tcCoord + float2(1.5, 257.5)).xyz, f.x);
+    tangent = lerp(ta0, ta1, f.y);
+    // make sure the tangent is normal to the normal
+    tangent = normalize(cross(cross(normal, tangent), normal));
+
+    return float4(pack_2half(normal.xy),
+        pack_2half(half2(normal.z, tangent.x)),
+        pack_2half(tangent.yz),
+        pack_2ushort(tCoord*.5));
+}

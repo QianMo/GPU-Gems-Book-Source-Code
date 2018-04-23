@@ -1,0 +1,34 @@
+!!FP1.0
+# cgc version 1.3.0001, build date Sep 28 2004 16:01:04
+# command line args: -profile fp30
+# source file: c:\3d\SubDViewer\epflat.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.srcTexMap : TEXUNIT3
+#var float4 srcCoord : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 srcCoord2 : $vin.TEX1 : TEX1 : 1 : 1
+#var float4 position : $vin.WPOS : WPOS : 2 : 1
+#var samplerRECT srcTexMap : TEXUNIT3 : texunit 3 : 3 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+MOVR  R0.xy, f[TEX0].yzzw;
+ADDR  R0.xy, f[WPOS], R0.yxzw;
+ADDR  R0.zw, R0.xyxy, f[TEX1].xyxy;
+ADDR  R1.y, f[TEX0].w, {0.5, 0, 0, 0}.x;
+SLERC HC.x, R0.w, R1.y;
+MOVR  R1.x, R0.w;
+ADDR  R1.x(GT), R0.w, f[TEX0];
+ADDR  R1.y, R1, f[TEX0].x;
+MOVR  R0.w, R1.x;
+SGTRC HC.x, R1, R1.y;
+ADDR  R0.w(GT.x), R1.x, -f[TEX0].x;
+TEX   R1, R0.zwzw, TEX3, RECT;
+TEX   R0, R0, TEX3, RECT;
+ADDR  R0, R0, R1;
+MULR  o[COLR], R0, {0.5, 0, 0, 0}.x;
+END
+# 15 instructions, 2 R-regs, 0 H-regs
+# 15 inst, (3 mov, 2 tex, 0 complex, 10 math)
+# non-mov args: 0 6 4 0 2
+# mov args:     0 2 1 0 0
