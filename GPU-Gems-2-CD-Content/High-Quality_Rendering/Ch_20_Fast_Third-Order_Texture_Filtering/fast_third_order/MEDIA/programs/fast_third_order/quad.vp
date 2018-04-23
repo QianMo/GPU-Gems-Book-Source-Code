@@ -1,0 +1,41 @@
+!!ARBvp1.0
+
+# env0: position bias (scale.x, scale.y, trans.x, trans.y}
+
+# ******* attributes *********
+
+ATTRIB ipos = vertex.position; 
+ATTRIB icol = vertex.color; 
+
+# ******* parameters *********
+
+PARAM const   = {0.5, -0.5, 0.0001, 1.0};
+PARAM vp_bias = program.env[0];
+
+# ******* outputs *********
+
+OUTPUT opos = result.position;
+OUTPUT otc0 = result.texcoord[0];
+OUTPUT ocol = result.color;
+
+# ******** temporaries *********
+
+TEMP temp;
+
+# ******** program *********
+
+# move vertex close to far plane
+MOV temp.w, const.w;
+ADD temp.z, const.w, -const.z;
+
+# write biased vertex position
+MAD temp.xy, ipos, vp_bias, vp_bias.zwxy;
+MOV opos, temp;
+
+# transform to [0,1]^4
+MAD otc0, ipos, const.x, const.x;
+
+# pass through color
+MOV ocol, icol;
+
+END

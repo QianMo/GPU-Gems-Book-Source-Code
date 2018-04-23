@@ -1,0 +1,16 @@
+built/gpukernel.obj: ./gpuruntime.hpp
+built/gpukernel.obj: ./gpukernel.hpp
+built/gpukernel.obj: ./gpubase.hpp
+built/gpukernel.obj: ./gpu.hpp
+built/gpukernel.obj: ./gpucontext.hpp
+built/gpukernel.obj: ./../profiler.hpp
+built/gpukernel.obj: ../../include/brook/brt.hpp
+built/gpukernel.obj: ../../include/brook/type_promotion.hpp
+built/gpukernel.obj: ./../runtime.hpp
+built/gpukernel.obj: ../../include/brook/vc6vector.hpp
+built/gpukernel.obj: ../../include/brook/brtvector.hpp
+built/gpukernel.obj: gpukernel.cpp
+built/gpukernel.obj: ../../include/brook/kerneldesc.hpp
+built/gpukernel.obj: ./../logger.hpp
+built/gpukernel.obj: ./gpuiterator.hpp
+built/gpukernel.obj: ./gpustream.hpp

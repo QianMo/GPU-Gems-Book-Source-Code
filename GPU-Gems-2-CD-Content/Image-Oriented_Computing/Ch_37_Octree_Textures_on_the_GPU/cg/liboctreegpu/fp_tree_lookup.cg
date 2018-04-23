@@ -1,0 +1,72 @@
+// -------------------------------------------------------
+
+float4 tree_lookup(uniform sampler3D IndirPool,
+                   uniform float3    invS,
+                   uniform float     N,
+                   float3            M)
+{
+
+  float4 cout=float4(0.0,0.0,0.0,0.0);
+
+  float3 MNl=M;
+
+  for (float i=0;i<HRDWTREE_MAX_DEPTH;i++)
+  {
+    float3 P;
+
+    // lookup coords. within current node
+    P = (MNl + floor(0.5+cout.xyz*255.0))*invS;
+
+    // access indirection pool
+    if (cout.w < 0.9)
+      cout=(float4)tex3D(IndirPool,P);
+    
+    if (cout.w < 0.1)
+      discard;
+    
+#ifdef NV40
+    if (cout.w > 0.9)
+      break;
+#endif
+    
+    // compute pos within next level grid
+    MNl = MNl * N;
+  }
+  return (cout);
+}
+
+// -------------------------------------------------------
+
+float4 tree_lookup_non_empty(uniform sampler3D IndirPool,
+			     uniform float3    invS,
+			     uniform float     N,
+			     float3            M)
+{
+
+  float4 cout=float4(0.0,0.0,0.0,0.0);
+
+  float3 MNl=M;
+
+  for (float i=0;i<HRDWTREE_MAX_DEPTH;i++)
+  {
+    float3 P;
+
+    // lookup coords. within current node
+    P = (MNl + floor(0.5+cout.xyz*255.0))*invS;
+    
+    // access indirection pool
+    if (cout.w < 0.9)
+      cout=(float4)tex3D(IndirPool,P);
+
+#ifdef NV40
+  if (cout.w > 0.9)
+    break;
+#endif
+ 
+    // compute pos within next level grid
+    MNl = MNl * N;
+  }
+  return (cout);
+}
+
+// -------------------------------------------------------

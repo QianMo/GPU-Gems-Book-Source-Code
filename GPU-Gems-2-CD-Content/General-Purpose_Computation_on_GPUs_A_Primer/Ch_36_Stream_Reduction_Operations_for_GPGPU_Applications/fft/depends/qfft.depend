@@ -1,0 +1,12 @@
+built/qfft.obj: ../include/brook/type_promotion.hpp
+built/qfft.obj: qfft.br
+built/qfft.obj: ./main.h
+built/qfft.obj: ../include/brook/brt.hpp
+built/qfft.obj: ./ppm.h
+built/qfft.obj: ../include/brook/kerneldesc.hpp
+built/qfft.obj: ../include/brook/brtvector.hpp
+built/qfft.obj: ./wfft.h
+built/qfft.obj: ../include/brook/vc6vector.hpp
+built/qfft.obj: built/qfft.cpp
+built/qfft.cpp: $(ROOTDIR)/bin/brcc$(BINSUFFIX)
+built/qfft.cpp: qfft.br

@@ -1,0 +1,2 @@
+built/logger.obj: logger.cpp
+built/logger.obj: ./logger.hpp

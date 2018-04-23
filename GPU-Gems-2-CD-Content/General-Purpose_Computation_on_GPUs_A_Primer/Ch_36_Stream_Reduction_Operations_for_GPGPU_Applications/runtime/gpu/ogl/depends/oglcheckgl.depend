@@ -1,0 +1,3 @@
+built/oglcheckgl.obj: oglcheckgl.cpp
+built/oglcheckgl.obj: ./oglcheckgl.hpp
+built/oglcheckgl.obj: ./oglfunc.hpp

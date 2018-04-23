@@ -1,0 +1,25 @@
+static const int zoomout_width = 20;
+static const int zoomout_height = 20;
+static const int zoomout_hotx = 9;
+static const int zoomout_hoty = 9;
+static unsigned char zoomout_data[] =
+"                    "
+"       OOO          "
+"     OOXXXOO        "
+"    OXXXOXXXO       "
+"   OXXOOOOOXXO      "
+"  OXXOOOOOOOXXO     "
+"  OXXOOOOOOOXXO     "
+" OXXOOOOOOOOOXXO    "
+" OXXOOXXXXXOOXXO    "
+" OXXOOOOOOOOOXXO    "
+"  OXXOOOOOOOXXO     "
+"  OXXOOOOOOOXXO     "
+"   OXXOOOOOXXOO     "
+"    OXXXOXXXXXXO    "
+"     OOXXXOOXXXXO   "
+"       OOO  OXXXXO  "
+"             OXXXXO "
+"              OXXXXO"
+"               OXXXO"
+"                OOO ";

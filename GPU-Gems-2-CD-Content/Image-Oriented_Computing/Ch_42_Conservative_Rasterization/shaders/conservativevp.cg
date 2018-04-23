@@ -1,0 +1,95 @@
+struct A2V {
+    float4 col:COLOR0;
+	
+    float4 prevPos:TEXCOORD0;
+    float4 currentPos:POSITION;
+    float4 nextPos:TEXCOORD1;
+};
+
+struct V2F {
+    float4 pos:POSITION;
+    float4 col:COLOR0;
+     
+    float4 clipSpace:TEXCOORD4;
+    float4 AABB:TEXCOORD5;
+    float4 polyPlane:TEXCOORD6;
+    float2 Delta:TEXCOORD7;
+};
+
+#define THRESHOLD 0.0000125
+#define FLT_MAX 9999999999999.0
+
+/**
+ * Adds a new point to the bounding box. This method can be simplified if orthogonal 
+ * projection is assumed
+ */
+float4 addPoint(float4 pos, float4 bbBounds) {
+	if (pos.w < 0) {
+		bbBounds.xy = min(bbBounds.xy,pos.xy);
+		bbBounds.zw = max(bbBounds.zw,pos.xy);
+	}
+	else {
+		bbBounds.xy = min(bbBounds.xy,pos.xy/pos.w);
+		bbBounds.zw = max(bbBounds.zw,pos.xy/pos.w);
+	}
+	return bbBounds;
+}
+
+/**
+ * hPixel parameter is defined as (1/xres, 1/yres, 1/xres, 1/yres). 
+ * I.e, the size of a half pixel cell in clip space
+ */
+V2F main(A2V In, uniform float4x4 ModelViewProj,uniform float4 hPixel) {
+
+    V2F		Out;
+	float4  currentPos,prevPos,nextPos;
+
+	prevPos = mul(ModelViewProj,In.prevPos);
+	currentPos = mul(ModelViewProj,In.currentPos);
+	nextPos = mul(ModelViewProj,In.nextPos);	
+
+	// Compute the (x,y,w,d) triangle plane		
+	float4 pPlane = float4( normalize(cross( currentPos.xyw-prevPos.xyw, nextPos.xyw-prevPos.xyw )), 0);
+	pPlane.w = -dot(pPlane.xyz,prevPos.xyw);
+
+	// Compute the screen space bounding box of the triangle
+	float4 brBounds = float4(FLT_MAX,FLT_MAX,-FLT_MAX,-FLT_MAX);
+	brBounds = addPoint(prevPos,brBounds);
+	brBounds = addPoint(currentPos,brBounds);
+	brBounds = addPoint(nextPos,brBounds);
+	Out.AABB = brBounds + float4(-hPixel.xy,hPixel.xy);
+	
+	float3 plane[2];
+	plane[0] = (cross(currentPos.xyw - prevPos.xyw, prevPos.xyw));
+	plane[1] = (cross(nextPos.xyw - currentPos.xyw, currentPos.xyw));
+
+	float4 finalPos;	
+
+	// Test if the triangle is "almost backfacing" to avoid precision issues	
+	if (dot(currentPos.xyw,pPlane.xyz) < THRESHOLD) 
+		finalPos = currentPos;		
+	else {
+		// Push the planes back enough to enclose the sample points of all pixels the triangle intersects.
+		// The pushfactor is dependant on the slope (x,y)
+		plane[0].z -= dot(hPixel.xy,abs(plane[0].xy));
+		plane[1].z -= dot(hPixel.xy,abs(plane[1].xy));
+
+		// Compute the intersection point of the two planes. Gives us the final position of the vertex
+		finalPos.xyw = cross(plane[0],plane[1]);
+		finalPos /= abs(finalPos.w);
+		finalPos.z = 1;	
+	}
+	
+	Out.col = In.col;		
+	Out.polyPlane = pPlane;		
+	Out.clipSpace = finalPos;
+	Out.pos = finalPos;
+
+#ifdef MAX_DEPTH
+	Out.Delta = -0.5*sign(pPlane.xy);
+#else
+	Out.Delta = 0.5*sign(pPlane.xy);
+#endif
+
+    return Out;
+}

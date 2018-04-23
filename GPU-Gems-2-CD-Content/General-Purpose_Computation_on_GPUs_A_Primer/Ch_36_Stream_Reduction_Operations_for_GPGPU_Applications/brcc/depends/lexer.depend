@@ -1,0 +1,17 @@
+built/lexer.obj: ./identify.h
+built/lexer.obj: ./decl.h
+built/lexer.obj: ./config.h
+built/lexer.obj: ./stemnt.h
+built/lexer.obj: ./token.h
+built/lexer.obj: ./dup.h
+built/lexer.obj: ./parseenv.h
+built/lexer.obj: lexer.cpp
+built/lexer.obj: ./callback.h
+built/lexer.obj: ./location.h
+built/lexer.obj: ./express.h
+built/lexer.obj: ./context.h
+built/lexer.obj: ./lexer.h
+built/lexer.obj: ./gram.h
+built/lexer.obj: ./symbol.h
+built/lexer.obj: ./project.h
+built/lexer.obj: ./utype.h

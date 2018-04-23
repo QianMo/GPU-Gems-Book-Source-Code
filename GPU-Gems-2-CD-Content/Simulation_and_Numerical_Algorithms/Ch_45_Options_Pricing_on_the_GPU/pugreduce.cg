@@ -1,0 +1,86 @@
+/*********************************************************************NVMH3****
+
+  Copyright NVIDIA Corporation 2004
+  TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
+  *AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
+  OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL
+  NVIDIA OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR
+  CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR
+  LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS
+  INFORMATION, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR
+  INABILITY TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS BEEN ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGES.
+
+  ****************************************************************************/
+
+// Code for parallel reductions on the GPU.  To use these shaders, either
+// specify "gpuReduce.cg" as the filename to gpuLoadReductionProgram and use 
+// the name of one of the three basic ReduceOps defined below, or 
+// #include "gpuReduce.cg" from a custom Cg file that defines new structs that
+// implement the ReduceOp interface.
+
+#include "pug.cg"
+
+// TYPE should be defined at compile time to enable different size float vecs 
+#if   COMPONENTS == 1
+#define TYPE float
+#define VALUE value
+#elif COMPONENTS == 2
+#define TYPE float2
+#define VALUE value2
+#elif COMPONENTS == 3
+#define TYPE float3
+#define VALUE value3
+#else // assume COMPONENTS == 4
+#define TYPE float4
+#define VALUE value4
+#endif
+
+// Implement this interface to create new types of Reductions
+interface ReduceOp {
+    TYPE op(TYPE a, TYPE b);
+};
+
+struct ReduceAdd : ReduceOp {
+    TYPE op(TYPE a, TYPE b) { return a + b; }
+};
+
+struct ReduceMax : ReduceOp {
+    TYPE op(TYPE a, TYPE b) { return max(a, b); }
+};
+
+struct ReduceMin : ReduceOp {
+    TYPE op(TYPE a, TYPE b) { return min(a, b); }
+};
+
+
+// binary reductions
+void reduce_2samples(ReduceOp reducer,
+                     Stream src, 
+                     float2 offset  : DOMAIN0,
+                     float2 offset2 : DOMAIN1,
+                     out TYPE dst   : RANGE0)
+{
+    dst = reducer.op(src.VALUE(offset), src.VALUE(offset2));
+}
+
+// 4-way reductions
+void reduce_4samples(ReduceOp reducer,
+                     Stream src, 
+                     float2 offset  : DOMAIN0,
+                     float2 offset2 : DOMAIN1,
+                     float2 offset3 : DOMAIN2,
+                     float2 offset4 : DOMAIN3,
+                     out float dst  : RANGE0)
+{
+   dst = reducer.op(reducer.op(src.value(offset), src.value(offset2)), 
+                    reducer.op(src.value(offset3), src.value(offset4)));
+}
+
+void passthru(Stream src,
+              float2 offset : DOMAIN0,
+              out TYPE dst : RANGE)
+{
+    dst = src.VALUE(offset);
+}

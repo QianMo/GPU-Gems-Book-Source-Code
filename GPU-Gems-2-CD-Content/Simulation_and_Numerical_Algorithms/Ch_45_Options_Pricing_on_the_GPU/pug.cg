@@ -1,0 +1,51 @@
+/*********************************************************************NVMH3****
+
+  Copyright NVIDIA Corporation 2004
+  TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
+  *AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
+  OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL
+  NVIDIA OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR
+  CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR
+  LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS
+  INFORMATION, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR
+  INABILITY TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS BEEN ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGES.
+
+  ****************************************************************************/
+#ifndef _PUG_CG_
+#define _PUG_CG_
+
+// Abstraction for a memory buffer on the GPU.
+
+#define DOMAIN  WPOS
+#define DOMAIN0 WPOS
+#define DOMAIN1 TEXCOORD0
+#define DOMAIN2 TEXCOORD1
+#define DOMAIN3 TEXCOORD2
+#define DOMAIN4 TEXCOORD3
+#define DOMAIN5 TEXCOORD4
+#define DOMAIN6 TEXCOORD5
+#define DOMAIN7 TEXCOORD6
+#define DOMAIN8 TEXCOORD7
+
+#define RANGE   COLOR0
+#define RANGE0  COLOR0
+#define RANGE1  COLOR1
+#define RANGE2  COLOR2
+#define RANGE3  COLOR3
+
+struct Stream {
+    uniform samplerRECT sampler;
+
+    float  value(float2 offset)  { return texRECT(sampler, offset).x; }
+    float  value(float  offset)  { return texRECT(sampler, float2(offset, 0)).x; }
+    float2 value2(float2 offset) { return texRECT(sampler, offset).xy; }
+    float2 value2(float  offset) { return texRECT(sampler, float2(offset, 0)).xy; }
+    float3 value3(float2 offset) { return texRECT(sampler, offset).xyz; }
+    float3 value3(float  offset) { return texRECT(sampler, float2(offset, 0)).xyz; }
+    float4 value4(float2 offset) { return texRECT(sampler, offset); }
+    float4 value4(float  offset) { return texRECT(sampler, float2(offset, 0)); }
+};
+
+#endif // _PUG_CG_

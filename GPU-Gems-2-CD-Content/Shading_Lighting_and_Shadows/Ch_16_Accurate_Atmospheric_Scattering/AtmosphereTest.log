@@ -1,0 +1,1199 @@
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+NVIDIA Corporation
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+GeForce 6800/AGP/SSE/3DNOW!
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+2.0.0
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+GL_ARB_color_buffer_float GL_ARB_depth_texture GL_ARB_draw_buffers GL_ARB_fragment_program GL_ARB_fragment_program_shadow GL_ARB_fragment_shader GL_ARB_half_float_pixel GL_ARB_imaging GL_ARB_multisample GL_ARB_multitexture GL_ARB_occlusion_query GL_ARB_point_parameters GL_ARB_point_sprite GL_ARB_shadow GL_ARB_shader_objects GL_ARB_shading_language_100 GL_ARB_texture_border_clamp GL_ARB_texture_compression GL_ARB_texture_cube_map GL_ARB_texture_env_add GL_ARB_texture_env_combine GL_ARB_texture_env_dot3 GL_ARB_texture_float GL_ARB_texture_mirrored_repeat GL_ARB_texture_non_power_of_two GL_ARB_texture_rectangle GL_ARB_transpose_matrix GL_ARB_vertex_buffer_object GL_ARB_vertex_program GL_ARB_vertex_shader GL_ARB_window_pos GL_ATI_draw_buffers GL_ATI_texture_float GL_ATI_texture_mirror_once GL_S3_s3tc GL_EXT_texture_env_add GL_EXT_abgr GL_EXT_bgra GL_EXT_blend_color GL_EXT_blend_equation_separate GL_EXT_blend_func_separate GL_EXT_blend_minmax GL_EXT_blend_subtract GL_EXT_compiled_vertex_array GL_EXT_Cg_shader GL_EXT_depth_bounds_test GL_EXT_draw_range_elements GL_EXT_fog_coord GL_EXT_multi_draw_arrays GL_EXT_packed_pixels GL_EXT_pixel_buffer_object GL_EXT_point_parameters GL_EXT_rescale_normal GL_EXT_secondary_color GL_EXT_separate_specular_color GL_EXT_shadow_funcs GL_EXT_stencil_two_side GL_EXT_stencil_wrap GL_EXT_texture3D GL_EXT_texture_compression_s3tc GL_EXT_texture_cube_map GL_EXT_texture_edge_clamp GL_EXT_texture_env_combine GL_EXT_texture_env_dot3 GL_EXT_texture_filter_anisotropic GL_EXT_texture_lod GL_EXT_texture_lod_bias GL_EXT_texture_mirror_clamp GL_EXT_texture_object GL_EXT_vertex_array GL_HP_occlusion_test GL_IBM_rasterpos_clip GL_IBM_texture_mirrored_repeat GL_KTX_buffer_region GL_NV_blend_square GL_NV_copy_depth_to_color GL_NV_depth_clamp GL_NV_fence GL_NV_float_buffer GL_NV_fog_distance GL_NV_fragment_program GL_NV_fragment_program_option GL_NV_fragment_program2 GL_NV_half_float GL_NV_light_max_exponent GL_NV_multisample_filter_hint GL_NV_occlusion_query GL_NV_packed_depth_stencil GL_NV_pixel_data_range GL_NV_point_sprite GL_NV_primitive_restart GL_NV_register_combiners GL_NV_register_combiners2 GL_NV_texgen_reflection GL_NV_texture_compression_vtc GL_NV_texture_env_combine4 GL_NV_texture_expand_normal GL_NV_texture_rectangle GL_NV_texture_shader GL_NV_texture_shader2 GL_NV_texture_shader3 GL_NV_vertex_array_range GL_NV_vertex_array_range2 GL_NV_vertex_program GL_NV_vertex_program1_1 GL_NV_vertex_program2 GL_NV_vertex_program2_option GL_NV_vertex_program3 GL_NVX_conditional_render GL_SGIS_generate_mipmap GL_SGIS_texture_lod GL_SGIX_depth_texture GL_SGIX_shadow GL_SUN_slice_accum GL_WIN_swap_hint WGL_EXT_swap_control 
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+Cg vertex profile: vp30
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+Cg fragment profile: fp30
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+PBuffer::Init() - 1024x1024 r:16 g:16 b:16 a:16 depth:24 stencil:8 samples:0 aux:4
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: HDRCg.vert
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4 gl_MultiTexCoord0 : $vin.ATTR8 : ATTR8 : 1 : 1
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 2 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+BB1:
+DP4   o[HPOS].w, v[0], c[3];
+DP4   o[HPOS].z, v[0], c[2];
+DP4   o[HPOS].y, v[0], c[1];
+DP4   o[HPOS].x, v[0], c[0];
+MOV   o[TEX0], v[8];
+END
+# 5 instructions, 0 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: HDRRectCg.frag
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.fExposure
+#semantic main.s2Test
+#var float4 gl_Color :  :  : 0 : 0
+#var float4 gl_SecondaryColor :  :  : 1 : 0
+#var float4 gl_TexCoord0 : $vin.TEX0 : TEX0 : 2 : 1
+#var float fExposure :  :  : 3 : 1
+#var samplerRECT s2Test :  : texunit 0 : 4 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+DECLARE fExposure;
+MULR  R0.xy, f[TEX0], {1024}.x;
+TEX   R0, R0, TEX0, RECT;
+MULR  R0, R0, -fExposure.x;
+POWR  R0.x, {2.71828}.x, R0.x;
+POWR  R0.y, {2.71828}.x, R0.y;
+POWR  R0.z, {2.71828}.x, R0.z;
+POWR  R0.w, {2.71828}.x, R0.w;
+ADDR  o[COLR], -R0, {1}.x;
+END
+# 8 instructions, 1 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: SkyFromSpaceCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 1 : 1
+#var float3 v3CameraPos :  : c[4] : 2 : 1
+#var float3 v3LightPos :  : c[13] : 3 : 1
+#var float3 v3InvWavelength :  : c[17] : 4 : 1
+#var float fCameraHeight :  :  : 5 : 0
+#var float fCameraHeight2 :  : c[7] : 6 : 1
+#var float fOuterRadius :  : c[9] : 7 : 1
+#var float fOuterRadius2 :  : c[6] : 8 : 1
+#var float fInnerRadius :  : c[14] : 9 : 1
+#var float fInnerRadius2 :  :  : 10 : 0
+#var float fKrESun :  : c[19] : 11 : 1
+#var float fKmESun :  : c[20] : 12 : 1
+#var float fKr4PI :  : c[16] : 13 : 1
+#var float fKm4PI :  : c[18] : 14 : 1
+#var float fScale :  : c[12] : 15 : 1
+#var float fScaleOverScaleDepth :  : c[15] : 16 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 : $vout.COL0 : COL0 : -1 : 1
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[5] = 2.718282 2 4 0
+#const c[8] = 0.5 1 5.25 -6.8
+#const c[10] = 3.83 0.459 -0.00287 0.25
+#const c[11] = 2.718282 -4
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+ADD   R1.xyz, v[0], -c[4];
+DP3   R0.y, R1, R1;
+MOV   R0.x, c[7];
+RSQ   R1.w, R0.y;
+ADD   R0.x, -c[6], R0;
+MUL   R5.xyz, R1, R1.w;
+DP3   R0.y, R5, c[4];
+MUL   R0.x, R0, c[5].z;
+MUL   R0.y, R0, c[5];
+MAD   R0.x, R0.y, R0.y, -R0;
+MAX   R0.x, R0, c[5].w;
+RSQ   R0.x, R0.x;
+RCP   R0.x, R0.x;
+ADD   R0.x, -R0.y, -R0;
+MUL   R0.y, R0.x, c[8].x;
+MAD   R7.xyz, R5, R0.y, c[4];
+RCP   R0.z, c[9].x;
+DP3   R0.x, R5, R7;
+MAD   R0.w, -R0.x, R0.z, c[8].y;
+MOV   R3, v[0];
+MAD   R0.x, R0.w, c[8].z, c[8].w;
+MOV   R6.xyz, c[5].w;
+MAD   R0.z, R0.w, R0.x, c[10].x;
+MOV   R0.x, c[5].w;
+MAD   R1.x, R0.w, R0.z, c[10].y;
+LIT   R0.z, c[11].xxzy;
+MAD   R1.z, R0.w, R1.x, c[10];
+MOV   R1.xy, c[5].x;
+LIT   R1.z, R1.xyzz;
+RCP   R0.w, c[5].y;
+MUL   R0.z, R1, R0;
+RCP   R1.y, R1.w;
+MUL   R1.x, R0.z, c[10].w;
+ADD   R0.y, R1, -R0;
+MOV   R4.xyz, R5;
+MUL   R0.y, R0, R0.w;
+MUL   R2.x, R0.y, c[12];
+MUL   R8.xyz, R5, R0.y;
+MOV   R5.xyz, R8;
+MAD   R8.xyz, R8, c[8].x, R7;
+BB2:
+SLTC  CC.x, R0, c[5].y;
+BRA   BB4 (EQ.x);
+BB3:
+ADD   R0.x, R0, c[8].y;
+MOV   R7.xy, c[5].x;
+MOV   R10.xy, c[5].x;
+MOV   R11.xy, c[5].x;
+DP3   R0.y, R8, R8;
+MOV   R2.yz, c[5].x;
+RSQ   R1.w, R0.y;
+MOV   R1.yz, c[5].x;
+RCP   R0.y, R1.w;
+MOV   R9.xyz, c[17];
+ADD   R0.w, -R0.y, c[14].x;
+MOV   R0.yz, c[5].x;
+MUL   R0.w, R0, c[15].x;
+LIT   R0.z, R0.yzzw;
+MUL   R9.xyz, c[16].x, R9;
+DP3   R0.y, R8, c[13];
+DP3   R0.w, R4, R8;
+MAD   R0.y, -R0, R1.w, c[8];
+MAD   R0.w, -R0, R1, c[8].y;
+MAD   R1.w, R0.y, c[8].z, c[8];
+MAD   R2.w, R0, c[8].z, c[8];
+MAD   R1.w, R0.y, R1, c[10].x;
+MAD   R2.w, R0, R2, c[10].x;
+MAD   R1.w, R0.y, R1, c[10].y;
+MAD   R2.w, R0, R2, c[10].y;
+MAD   R1.w, R0.y, R1, c[10].z;
+MAD   R2.w, R0, R2, c[10].z;
+LIT   R1.z, R1.yzzw;
+LIT   R2.z, R2.yzzw;
+ADD   R0.y, R1.z, -R2.z;
+ADD   R9.xyz, R9, c[18].x;
+MUL   R0.y, R0, R0.z;
+MAD   R0.y, R0, c[10].w, R1.x;
+ADD   R8.xyz, R8, R5;
+MUL   R9.xyz, -R0.y, R9;
+MOV   R11.z, R9.x;
+LIT   R1.z, R11.xyzz;
+MOV   R10.z, R9.y;
+LIT   R2.z, R10.xyzz;
+MOV   R7.z, R9;
+LIT   R7.z, R7.xyzz;
+MOV   R7.x, R1.z;
+MOV   R7.y, R2.z;
+MUL   R0.y, R0.z, R2.x;
+MAD   R6.xyz, R7, R0.y, R6;
+BRA   BB2;
+BB4:
+DP4   o[HPOS].w, R3, c[3];
+DP4   o[HPOS].z, R3, c[2];
+DP4   o[HPOS].y, R3, c[1];
+DP4   o[HPOS].x, R3, c[0];
+MUL   o[COL1].xyz, R6, c[20].x;
+ADD   o[TEX0].xyz, -R3, c[4];
+MOV   R0.xyz, c[17];
+MUL   R0.xyz, c[19].x, R0;
+MUL   o[COL0].xyz, R6, R0;
+END
+# 97 instructions, 12 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: SkyFromSpaceCg.frag
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.v3LightPos
+#semantic main.g
+#semantic main.g2
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 c0 : $vin.COL0 : COL0 : 0 : 1
+#var float4 c1 : $vin.COL1 : COL1 : 1 : 1
+#var float3 v3Direction : $vin.TEX0 : TEX0 : 2 : 1
+#var float3 v3LightPos :  :  : 3 : 1
+#var float g :  :  : 4 : 1
+#var float g2 :  :  : 5 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+DECLARE v3LightPos;
+DECLARE g;
+DECLARE g2;
+DP3R  R0.x, f[TEX0], f[TEX0];
+RSQR  R0.y, R0.x;
+DP3R  R0.x, f[TEX0], v3LightPos;
+MULR  R0.x, R0, R0.y;
+MULR  R0.y, R0.x, R0.x;
+MULR  R1.x, g, R0;
+MADR  R0.x, R0.y, {0.75}, {0.75};
+ADDR  R0.w, R0.y, {1}.x;
+MOVR  R0.y, {1}.x;
+MOVR  R0.z, {2}.x;
+ADDR  R0.z, g2.x, R0;
+ADDR  R0.y, -g2.x, R0;
+RCPR  R0.z, R0.z;
+MULR  R0.y, R0, R0.z;
+MULR  R0.z, -R1.x, {2}.x;
+ADDR  R0.z, R0, g2.x;
+MULR  R0.y, R0, R0.w;
+ADDR  R0.z, R0, {1}.x;
+POWR  R0.z, R0.z, {1.5}.x;
+RCPR  R0.z, R0.z;
+MULR  R0.y, R0, R0.z;
+MULR  R1.xyz, R0.y, f[COL1];
+MULR  R1.xyz, R1, {1.5}.x;
+MADR  o[COLR], R0.x, f[COL0].xyzz, R1.xyzz;
+END
+# 24 instructions, 2 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: SkyFromAtmosphereCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 1 : 1
+#var float3 v3CameraPos :  : c[4] : 2 : 1
+#var float3 v3LightPos :  : c[12] : 3 : 1
+#var float3 v3InvWavelength :  : c[14] : 4 : 1
+#var float fCameraHeight :  : c[7] : 5 : 1
+#var float fCameraHeight2 :  :  : 6 : 0
+#var float fOuterRadius :  :  : 7 : 0
+#var float fOuterRadius2 :  :  : 8 : 0
+#var float fInnerRadius :  : c[8] : 9 : 1
+#var float fInnerRadius2 :  :  : 10 : 0
+#var float fKrESun :  : c[16] : 11 : 1
+#var float fKmESun :  : c[17] : 12 : 1
+#var float fKr4PI :  : c[13] : 13 : 1
+#var float fKm4PI :  : c[15] : 14 : 1
+#var float fScale :  : c[11] : 15 : 1
+#var float fScaleOverScaleDepth :  : c[9] : 16 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 : $vout.COL0 : COL0 : -1 : 1
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[5] = 2.718282 1 5.25 -6.8
+#const c[6] = 3.83 0.459 -0.00287 0.25
+#const c[10] = 2 0.5 0
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+ADD   R1.xyz, v[0], -c[4];
+MOV   R3, v[0];
+DP3   R0.y, R1, R1;
+DP3   R0.x, c[4], c[4];
+RSQ   R0.y, R0.y;
+RSQ   R0.x, R0.x;
+MUL   R5.xyz, R1, R0.y;
+DP3   R0.z, R5, c[4];
+MOV   R6.xyz, c[10].z;
+MAD   R0.w, -R0.z, R0.x, c[5].y;
+MOV   R0.x, c[10].z;
+MAD   R0.z, R0.w, c[5], c[5].w;
+MOV   R1.xy, c[5].x;
+MAD   R0.z, R0.w, R0, c[6].x;
+MOV   R2.xy, c[5].x;
+MAD   R1.z, R0.w, R0, c[6].y;
+MOV   R0.z, c[8].x;
+MAD   R2.z, R0.w, R1, c[6];
+ADD   R0.w, -c[7].x, R0.z;
+LIT   R0.z, R2.xyzz;
+MUL   R1.z, R0.w, c[9].x;
+LIT   R1.z, R1.xyzz;
+RCP   R0.w, c[10].x;
+MUL   R0.z, R0, R1;
+MUL   R1.x, R0.z, c[6].w;
+RCP   R0.y, R0.y;
+MOV   R4.xyz, R5;
+MUL   R0.y, R0, R0.w;
+MUL   R2.x, R0.y, c[11];
+MUL   R7.xyz, R5, R0.y;
+MOV   R5.xyz, R7;
+MUL   R7.xyz, R7, c[10].y;
+ADD   R8.xyz, R7, c[4];
+BB2:
+SLTC  CC.x, R0, c[10];
+BRA   BB4 (EQ.x);
+BB3:
+ADD   R0.x, R0, c[5].y;
+MOV   R7.xy, c[5].x;
+MOV   R10.xy, c[5].x;
+MOV   R11.xy, c[5].x;
+DP3   R0.y, R8, R8;
+MOV   R2.yz, c[5].x;
+RSQ   R1.w, R0.y;
+MOV   R1.yz, c[5].x;
+RCP   R0.y, R1.w;
+MOV   R9.xyz, c[14];
+ADD   R0.w, -R0.y, c[8].x;
+MOV   R0.yz, c[5].x;
+MUL   R0.w, R0, c[9].x;
+LIT   R0.z, R0.yzzw;
+MUL   R9.xyz, c[13].x, R9;
+DP3   R0.y, R8, c[12];
+DP3   R0.w, R4, R8;
+MAD   R0.y, -R0, R1.w, c[5];
+MAD   R0.w, -R0, R1, c[5].y;
+MAD   R1.w, R0.y, c[5].z, c[5];
+MAD   R2.w, R0, c[5].z, c[5];
+MAD   R1.w, R0.y, R1, c[6].x;
+MAD   R2.w, R0, R2, c[6].x;
+MAD   R1.w, R0.y, R1, c[6].y;
+MAD   R2.w, R0, R2, c[6].y;
+MAD   R1.w, R0.y, R1, c[6].z;
+MAD   R2.w, R0, R2, c[6].z;
+LIT   R1.z, R1.yzzw;
+LIT   R2.z, R2.yzzw;
+ADD   R0.y, R1.z, -R2.z;
+ADD   R9.xyz, R9, c[15].x;
+MUL   R0.y, R0, R0.z;
+MAD   R0.y, R0, c[6].w, R1.x;
+ADD   R8.xyz, R8, R5;
+MUL   R9.xyz, -R0.y, R9;
+MOV   R11.z, R9.y;
+LIT   R1.z, R11.xyzz;
+MOV   R10.z, R9.x;
+LIT   R2.z, R10.xyzz;
+MOV   R7.z, R9;
+LIT   R7.z, R7.xyzz;
+MOV   R7.x, R2.z;
+MOV   R7.y, R1.z;
+MUL   R0.y, R0.z, R2.x;
+MAD   R6.xyz, R7, R0.y, R6;
+BRA   BB2;
+BB4:
+DP4   o[HPOS].w, R3, c[3];
+DP4   o[HPOS].z, R3, c[2];
+DP4   o[HPOS].y, R3, c[1];
+DP4   o[HPOS].x, R3, c[0];
+MUL   o[COL1].xyz, R6, c[17].x;
+ADD   o[TEX0].xyz, -R3, c[4];
+MOV   R0.xyz, c[14];
+MUL   R0.xyz, c[16].x, R0;
+MUL   o[COL0].xyz, R6, R0;
+END
+# 90 instructions, 12 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: SkyFromAtmosphereCg.frag
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.v3LightPos
+#semantic main.g
+#semantic main.g2
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 c0 : $vin.COL0 : COL0 : 0 : 1
+#var float4 c1 : $vin.COL1 : COL1 : 1 : 1
+#var float3 v3Direction : $vin.TEX0 : TEX0 : 2 : 1
+#var float3 v3LightPos :  :  : 3 : 1
+#var float g :  :  : 4 : 1
+#var float g2 :  :  : 5 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+DECLARE v3LightPos;
+DECLARE g;
+DECLARE g2;
+DP3R  R0.x, f[TEX0], f[TEX0];
+RSQR  R0.y, R0.x;
+DP3R  R0.x, f[TEX0], v3LightPos;
+MULR  R0.x, R0, R0.y;
+MULR  R0.y, R0.x, R0.x;
+MULR  R1.x, g, R0;
+MADR  R0.x, R0.y, {0.75}, {0.75};
+ADDR  R0.w, R0.y, {1}.x;
+MOVR  R0.y, {1}.x;
+MOVR  R0.z, {2}.x;
+ADDR  R0.z, g2.x, R0;
+ADDR  R0.y, -g2.x, R0;
+RCPR  R0.z, R0.z;
+MULR  R0.y, R0, R0.z;
+MULR  R0.z, -R1.x, {2}.x;
+ADDR  R0.z, R0, g2.x;
+MULR  R0.y, R0, R0.w;
+ADDR  R0.z, R0, {1}.x;
+POWR  R0.z, R0.z, {1.5}.x;
+RCPR  R0.z, R0.z;
+MULR  R0.y, R0, R0.z;
+MULR  R1.xyz, R0.y, f[COL1];
+MULR  R1.xyz, R1, {1.5}.x;
+MADR  o[COLR], R0.x, f[COL0].xyzz, R1.xyzz;
+END
+# 24 instructions, 2 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: GroundFromSpaceCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4 gl_MultiTexCoord0 :  :  : 1 : 0
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 2 : 1
+#var float3 v3CameraPos :  : c[5] : 3 : 1
+#var float3 v3LightPos :  : c[11] : 4 : 1
+#var float3 v3InvWavelength :  : c[15] : 5 : 1
+#var float fCameraHeight :  :  : 6 : 0
+#var float fCameraHeight2 :  : c[7] : 7 : 1
+#var float fOuterRadius :  : c[13] : 8 : 1
+#var float fOuterRadius2 :  : c[6] : 9 : 1
+#var float fInnerRadius :  : c[9] : 10 : 1
+#var float fInnerRadius2 :  :  : 11 : 0
+#var float fKrESun :  : c[18] : 12 : 1
+#var float fKmESun :  : c[19] : 13 : 1
+#var float fKr4PI :  : c[14] : 14 : 1
+#var float fKm4PI :  : c[16] : 15 : 1
+#var float fScale :  : c[17] : 16 : 1
+#var float fScaleOverScaleDepth :  : c[10] : 17 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 : $vout.COL0 : COL0 : -1 : 1
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[4] = 2.718282 2 4 0
+#const c[8] = 0.5 1 5.25 -6.8
+#const c[12] = 3.83 0.459 -0.00287 0.25
+#const c[20] = 0 1 2.905166e-037 500
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+DP4   o[HPOS].w, v[0], c[3];
+DP4   o[HPOS].z, v[0], c[2];
+DP4   o[HPOS].y, v[0], c[1];
+DP4   o[HPOS].x, v[0], c[0];
+MOV   o[TEX0].z, R0.x;
+MOV   R7.xy, c[4].x;
+MOV   R4.xy, c[4].x;
+MOV   R3.xy, c[4].x;
+ADD   R0.xyz, v[0], -c[5];
+MOV   R2.xy, c[4].x;
+DP3   R0.w, R0, R0;
+MOV   R1.x, c[7];
+RSQ   R0.w, R0.w;
+ADD   R1.x, -c[6], R1;
+MUL   R11.xyz, R0, R0.w;
+DP3   R0.x, R11, c[5];
+MUL   R0.y, R1.x, c[4].z;
+MUL   R0.z, R0.x, c[4].y;
+MAD   R0.x, R0.z, R0.z, -R0.y;
+MOV   R8.xy, c[4].x;
+MAX   R1.x, R0, c[4].w;
+MOV   R0.xy, c[4].x;
+RSQ   R1.x, R1.x;
+MOV   R5.xyz, c[15];
+RCP   R1.x, R1.x;
+ADD   R1.x, -R0.z, -R1;
+RCP   R0.z, c[4].y;
+RCP   R0.w, R0.w;
+MUL   R1.x, R1, c[8];
+ADD   R0.w, R0, -R1.x;
+MAD   R1.xyz, R11, R1.x, c[5];
+MUL   R2.w, R0, R0.z;
+MUL   R9.xyz, R11, R2.w;
+MAD   R6.xyz, R9, c[8].x, R1;
+MOV   R1.xy, c[4].x;
+ADD   R10.xyz, R6, R9;
+MOV   R9.xy, c[4].x;
+DP3   R0.z, R10, R10;
+MOV   R10.xy, c[4].x;
+MOV   R12.xy, c[4].x;
+RSQ   R0.z, R0.z;
+MOV   R1.z, c[9].x;
+DP3   R0.w, v[0], v[0];
+RCP   R0.z, R0.z;
+DP3   R1.w, R6, R6;
+ADD   R2.z, -R0, c[9].x;
+MOV   R6.xy, c[4].x;
+RSQ   R0.z, R1.w;
+MUL   R6.z, R2, c[10].x;
+RCP   R1.w, R0.z;
+LIT   R0.z, R6.xyzz;
+RSQ   R2.z, R0.w;
+ADD   R1.w, -R1, c[9].x;
+ADD   R0.w, -c[13].x, R1.z;
+MUL   R12.z, R1.w, c[10].x;
+MUL   R6.xyz, R2.z, v[0];
+LIT   R1.z, R12.xyzz;
+DP3   R1.w, -R11, R6;
+MUL   R10.z, R0.w, c[4];
+DP3   R0.w, R6, c[11];
+ADD   R2.z, -R1.w, c[8].y;
+ADD   R0.w, -R0, c[8].y;
+MAD   R3.z, R2, c[8], c[8].w;
+MAD   R1.w, R0, c[8].z, c[8];
+MAD   R3.z, R2, R3, c[12].x;
+MAD   R1.w, R0, R1, c[12].x;
+MAD   R3.z, R2, R3, c[12].y;
+MAD   R1.w, R0, R1, c[12].y;
+MAD   R9.z, R2, R3, c[12];
+MAD   R1.w, R0, R1, c[12].z;
+LIT   R2.z, R10.xyzz;
+LIT   R3.z, R9.xyzz;
+LIT   R4.z, R1;
+MUL   R9.xyz, c[14].x, R5;
+MUL   R0.w, R3.z, c[12];
+MAD   R1.x, R4.z, c[12].w, R0.w;
+ADD   R10.xyz, R9, c[16].x;
+MUL   R1.y, R2.z, R0.w;
+MAD   R0.w, R1.z, R1.x, -R1.y;
+MAD   R1.x, R0.z, R1, -R1.y;
+MUL   R9.xyz, -R0.w, R10;
+MOV   R0.w, R9.z;
+LIT   R9.z, R0;
+MUL   R10.xyz, -R1.x, R10;
+MOV   R8.z, R10;
+MOV   R2.z, R9.y;
+LIT   R10.z, R8.xyzz;
+LIT   R2.z, R2.xyzz;
+ADD   R8.xyz, R6, c[20].xxyw;
+MOV   R3.z, R10.y;
+MOV   R4.z, R10.x;
+LIT   R3.z, R3.xyzz;
+LIT   R4.z, R4.xyzz;
+DP3   R0.x, R8, R8;
+MOV   R7.z, R9.x;
+LIT   R6.z, R7.xyzz;
+MUL   R5.xyz, c[18].x, R5;
+RSQ   R0.x, R0.x;
+ADD   R5.xyz, R5, c[19].x;
+MOV   R9.x, R6.z;
+RCP   R0.x, R0.x;
+MOV   R10.x, R4.z;
+MOV   R10.y, R3.z;
+MUL   R0.x, R0, c[4].y;
+RCP   R0.x, R0.x;
+MOV   R9.y, R2.z;
+MOV   o[COL1].xyz, R10;
+MAD   R0.w, R6.x, R0.x, c[8].x;
+MAD   R0.x, -R6.y, R0, c[8];
+MUL   R0.y, R2.w, c[17].x;
+MUL   o[TEX0].y, R0.x, c[20].w;
+MUL   R0.x, R0.z, R0.y;
+MUL   R1.x, R1.z, R0.y;
+MUL   R0.xyz, R10, R0.x;
+MAD   R0.xyz, R9, R1.x, R0;
+MUL   o[TEX0].x, R0.w, c[20].w;
+MUL   o[COL0].xyz, R0, R5;
+END
+# 117 instructions, 13 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: GroundFromSpaceCg.frag
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.s2Test
+#var float4 gl_Color : $vin.COL0 : COL0 : 0 : 1
+#var float4 gl_SecondaryColor : $vin.COL1 : COL1 : 1 : 1
+#var float4 gl_TexCoord0 : $vin.TEX0 : TEX0 : 2 : 1
+#var samplerRECT s2Test :  : texunit 0 : 3 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0, f[TEX0], TEX0, RECT;
+MULR  R0, R0, f[COL1];
+ADDR  o[COLR], R0, f[COL0];
+END
+# 3 instructions, 1 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: GroundFromAtmosphereCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4 gl_MultiTexCoord0 :  :  : 1 : 0
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 2 : 1
+#var float3 v3CameraPos :  : c[5] : 3 : 1
+#var float3 v3LightPos :  : c[8] : 4 : 1
+#var float3 v3InvWavelength :  : c[13] : 5 : 1
+#var float fCameraHeight :  : c[11] : 6 : 1
+#var float fCameraHeight2 :  :  : 7 : 0
+#var float fOuterRadius :  :  : 8 : 0
+#var float fOuterRadius2 :  :  : 9 : 0
+#var float fInnerRadius :  : c[6] : 10 : 1
+#var float fInnerRadius2 :  :  : 11 : 0
+#var float fKrESun :  : c[16] : 12 : 1
+#var float fKmESun :  : c[17] : 13 : 1
+#var float fKr4PI :  : c[12] : 14 : 1
+#var float fKm4PI :  : c[14] : 15 : 1
+#var float fScale :  : c[15] : 16 : 1
+#var float fScaleOverScaleDepth :  : c[7] : 17 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 : $vout.COL0 : COL0 : -1 : 1
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[4] = 2.718282 2 0.5 1
+#const c[9] = 5.25 -6.8 3.83 0.459
+#const c[10] = -0.00287 0.25 4 500
+#const c[18] = 0 1 3.011914e-037
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+DP4   o[HPOS].w, v[0], c[3];
+DP4   o[HPOS].z, v[0], c[2];
+DP4   o[HPOS].y, v[0], c[1];
+DP4   o[HPOS].x, v[0], c[0];
+MOV   o[TEX0].z, R0.x;
+MOV   R7.xy, c[4].x;
+MOV   R4.xy, c[4].x;
+MOV   R3.xy, c[4].x;
+MOV   R2.xy, c[4].x;
+MOV   R0.xy, c[4].x;
+ADD   R5.xyz, v[0], -c[5];
+MOV   R6.xyz, c[13];
+DP3   R0.z, R5, R5;
+MOV   R1.xy, c[4].x;
+RSQ   R1.z, R0.z;
+MOV   R8.xy, c[4].x;
+RCP   R0.w, c[4].y;
+RCP   R0.z, R1.z;
+MUL   R10.xyz, R5, R1.z;
+MUL   R2.w, R0.z, R0;
+MUL   R5.xyz, R10, R2.w;
+MUL   R9.xyz, R5, c[4].z;
+ADD   R11.xyz, R9, c[5];
+MOV   R9.xy, c[4].x;
+ADD   R5.xyz, R11, R5;
+DP3   R0.w, v[0], v[0];
+DP3   R0.z, R5, R5;
+DP3   R1.z, R11, R11;
+RSQ   R0.z, R0.z;
+MOV   R5.xy, c[4].x;
+RSQ   R1.z, R1.z;
+RCP   R0.z, R0.z;
+MOV   R11.xy, c[4].x;
+RCP   R1.z, R1.z;
+ADD   R0.z, -R0, c[6].x;
+ADD   R1.w, -R1.z, c[6].x;
+MUL   R11.z, R0, c[7].x;
+MOV   R1.z, c[6].x;
+LIT   R0.z, R11.xyzz;
+MUL   R5.z, R1.w, c[7].x;
+ADD   R1.w, -c[11].x, R1.z;
+LIT   R1.z, R5.xyzz;
+RSQ   R0.w, R0.w;
+MUL   R9.z, R1.w, c[10];
+MUL   R5.xyz, R0.w, v[0];
+DP3   R0.w, R5, c[8];
+DP3   R1.w, -R10, R5;
+ADD   R2.z, -R0.w, c[4].w;
+ADD   R0.w, -R1, c[4];
+MAD   R3.z, R2, c[9].x, c[9].y;
+MAD   R1.w, R0, c[9].x, c[9].y;
+MAD   R3.z, R2, R3, c[9];
+MAD   R1.w, R0, R1, c[9].z;
+MAD   R3.z, R2, R3, c[9].w;
+MAD   R1.w, R0, R1, c[9];
+MAD   R8.z, R2, R3, c[10].x;
+MAD   R1.w, R0, R1, c[10].x;
+LIT   R2.z, R9.xyzz;
+LIT   R3.z, R8.xyzz;
+LIT   R4.z, R1;
+MUL   R8.xyz, c[12].x, R6;
+ADD   R8.xyz, R8, c[14].x;
+MUL   R0.w, R4.z, c[10].y;
+MAD   R1.x, R3.z, c[10].y, R0.w;
+MUL   R1.y, R2.z, R0.w;
+MAD   R0.w, R1.z, R1.x, -R1.y;
+MAD   R1.x, R0.z, R1, -R1.y;
+MUL   R9.xyz, -R0.w, R8;
+MOV   R0.w, R9.z;
+MOV   R10.xy, c[4].x;
+LIT   R9.z, R0;
+MUL   R8.xyz, -R1.x, R8;
+MOV   R10.z, R8;
+MOV   R2.z, R9.y;
+LIT   R8.z, R10.xyzz;
+LIT   R2.z, R2.xyzz;
+MOV   R3.z, R8.y;
+MOV   R4.z, R8.x;
+LIT   R3.z, R3.xyzz;
+LIT   R4.z, R4.xyzz;
+MOV   R7.z, R9.x;
+LIT   R7.z, R7.xyzz;
+MUL   R6.xyz, c[16].x, R6;
+ADD   R6.xyz, R6, c[17].x;
+MOV   R9.x, R7.z;
+ADD   R7.xyz, R5, c[18].xxyw;
+MOV   R8.x, R4.z;
+MOV   R8.y, R3.z;
+DP3   R0.x, R7, R7;
+MOV   R9.y, R2.z;
+MOV   o[COL1].xyz, R8;
+RSQ   R0.x, R0.x;
+MUL   R0.y, R2.w, c[15].x;
+MUL   R1.x, R1.z, R0.y;
+MUL   R0.y, R0.z, R0;
+RCP   R0.w, R0.x;
+MUL   R0.xyz, R8, R0.y;
+MAD   R0.xyz, R9, R1.x, R0;
+MUL   R0.w, R0, c[4].y;
+RCP   R0.w, R0.w;
+MUL   o[COL0].xyz, R0, R6;
+MAD   R0.x, -R5.y, R0.w, c[4].z;
+MAD   R0.y, R5.x, R0.w, c[4].z;
+MUL   o[TEX0].y, R0.x, c[10].w;
+MUL   o[TEX0].x, R0.y, c[10].w;
+END
+# 105 instructions, 12 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: GroundFromAtmosphereCg.frag
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.s2Test
+#var float4 gl_Color : $vin.COL0 : COL0 : 0 : 1
+#var float4 gl_SecondaryColor : $vin.COL1 : COL1 : 1 : 1
+#var float4 gl_TexCoord0 : $vin.TEX0 : TEX0 : 2 : 1
+#var samplerRECT s2Test :  : texunit 0 : 3 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0, f[TEX0], TEX0, RECT;
+MULR  R0, R0, f[COL1];
+ADDR  o[COLR], R0, f[COL0];
+END
+# 3 instructions, 1 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: SpaceFromSpaceCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4 gl_MultiTexCoord0 : $vin.ATTR8 : ATTR8 : 1 : 1
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 2 : 1
+#var float3 v3CameraPos :  : c[5] : 3 : 1
+#var float3 v3LightPos :  :  : 4 : 0
+#var float3 v3InvWavelength :  : c[14] : 5 : 1
+#var float fCameraHeight :  : c[10] : 6 : 1
+#var float fCameraHeight2 :  : c[7] : 7 : 1
+#var float fOuterRadius :  :  : 8 : 0
+#var float fOuterRadius2 :  : c[6] : 9 : 1
+#var float fInnerRadius :  : c[11] : 10 : 1
+#var float fInnerRadius2 :  :  : 11 : 0
+#var float fKrESun :  :  : 12 : 0
+#var float fKmESun :  :  : 13 : 0
+#var float fKr4PI :  : c[13] : 14 : 1
+#var float fKm4PI :  : c[15] : 15 : 1
+#var float fScale :  :  : 16 : 0
+#var float fScaleOverScaleDepth :  : c[12] : 17 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 :  :  : -1 : 0
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[4] = 2.718282 2 4 0
+#const c[8] = 0.5 1 5.25 -6.8
+#const c[9] = 3.83 0.459 -0.00287 0.25
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+DP4   o[HPOS].w, v[0], c[3];
+DP4   o[HPOS].z, v[0], c[2];
+ADD   R1.xyz, v[0], -c[5];
+DP4   o[HPOS].y, v[0], c[1];
+DP3   R0.x, R1, R1;
+MOV   R0.y, c[7].x;
+RSQ   R0.x, R0.x;
+ADD   R0.y, -c[6].x, R0;
+MUL   R2.xyz, R1, R0.x;
+DP3   R0.x, R2, c[5];
+MUL   R0.y, R0, c[4].z;
+MUL   R0.x, R0, c[4].y;
+MAD   R0.y, R0.x, R0.x, -R0;
+DP4   o[HPOS].x, v[0], c[0];
+MAX   R0.y, R0, c[4].w;
+MOV   o[TEX0].xyz, v[8];
+RSQ   R0.y, R0.y;
+MOV   R5.xy, c[4].x;
+RCP   R0.y, R0.y;
+ADD   R0.z, -R0.x, -R0.y;
+MOV   R0.xy, c[4].x;
+MUL   R1.xyz, R0.z, R2;
+MUL   R1.xyz, R1, c[8].x;
+ADD   R3.xyz, R1, c[5];
+MOV   R1.xy, c[4].x;
+DP3   R0.z, R3, R3;
+DP3   R0.w, R2, R3;
+RSQ   R0.z, R0.z;
+MOV   R2.xyz, c[14];
+MAD   R0.w, -R0, R0.z, c[8].y;
+MOV   R3.xy, c[4].x;
+MAD   R0.z, R0.w, c[8], c[8].w;
+MOV   R4.xy, c[4].x;
+MAD   R1.z, R0.w, R0, c[9].x;
+MOV   R0.z, c[11].x;
+MAD   R1.z, R0.w, R1, c[9].y;
+ADD   R0.z, -c[10].x, R0;
+MAD   R4.z, R0.w, R1, c[9];
+MUL   R3.z, R0, c[12].x;
+LIT   R0.z, R4.xyzz;
+LIT   R1.z, R3.xyzz;
+MUL   R2.xyz, c[13].x, R2;
+ADD   R2.xyz, R2, c[15].x;
+MUL   R0.z, R0, R1;
+MUL   R2.xyz, -R0.z, R2;
+MUL   R2.xyz, R2, c[9].w;
+MOV   R1.z, R2.y;
+MOV   R0.z, R2.x;
+LIT   R1.z, R1.xyzz;
+LIT   R0.z, R0.xyzz;
+MOV   R5.z, R2;
+LIT   o[COL1].z, R5.xyzz;
+MOV   o[COL1].x, R0.z;
+MOV   o[COL1].y, R1.z;
+END
+# 54 instructions, 6 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: SpaceFromSpaceCg.frag
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.s2Test
+#var float4 gl_Color :  :  : 0 : 0
+#var float4 gl_SecondaryColor : $vin.COL1 : COL1 : 1 : 1
+#var float4 gl_TexCoord0 : $vin.TEX0 : TEX0 : 2 : 1
+#var sampler2D s2Test :  : texunit 0 : 3 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0, f[TEX0], TEX0, 2D;
+MULR  o[COLR], f[COL1], R0;
+END
+# 2 instructions, 1 R-regs, 0 H-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!VP2.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile vp30 -entry main
+# source file: SpaceFromAtmosphereCg.vert
+# source file: ./Common.cg
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile vp30
+#program main
+#semantic main.gl_ModelViewProjectionMatrix
+#semantic main.v3CameraPos
+#semantic main.v3LightPos
+#semantic main.v3InvWavelength
+#semantic main.fCameraHeight
+#semantic main.fCameraHeight2
+#semantic main.fOuterRadius
+#semantic main.fOuterRadius2
+#semantic main.fInnerRadius
+#semantic main.fInnerRadius2
+#semantic main.fKrESun
+#semantic main.fKmESun
+#semantic main.fKr4PI
+#semantic main.fKm4PI
+#semantic main.fScale
+#semantic main.fScaleOverScaleDepth
+#semantic nSamples
+#semantic fSamples
+#semantic fScaleDepth
+#semantic fInvScaleDepth
+#var float4 gl_Vertex : $vin.ATTR0 : ATTR0 : 0 : 1
+#var float4 gl_MultiTexCoord0 : $vin.ATTR8 : ATTR8 : 1 : 1
+#var float4x4 gl_ModelViewProjectionMatrix :  : c[0], 4 : 2 : 1
+#var float3 v3CameraPos :  : c[5] : 3 : 1
+#var float3 v3LightPos :  :  : 4 : 0
+#var float3 v3InvWavelength :  : c[11] : 5 : 1
+#var float fCameraHeight :  : c[7] : 6 : 1
+#var float fCameraHeight2 :  :  : 7 : 1
+#var float fOuterRadius :  :  : 8 : 0
+#var float fOuterRadius2 :  :  : 9 : 1
+#var float fInnerRadius :  : c[8] : 10 : 1
+#var float fInnerRadius2 :  :  : 11 : 0
+#var float fKrESun :  :  : 12 : 0
+#var float fKmESun :  :  : 13 : 0
+#var float fKr4PI :  : c[10] : 14 : 1
+#var float fKm4PI :  : c[12] : 15 : 1
+#var float fScale :  :  : 16 : 0
+#var float fScaleOverScaleDepth :  : c[9] : 17 : 1
+#var float4 main.pos : $vout.HPOS : HPOS : -1 : 1
+#var float4 main.c0 :  :  : -1 : 0
+#var float4 main.c1 : $vout.COL1 : COL1 : -1 : 1
+#var float3 main.t0 : $vout.TEX0 : TEX0 : -1 : 1
+#var int nSamples :  :  : -1 : 0
+#var float fSamples :  :  : -1 : 0
+#var float fScaleDepth :  :  : -1 : 0
+#var float fInvScaleDepth :  :  : -1 : 0
+#const c[4] = 2.718282 1 5.25 -6.8
+#const c[6] = 3.83 0.459 -0.00287 0.25
+#default fSamples = 2
+#default fScaleDepth = 0.25
+#default fInvScaleDepth = 4
+BB1:
+DP4   o[HPOS].w, v[0], c[3];
+DP4   o[HPOS].z, v[0], c[2];
+DP4   o[HPOS].y, v[0], c[1];
+DP4   o[HPOS].x, v[0], c[0];
+MOV   o[TEX0].xyz, v[8];
+MOV   R5.xy, c[4].x;
+ADD   R2.xyz, v[0], -c[5];
+MOV   R0.xy, c[4].x;
+DP3   R0.w, R2, R2;
+DP3   R0.z, c[5], c[5];
+RSQ   R0.w, R0.w;
+MOV   R1.xy, c[4].x;
+RSQ   R0.z, R0.z;
+MUL   R2.xyz, R2, R0.w;
+DP3   R0.w, R2, c[5];
+MOV   R2.xyz, c[11];
+MAD   R0.w, -R0, R0.z, c[4].y;
+MOV   R3.xy, c[4].x;
+MAD   R0.z, R0.w, c[4], c[4].w;
+MOV   R4.xy, c[4].x;
+MAD   R1.z, R0.w, R0, c[6].x;
+MOV   R0.z, c[8].x;
+MAD   R1.z, R0.w, R1, c[6].y;
+ADD   R0.z, -c[7].x, R0;
+MAD   R4.z, R0.w, R1, c[6];
+MUL   R3.z, R0, c[9].x;
+LIT   R0.z, R4.xyzz;
+LIT   R1.z, R3.xyzz;
+MUL   R2.xyz, c[10].x, R2;
+ADD   R2.xyz, R2, c[12].x;
+MUL   R0.z, R0, R1;
+MUL   R2.xyz, -R0.z, R2;
+MUL   R2.xyz, R2, c[6].w;
+MOV   R1.z, R2.y;
+MOV   R0.z, R2.x;
+LIT   R1.z, R1.xyzz;
+LIT   R0.z, R0.xyzz;
+MOV   R5.z, R2;
+LIT   o[COL1].z, R5.xyzz;
+MOV   o[COL1].x, R0.z;
+MOV   o[COL1].y, R1.z;
+END
+# 41 instructions, 6 R-regs
+
+
+2004-12-20 18:49:55  Severity: INFORMATION   Thread: 0xBAC
+!!FP1.0
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp30 -entry main
+# source file: SpaceFromAtmosphereCg.frag
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp30
+#program main
+#semantic main.s2Test
+#var float4 gl_Color :  :  : 0 : 0
+#var float4 gl_SecondaryColor : $vin.COL1 : COL1 : 1 : 1
+#var float4 gl_TexCoord0 : $vin.TEX0 : TEX0 : 2 : 1
+#var sampler2D s2Test :  : texunit 0 : 3 : 1
+#var float4 main : $vout.COL : COL : -1 : 1
+TEX   R0, f[TEX0], TEX0, 2D;
+MULR  o[COLR], f[COL1], R0;
+END
+# 2 instructions, 1 R-regs, 0 H-regs
+
+

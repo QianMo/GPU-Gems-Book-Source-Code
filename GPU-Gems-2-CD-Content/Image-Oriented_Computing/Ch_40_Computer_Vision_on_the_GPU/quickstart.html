@@ -1,0 +1,307 @@
+<html>
+
+<head>
+<title>OpenVIDIA : Parallel GPU Computer Vision</title>
+<meta name="description" content="The OpenVIDIA project implements some computer vision algorithms on computer graphics hardware, in OpenGL and Cg. The project provides useful example programs which run computer vision algorithms on single or parallel gfx processing units(GPU).">
+<meta name="keywords" content="computer vision, real time, GPU,
+graphics processing unit, openvidia, parallel graphics, parallel GPU, parallel,
+general purpose, machine vision augmented reality, mixed reality, software, tools, tool">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" />
+
+<style>
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 13px; color: #000000; }
+a                 { color: #002299 }
+#.pagetitle        { font-size: 28px; font-weight: bold; color: #336699; }
+.pagetitle        { font-size: 24px; font-weight: normal; color: #336699; }
+.dateheader       { font-size: 14px; font-weight: bold; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+<!--
+  <td colspan="6"><span class="pagetitle">$blog_title</span></td>
+-->
+<!--
+  <td bgcolor="#EEEEEE"></td>
+-->
+  <td colspan="5" height=40 bgcolor="#EEEEEE">
+       <h1> <span class="pagetitle"> 
+OpenVIDIA : Parallel GPU Computer Vision</span></h1>
+  </td>
+<!--
+  <td colspan="0" bgcolor = "#EEEEEE" height=40>
+ -->
+  <center>
+  </center>
+<!--
+  </td>
+-->
+    
+
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+<!--
+  <td bgcolor="#DDDDDD"><nobr>&nbsp; &nbsp; </nobr>
+-->
+  
+  <!-- left column -->
+  <td bgcolor="#DDDDDD" width="20%" >
+  <br><b>
+<a href="index.html">Home</a><br><br>
+<a href="screenshots.html">Screenshots</a><br><br>
+<a href="installation.html">Installation<br>Instructions</a><br><br>
+<a href="quickstart.html">Quickstart</a><br><br>
+<a href="programming.html">Programming<br>Example</a><br><br>
+<a href="openvidia-0.07.tar.gz">CD Source Code</a><br><br>
+<a href="http://sourceforge.net/project/showfiles.php?group_id=98913">Download</a><br><br>
+<a href="papers.html">Papers</a><br></b>
+
+<hr>
+   <b>Project</b> <br>
+   <a href=http://sourceforge.net/projects/openvidia>sf.net project page</a><br>
+<!--#include virtual="projhtml.cache" -->
+<hr>
+
+   <p>
+   <b>Related Projects</b>
+   <br />
+   <p>
+   <a href="http://comparametric.sf.net">Comparametric Toolkit</a>
+   </p>
+
+   <p>
+   <b>Links</b> 
+     <p>
+   <a href="http://fly.cc.fer.hr/~unreal/theredbook/">Open GL Ref.</a>
+   </p>
+
+   <p>
+   <a href="http://www.linuxhardware.org/nvclock/">GeForce FX Overclocking</a>
+   </p>
+   <p>
+   <a href="http://www.gpgpu.org">GPGPU</a>
+   </p>
+    
+<p>
+   <a href="http://www.eyetap.org"><img src="eyetaplogo.png" border="1" hspace="3" vspace="3" /></a>
+   </p>
+
+   <p>
+  <a href="http://sourceforge.net"><img
+    src="sflogo.php"
+    width="88" height="31" border="0" hspace="3" vspace="3" alt="SourceForge.net Logo"
+    /></a></p>
+
+
+  <p>
+<i>   Page design based on <a href="http://www.blosxom.com">Blosxom</a> (which was
+   used originally before the move to sourceforge).</i></p>
+<p>
+<i>This page best viewed with Dillo, Lynx, w3m, Mozilla-Firefox, Galeon, Epiphany . . .</i></p>
+
+  </td>
+<!--
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td>
+-->
+
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#FFFFFF" width="100%"> 
+<br />
+
+<a name ="top"></a>
+<h2>OpenVIDIA Quickstart Information</h2>
+<p>
+Assuming that you've succesfully compiled the programs, here's a 
+quick description of what they do, and common usage examples.  This is 
+just a short list, check the makefile for many more executables (in various
+states of maintenance..)
+</p>
+<p>
+For all the programs, the -h option gives help and additional options.
+</p>
+Programs:<br>
+<a href=#glestpchirp2m>glestpchirp2m</a><br>
+<a href=#hwOrbits>hwOrbits</a><br>
+<a href=#imlibServer>imlibServer</a><br>
+<a href=#skintrack>skintrack</a><br>
+<a href=#flcornersTrack>flcornersTrack</a><br>
+<a href=#canny>canny</a><br>
+<a href=#3dcoordCamFrustum>3dcoordCamFrustum</a><br>
+<hr>
+
+<a name=flcornersTrack>
+<h3>Program Name: flcornersTrack</h3>
+</a>
+<p>This is a simple program for annotating environments.<br>
+<img src=flcornerstrackscreenshot0.06.jpg>
+<br>
+<p>
+Upon starting the program, a computer-generated tag is displayed in the centre 
+of the image, and this position is then successively tracked in the video
+input.
+</p>
+<p>The tag can be moved to a position by clicking the middle mouse button on 
+where you'd like it to appear in the image.  A new reference frame can be taken
+by pressing "r" in the video window.
+</p>
+<p>
+The text of the tag can be changed by typing in the "Tag" box in the interface
+GUI.   The output boxes labelled "RANSAC", "Matched", and "Features" show
+information about the corner tracking.  "Features" is the number of features
+(corners) detected in the image, "Matched" is the number of features matched to
+the reference frame, and "RANSAC" is the number of matched features
+contributing to the Projective Orbit motion being detected.  The corners and
+matches can be displayed by clicking on the two toggle buttons labelled "Show
+Matches" and "Show Corners".
+</p>
+<p>The Relative Tracking button allows it to update reference frames on the 
+fly as it needs them.  This allows for more motion/rotation of the camera, but
+at the expense of some drift over time.  Should it lose track, the camera should be
+returned to its last tracked position, and the program is often able to recover.</p>
+<p><b>flcornersTrack</b> works well for a person standing in a fixed location looking
+about a scene.  Current work involves adding panoramic reference frames, multiple points, projective feature invariance etc. etc.. <a href="http://openvidia.org/inetdemo.mpg">Here's a video [1MB].</a></p>
+
+
+<a href="#top">[ back to top ]</a><br>
+</a>
+<a name="glestpchirp2m">
+<h3>Program Name: glestpchirp2m</h3>
+</a>
+<p>
+This program creates a panorama with two input images.  It is a 
+GPU hardware implementation of 'estpchirp2m' from the videorbits package
+(see <a href="http://comparametric.sf.net">http://comparametric.sf.net</a> for details).
+</p>
+<p>
+To demonstrate it, type (in the openvidia directory)
+</p>
+
+<b>   ./glestpchirp2m -r </b>
+<p>
+and you should see the two test images from the distribution.  Depending
+on how fast your card is, you might see the images move so that they
+are lined up properly (on a fast card, it might be too fast ;) ).  The
+-r option renders the images to the display.
+</p>
+<p>
+You can use your own images, by specifying two on the command line:
+</p>
+ 
+  <b>./glestpchirp2m image1.ppm image2.ppm -r </b>
+<p>
+You can enable downsampling (faster, less accurate estimation) by using the
+a -l 1  option.
+</p>
+
+
+<br>
+<a href="#top">[ back to top ]</a><br>
+
+<a name="hwOrbits">
+<h3>Program Name: hwOrbits </h3>
+</a>
+<p>
+This does the same thing as glestpchirp2m (aligns two input images)
+but acts as a server.  Typical usage is:
+</p>
+
+  <b>./hwOrbits -c 1 </b>
+<p>
+Which starts it running, with client "id" 1.  It will sit there until
+it gets work to do from another program called imlibServer.
+</p>
+<p>
+If you have multiple graphics cards, you can start up a separate
+process on each head by opening a terminal on that head, and running this
+program (See the note on potential -display :0.1 problems, and 
+likely you'll want to set a different client id)
+</p>
+<p>
+Again -l 1 option can be used.
+</p>
+
+
+<br>
+<a href="#top">[ back to top ]</a><br>
+
+<a name="imlibServer">
+<h3>Program Name: imlibServer</h3>
+</a>
+<p>
+This program sends image pairs to the hwOrbits program and receives the
+paramters which line them up.    Typical usage is:
+</p>
+
+  <b>./imlibServer -p 8 image1.ppm image2.ppm</b>
+<p>
+This will return 8 parameters which line up the two images.    When no
+image names are given, the default test images are used.  Right now it
+sends to a hwOrbits program on client "id" 1 (as above).
+</p>
+
+
+<br>
+<a href="#top">[ back to top ]</a><br>
+<a name="skintrack">
+<h3>Program Name: skintrack</h3>
+</a>
+<p>
+This is a program which tracks skin coloured areas, useful for
+tracking a person's hands.   Typical usage is:
+</p>
+
+  <b>./skintrack</b>
+<p>
+Upon starting you'll see a box which represents the region being tracked.
+If you move your hand into this region, you should see it start to follow
+your hand around the screen.  </p>
+                <p>This is currently being used as a gesturing interface for wearable computers equipped with Eyetap devices.  To control your X11 session, a 
+program in the /tools directory is provided.  Type 'make -f Makefile.xnee htrackServer' to compile it (might have to set the XNEE_DIR to point to your libxnee source directory), and then, run ./skintrack -s 3 and ./htrackServer 3 640 480
+ for instance ,to have the hand tracking output control your mouse pointer.
+</p>
+<p>It may be necessary to alter the initial guess for skin colour to suit your system (see
+the code).  Additionally, some versions of the Cg toolkit have problems with the moment 
+summations, 1.2.1 is verified to work</p>
+<a href="#top">[ back to top ]</a><br>
+
+<a name="canny">
+<h3>Program Name: canny</h3>
+</a>
+<p>
+Just does a canny edge detector and shows it on the screen.  Type 0-9 to see the buffers,
+showing each stage of processing, with the the last buffer being the final edges.  Also,
+the keys (a,z),(s,x) control thresholding parameters.
+</p>
+<a href="#top">[ back to top ]</a><br>
+
+<a name="3dcoordCamFrustum">
+<h3>Program Name: 3dcoordCamFrustum</h3>
+</a>
+<p>
+This program shows a 3d coordinate system registered onto a plane.  It works by 
+accepting 4 mouse clicks, one at each corner of a plane, and then displays the
+3d axis centered on the plane.  
+</p>
+<a href="#top">[ back to top ]</a><br>
+</body>
+</html>
+
+
+
+
+
+

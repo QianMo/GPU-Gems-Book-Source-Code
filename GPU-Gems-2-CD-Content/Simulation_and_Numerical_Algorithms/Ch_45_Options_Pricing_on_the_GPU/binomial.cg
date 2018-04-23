@@ -1,0 +1,93 @@
+/*********************************************************************NVMH3****
+
+  Copyright NVIDIA Corporation 2004
+  TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
+  *AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
+  OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL
+  NVIDIA OR ITS SUPPLIERS BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR
+  CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR
+  LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS
+  INFORMATION, OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR
+  INABILITY TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS BEEN ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGES.
+
+  ****************************************************************************/
+#include "pug.cg"
+
+float priceAt(Stream initialPrice, Stream u, float2 offset, float step)
+{
+    float uval = u.value(offset.x);
+    return initialPrice.value(offset.x) * pow(uval, 2*(offset.y-0.5) - step);
+}
+
+void PutInit(Stream stockPrice,
+             Stream strikePrice,
+             Stream u,
+             uniform float numSteps,
+             float2 offset : DOMAIN0,
+             out float4 result : RANGE0)
+{
+    float price = priceAt(stockPrice, u, offset, numSteps);
+    result = max(strikePrice.value(offset.x) - price, 0.);
+}
+
+void CallInit(Stream stockPrice,
+              Stream strikePrice,
+              Stream u,
+              uniform float numSteps,
+              float2 offset : DOMAIN0,
+              out float4 result : RANGE0)
+{
+    float price = priceAt(stockPrice, u, offset, numSteps);
+    result = max(price - strikePrice.value(offset.x), 0.);
+
+}
+
+void EuropeanIterate(Stream Pu,
+                     Stream Pd,
+                     Stream optval,
+                     float2 offset : DOMAIN0,
+                     float2 offsetplus1: DOMAIN1,
+                     out float4 result : RANGE0)
+{
+    float val = (Pu.value(offset.x)*optval.value(offsetplus1) +
+                 Pd.value(offset.x)*optval.value(offset));
+    result = val;
+}
+
+void AmericanCallIterate(Stream Pu,
+                         Stream Pd,
+                         Stream stockPrice,
+                         Stream strikePrice,
+                         Stream u,
+                         Stream optval,
+                         uniform float step,
+                         float2 offset : DOMAIN0,
+                         float2 offsetplus1: DOMAIN1,
+                         out float4 result : RANGE0)
+{
+    float price = priceAt(stockPrice, u, offset, step);
+    float payoff = max(price - strikePrice.value(offset.x), 0.);
+    float value = (Pu.value(offset.x)*optval.value(offsetplus1) +
+                   Pd.value(offset.x)*optval.value(offset));
+    result = max(value, payoff);
+}
+
+void AmericanPutIterate( Stream Pu,
+                         Stream Pd,
+                         Stream stockPrice,
+                         Stream strikePrice,
+                         Stream u,
+                         Stream optval,
+                         uniform float step,
+                         float2 offset : DOMAIN0,
+                         float2 offsetplus1: DOMAIN1,
+                         out float4 result : RANGE0)
+{
+    float price = priceAt(stockPrice, u, offset, step);
+    float payoff = max(strikePrice.value(offset.x) - price, 0.);
+    float value = (Pu.value(offset.x)*optval.value(offsetplus1) +
+                   Pd.value(offset.x)*optval.value(offset));
+    result = max(value, payoff);
+}

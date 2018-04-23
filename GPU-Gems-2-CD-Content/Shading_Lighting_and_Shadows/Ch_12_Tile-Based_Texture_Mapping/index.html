@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>
+Source Code for "Tile-Based Texture Mapping on Graphics Hardware"
+</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>
+<center>
+Source Code for "Tile-Based Texture Mapping on Graphics Hardware"
+</center>
+</h1>
+
+<p align="center">
+<a href="http://graphics.stanford.edu/~liyiwei/">Li-Yi Wei</a>
+</p>
+
+<h3> Description </h3>
+<blockquote>
+This directory contains the source code for my Graphics Hardware 2004 paper "Tile-Based Texture Mapping on Graphics Hardware", as well GPU Gems II article "Tile-Based Texture Mapping". They present the same basic algorithms, but my GPU Gems II article contains more information on how to sanitize the tile set to avoid artifacts, which is absent from my Graphics Hardware 2004 paper.
+</blockquote>
+
+<h3>Matlab Code for Making Tiles</h3>
+<blockquote>
+There are 4 Matlab (.m) files in this directory. Just run tiles.m inside Matlab, which shows you how I built my tiles for the purple flowers and brown bricks.
+<p>
+COPYRIGHT issue: I acquired brown_bricks.jpg and purple_flowers.jpg somewhere on the internet, and I have no idea if they are copyright protected or not. If you are the owners of these texture, please let me know so I could acknowledge you.
+</blockquote>
+
+<h3>Cg Code for GPU Run-Time</h3>
+<blockquote>
+<h4>Compile</h4>
+<blockquote>
+To compile the code, simply open the workspace "TileMapping.dsw" by Microsoft Visual Studio, and build everything. Notice that you need to have Cg properly installed on your machine. If you have problem with Cg installation, please consult NVIDIA's Cg developer site. Please don't send me questions regarding Cg issues. If you do, I will simply ignore.
+</blockquote>
+
+<h4>Run</h4>
+<blockquote>
+To run the code, look at the command line options of TileMapping.cpp.
+
+<p>
+Here is an example command line that displays a static tiling:
+<br>
+Release/TileMapping.exe -1 -1 2 2 1 sample_tiles.ppm 8 8 0 0 -1 0 1 0 0 -1
+
+<p>
+And this is an example command line that shows an animation:
+<br>
+Release/TileMapping 240 320 2 2 1 sample_tiles.ppm 128 128 0 0 -1 0 1 2 1 -1
+</blockquote>
+</blockquote>
+
+<h3> Disclaimer </h3>
+<blockquote>
+You are on your own if you want to use this code! If you find a bug please send me an email and I might take a look, but I have no responsibility in debugging or maintaining this code.
+</blockquote>
+
+<hr>
+<address>liyiwei@graphics.stanford.edu</address>
+
+</body>
+</html>

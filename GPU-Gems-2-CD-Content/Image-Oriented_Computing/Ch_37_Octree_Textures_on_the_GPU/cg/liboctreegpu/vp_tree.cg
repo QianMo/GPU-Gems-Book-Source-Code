@@ -1,0 +1,65 @@
+//#define ATLAS
+
+// geometric input (sent by application)
+struct appin
+{
+  float4 Position     : POSITION;
+  float3 N            : NORMAL;
+  float3 T            : TEXCOORD1;
+  float3 TCoord0      : TEXCOORD0;
+  float4 Color0       : COLOR0;
+  float4 Snake        : TEXCOORD2;
+};
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float4 Color0       : COLOR0;
+  float3 TCoord0      : TEXCOORD0;
+  float3 T            : TEXCOORD1;
+  float3 B            : TEXCOORD2;
+  float3 N            : TEXCOORD3;
+  float3 I            : TEXCOORD4;
+  float3 L            : TEXCOORD5;
+  float3 NObj         : TEXCOORD6;
+  float4 Snake        : TEXCOORD7;
+};
+
+V2FI main(appin IN,
+	  uniform float4x4 ViewProj,
+	  uniform float4x4 View,
+	  uniform float4x4 ITView
+  )
+{
+  V2FI OUT;
+  
+  float4 pos       = mul(ViewProj,IN.Position);
+  OUT.HPosition    = pos;
+
+  OUT.TCoord0      = IN.TCoord0;
+
+  float3 t         = mul(View,float4(IN.T,0.0)).xyz;
+  float3 n         = mul(ITView,float4(IN.N,0.0)).xyz;
+  t=normalize(t);
+  n=normalize(n);
+  OUT.T            = t;
+  OUT.B            = cross(n,t);
+  OUT.N            = n;
+  OUT.I            = - mul(View,IN.Position).xyz;
+  OUT.L            = normalize(float3(0.0,0.0,1.0));
+//  OUT.L            = normalize(float3(0.0,0.0,-1.0));
+  OUT.NObj         = IN.N;
+
+#ifdef ATLAS
+  float clr        = 0.5+0.5*clamp(dot(float3(0.0,0.0,1.0),normalize(n)),0.0,1.0);
+  OUT.Color0       = float4(clr.xxx,1.0);
+#else
+  OUT.Color0       = IN.Color0;
+#endif
+
+  
+  OUT.Snake        = IN.Snake;
+
+  return OUT;
+}

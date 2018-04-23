@@ -1,0 +1,42 @@
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float2 TCoord0      : TEXCOORD0;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI             IN,
+	      uniform sampler2D Tex
+	      )
+{
+    PixelOut OUT;
+
+    float4 res   = float4(0.0,0.0,0.0,0.0);
+    float  alpha = 0.0;
+    float  sz    = TEX_SIZE;
+
+    for (float i=0.0;
+	 i<=TEX_SIZE_LOG2;
+	 i+=1.0)
+    {
+	float2 MIP=float2(sz/TEX_SIZE,
+			  0.0);
+
+	float4 c=(float4)tex2D(Tex,IN.TCoord0,
+			       MIP.xy,MIP.yx);
+	sz /= 2.0;
+  
+	res=c + res*(1.0-c.w);
+    }
+
+    // done
+    OUT.COL=float4(res.xyz/res.w,1);
+
+    return OUT;
+}

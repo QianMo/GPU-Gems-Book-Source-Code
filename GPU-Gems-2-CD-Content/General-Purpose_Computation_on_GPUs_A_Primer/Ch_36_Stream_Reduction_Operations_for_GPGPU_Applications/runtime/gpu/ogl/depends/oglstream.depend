@@ -1,0 +1,16 @@
+built/oglstream.obj: ../../../include/brook/vc6vector.hpp
+built/oglstream.obj: ./oglcheckgl.hpp
+built/oglstream.obj: oglstream.cpp
+built/oglstream.obj: ../../../include/brook/type_promotion.hpp
+built/oglstream.obj: ../../../include/brook/kerneldesc.hpp
+built/oglstream.obj: ./../gpucontext.hpp
+built/oglstream.obj: ./oglfunc.hpp
+built/oglstream.obj: ./../../runtime.hpp
+built/oglstream.obj: ./../../logger.hpp
+built/oglstream.obj: ./../../profiler.hpp
+built/oglstream.obj: ./../gpubase.hpp
+built/oglstream.obj: ../../../include/brook/brt.hpp
+built/oglstream.obj: ../../../include/brook/brtvector.hpp
+built/oglstream.obj: ./ogltexture.hpp
+built/oglstream.obj: ./oglcontext.hpp
+built/oglstream.obj: ./oglwindow.hpp

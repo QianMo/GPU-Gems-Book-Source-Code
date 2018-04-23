@@ -1,0 +1,31 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : simpleVP.cg
+//  Desc : simple vertex program, for debugging
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define inputs from application
+struct VpIn
+{
+    float4 Position      : POSITION;
+    float2 TexCoord0     : TEXCOORD0;    
+    float3 Normal        : TEXCOORD1;
+};
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPosition    : POSITION;    
+    float4 TexCoord0    : TEXCOORD0;
+};
+
+// vertex program
+VpOut main(VpIn IN, uniform float4x4 ModelViewProj, uniform float4 FogParams)
+{
+    VpOut OUT;
+
+    OUT.HPosition = mul(ModelViewProj, IN.Position);     // transform vertex position into homogenous clip-space
+    OUT.TexCoord0.xy = IN.TexCoord0.xy;                   // output texture coordinates for decal/normal texture
+                   
+    return OUT;
+}

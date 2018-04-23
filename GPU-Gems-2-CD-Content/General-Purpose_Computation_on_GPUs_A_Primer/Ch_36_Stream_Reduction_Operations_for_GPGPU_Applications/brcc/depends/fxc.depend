@@ -1,0 +1,17 @@
+built/fxc.obj: ./location.h
+built/fxc.obj: ./callback.h
+built/fxc.obj: ./main.h
+built/fxc.obj: ./identify.h
+built/fxc.obj: ./decl.h
+built/fxc.obj: ./context.h
+built/fxc.obj: ./config.h
+built/fxc.obj: ./codegen.h
+built/fxc.obj: ./fxc.h
+built/fxc.obj: ./dup.h
+built/fxc.obj: ./symbol.h
+built/fxc.obj: ./subprocess.h
+built/fxc.obj: ./project.h
+built/fxc.obj: fxc.cpp
+built/fxc.obj: ./parseenv.h
+built/fxc.obj: ./ps2arb.h
+built/fxc.obj: ./utype.h

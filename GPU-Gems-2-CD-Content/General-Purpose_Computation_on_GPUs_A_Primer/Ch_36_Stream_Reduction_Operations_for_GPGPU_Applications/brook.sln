@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "brcc", "brcc\brcc.vcproj", "{14BE01F1-AC5F-493C-9270-3D153FDB5305}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "runtime", "runtime\runtime.vcproj", "{8C4E82B8-5F07-4AE6-A68C-16E46B436F15}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{14BE01F1-AC5F-493C-9270-3D153FDB5305}.Debug.ActiveCfg = Debug|Win32
+		{14BE01F1-AC5F-493C-9270-3D153FDB5305}.Debug.Build.0 = Debug|Win32
+		{14BE01F1-AC5F-493C-9270-3D153FDB5305}.Release.ActiveCfg = Release|Win32
+		{14BE01F1-AC5F-493C-9270-3D153FDB5305}.Release.Build.0 = Release|Win32
+		{8C4E82B8-5F07-4AE6-A68C-16E46B436F15}.Debug.ActiveCfg = Debug|Win32
+		{8C4E82B8-5F07-4AE6-A68C-16E46B436F15}.Debug.Build.0 = Debug|Win32
+		{8C4E82B8-5F07-4AE6-A68C-16E46B436F15}.Release.ActiveCfg = Release|Win32
+		{8C4E82B8-5F07-4AE6-A68C-16E46B436F15}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

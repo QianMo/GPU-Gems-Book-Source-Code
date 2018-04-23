@@ -1,0 +1,1322 @@
+<?xml version="1.0"?>
+<IVCSpawn_Log>
+	<VC_Environment
+		USERDNSDOMAIN="DOMAIN-I15.LOCAL"
+		PATHEXT=".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH"
+		USERPROFILE="C:\Dokumente und Einstellungen\krueger"
+		OS="Windows_NT"
+		CG_BIN_PATH="C:\Programme\NVIDIA Corporation\Cg\bin"
+		LIBPATH="C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322"
+		CLASSPATH="&quot;C:\Programme\Java\j2re1.4.2_03\lib\ext\QTJava.zip&quot;"
+		NVSGSDKHOME="C:\Programme\NVIDIA Corporation\NVSGSDK"
+		USERNAME="krueger"
+		LIB="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib;p:\c++\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\lib"
+		APPDATA="C:\Dokumente und Einstellungen\krueger\Anwendungsdaten"
+		_ACP_ATLPROV="C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin\ATLPROV.DLL"
+		windir="C:\WINDOWS"
+		PROCESSOR_REVISION="0209"
+		ALLUSERSPROFILE="C:\Dokumente und Einstellungen\All Users"
+		INCLUDE="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		PROCESSOR_LEVEL="15"
+		TMP="C:\DOKUME~1\krueger\LOKALE~1\Temp"
+		LOGONSERVER="\\I15-WS-02"
+		HOMEPATH="\"
+		DXSDK_DIR="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\"
+		QTJAVA="&quot;C:\Programme\Java\j2re1.4.2_03\lib\ext\QTJava.zip&quot;"
+		_ACP_INCLUDE="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		VS71COMNTOOLS="C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\"
+		CG_LIB_PATH="C:\Programme\NVIDIA Corporation\Cg\lib"
+		SESSIONNAME="Console"
+		ComSpec="C:\WINDOWS\system32\cmd.exe"
+		_ACP_LIB="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib;p:\c++\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\lib;c:\dx90sdk\include;C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		HOMESHARE="\\i15-ds-01\home\krueger"
+		HOMEDRIVE="Z:"
+		NUMBER_OF_PROCESSORS="2"
+		DEVMGR_SHOW_DETAILS="1"
+		CommonProgramFiles="C:\Programme\Gemeinsame Dateien"
+		_ACP_PATH="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Utilities;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\tools;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\ide;C:\Programme\HTML Help Workshop\;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\bin;C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322;C:\Perl\bin\;C:\PROGRA~1\Express\RUNTIME\BIN\PC;C:\Programme\Tex\texmf\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Programme\Tools;C:\PROGRA~1\SecureFX;C:\Programme\ATI Technologies\ATI Control Panel;C:\Programme\j2sdk1.4.1_02\bin"
+		Path="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Utilities;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\tools;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\ide;C:\Programme\HTML Help Workshop\;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\bin;C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322;C:\Perl\bin\;C:\PROGRA~1\Express\RUNTIME\BIN\PC;C:\Programme\Tex\texmf\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Programme\Tools;C:\PROGRA~1\SecureFX;C:\Programme\ATI Technologies\ATI Control Panel;C:\Programme\j2sdk1.4.1_02\bin"
+		USERDOMAIN="DOMAIN-I15"
+		FP_NO_HOST_CHECK="NO"
+		SystemRoot="C:\WINDOWS"
+		HOME="Z:\"
+		SystemDrive="C:"
+		CG_INC_PATH="C:\Programme\NVIDIA Corporation\Cg\include"
+		PROCESSOR_IDENTIFIER="x86 Family 15 Model 2 Stepping 9, GenuineIntel"
+		COMPUTERNAME="I15-PC-24"
+		PROCESSOR_ARCHITECTURE="x86"
+		TEMP="C:\DOKUME~1\krueger\LOKALE~1\Temp"
+		INTEL_LICENSE_FILE="C:\Programme\Gemeinsame Dateien\Intel\Licenses"
+		ProgramFiles="C:\Programme"
+		MAYA_SHADER_LIBRARY_PATH="C:\AW\ShaderLibrary\shaders"/>
+	<ICL_Environment
+		USERDNSDOMAIN="DOMAIN-I15.LOCAL"
+		PATHEXT=".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH"
+		CG_BIN_PATH="C:\Programme\NVIDIA Corporation\Cg\bin"
+		OS="Windows_NT"
+		USERPROFILE="C:\Dokumente und Einstellungen\krueger"
+		CLASSPATH="&quot;C:\Programme\Java\j2re1.4.2_03\lib\ext\QTJava.zip&quot;"
+		LIBPATH="C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322"
+		NVSGSDKHOME="C:\Programme\NVIDIA Corporation\NVSGSDK"
+		LIB="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib;p:\c++\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\lib"
+		USERNAME="krueger"
+		APPDATA="C:\Dokumente und Einstellungen\krueger\Anwendungsdaten"
+		_ACP_ATLPROV="C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin\ATLPROV.DLL"
+		windir="C:\WINDOWS"
+		PROCESSOR_REVISION="0209"
+		ALLUSERSPROFILE="C:\Dokumente und Einstellungen\All Users"
+		INCLUDE="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		PROCESSOR_LEVEL="15"
+		LOGONSERVER="\\I15-WS-02"
+		TMP="C:\DOKUME~1\krueger\LOKALE~1\Temp"
+		HOMEPATH="\"
+		DXSDK_DIR="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\"
+		QTJAVA="&quot;C:\Programme\Java\j2re1.4.2_03\lib\ext\QTJava.zip&quot;"
+		_ACP_INCLUDE="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		CG_LIB_PATH="C:\Programme\NVIDIA Corporation\Cg\lib"
+		VS71COMNTOOLS="C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\"
+		SESSIONNAME="Console"
+		ComSpec="C:\WINDOWS\system32\cmd.exe"
+		HOMESHARE="\\i15-ds-01\home\krueger"
+		_ACP_LIB="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib;p:\c++\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\lib;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\lib;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\lib;c:\dx90sdk\include;C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Include;p:\c++\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\atlmfc\include;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\PlatformSDK\include;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\include"
+		HOMEDRIVE="Z:"
+		DEVMGR_SHOW_DETAILS="1"
+		NUMBER_OF_PROCESSORS="2"
+		CommonProgramFiles="C:\Programme\Gemeinsame Dateien"
+		_ACP_PATH="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Utilities;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\tools;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\ide;C:\Programme\HTML Help Workshop\;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\bin;C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322;C:\Perl\bin\;C:\PROGRA~1\Express\RUNTIME\BIN\PC;C:\Programme\Tex\texmf\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Programme\Tools;C:\PROGRA~1\SecureFX;C:\Programme\ATI Technologies\ATI Control Panel;C:\Programme\j2sdk1.4.1_02\bin"
+		Path="C:\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Utilities;C:\Programme\Microsoft Visual Studio .NET 2003\Vc7\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin\prerelease;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\Tools\bin;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\tools;C:\Programme\Microsoft Visual Studio .NET 2003\Common7\ide;C:\Programme\HTML Help Workshop\;C:\Programme\Microsoft Visual Studio .NET 2003\SDK\v1.1\bin;C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322;C:\Perl\bin\;C:\PROGRA~1\Express\RUNTIME\BIN\PC;C:\Programme\Tex\texmf\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Programme\Tools;C:\PROGRA~1\SecureFX;C:\Programme\ATI Technologies\ATI Control Panel;C:\Programme\j2sdk1.4.1_02\bin"
+		USERDOMAIN="DOMAIN-I15"
+		FP_NO_HOST_CHECK="NO"
+		SystemRoot="C:\WINDOWS"
+		HOME="Z:\"
+		SystemDrive="C:"
+		CG_INC_PATH="C:\Programme\NVIDIA Corporation\Cg\include"
+		PROCESSOR_IDENTIFIER="x86 Family 15 Model 2 Stepping 9, GenuineIntel"
+		COMPUTERNAME="I15-PC-24"
+		PROCESSOR_ARCHITECTURE="x86"
+		INTEL_LICENSE_FILE="C:\Programme\Gemeinsame Dateien\Intel\Licenses"
+		TEMP="C:\DOKUME~1\krueger\LOKALE~1\Temp"
+		MAYA_SHADER_LIBRARY_PATH="C:\AW\ShaderLibrary\shaders"
+		ProgramFiles="C:\Programme"/>
+	<Commands>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000001.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000001.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000002.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000002.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000003.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000003.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000004.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000004.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000005.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000005.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000006.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000006.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000007.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000007.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000008.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000008.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000009.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000009.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000A.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000A.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000B.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000B.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000C.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000C.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000D.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000D.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000E.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000E.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000F.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00000F.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000010.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000010.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000011.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000011.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000012.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000012.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000013.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000013.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000014.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000014.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000015.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000015.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000016.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000016.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000017.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000017.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000018.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000018.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000019.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000019.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001A.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001A.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001B.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001B.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001C.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001C.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001D.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001D.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001E.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001E.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001F.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP00001F.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000020.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000020.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000021.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000021.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000022.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000022.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000023.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000023.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000024.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000024.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000025.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000025.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000026.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000026.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000027.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000027.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000001.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000001.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\tools\DirectXUtils.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000002.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000002.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000003.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000003.rsp"
+			ArgFileContents="/Od /I &quot;c:\dx90sdk\include&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000004.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Debug\RSP000004.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Debug\Water.res&quot;
+&quot;.\Debug\dxstdafx.obj&quot;
+&quot;.\Debug\DXUT.obj&quot;
+&quot;.\Debug\DXUTEffectMap.obj&quot;
+&quot;.\Debug\DXUTenum.obj&quot;
+&quot;.\Debug\DXUTgui.obj&quot;
+&quot;.\Debug\DXUTMesh.obj&quot;
+&quot;.\Debug\DXUTmisc.obj&quot;
+&quot;.\Debug\DXUTSettingsDlg.obj&quot;
+&quot;.\Debug\clCGSolver.obj&quot;
+&quot;.\Debug\clClass.obj&quot;
+&quot;.\Debug\clCrNiMatrix.obj&quot;
+&quot;.\Debug\clCrNiVector.obj&quot;
+&quot;.\Debug\clFloat.obj&quot;
+&quot;.\Debug\clFragmentMatrix.obj&quot;
+&quot;.\Debug\clFragmentVector.obj&quot;
+&quot;.\Debug\clMemMan.obj&quot;
+&quot;.\Debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\Debug\clPackedMatrix.obj&quot;
+&quot;.\Debug\clPackedVector.obj&quot;
+&quot;.\Debug\clPoissonMatrix.obj&quot;
+&quot;.\Debug\clUnpackedMatrix.obj&quot;
+&quot;.\Debug\clUnpackedVector.obj&quot;
+&quot;.\Debug\clVertexMatrix.obj&quot;
+&quot;.\Debug\DirectXUtils.obj&quot;
+&quot;.\Debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000005.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000005.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\Common&quot; /D &quot;optNVIDIA&quot; /D &quot;useUpacked&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release NVIDIA/&quot; /Fd&quot;Release NVIDIA/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\tools\DirectXUtils.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000006.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000006.rsp"
+			ArgFileContents="/OUT:&quot;Release NVIDIA/Water_NV.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release NVIDIA/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Release NVIDIA\Water.res&quot;
+&quot;.\Release NVIDIA\dxstdafx.obj&quot;
+&quot;.\Release NVIDIA\DXUT.obj&quot;
+&quot;.\Release NVIDIA\DXUTEffectMap.obj&quot;
+&quot;.\Release NVIDIA\DXUTenum.obj&quot;
+&quot;.\Release NVIDIA\DXUTgui.obj&quot;
+&quot;.\Release NVIDIA\DXUTMesh.obj&quot;
+&quot;.\Release NVIDIA\DXUTmisc.obj&quot;
+&quot;.\Release NVIDIA\DXUTSettingsDlg.obj&quot;
+&quot;.\Release NVIDIA\clCGSolver.obj&quot;
+&quot;.\Release NVIDIA\clClass.obj&quot;
+&quot;.\Release NVIDIA\clCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clCrNiVector.obj&quot;
+&quot;.\Release NVIDIA\clFloat.obj&quot;
+&quot;.\Release NVIDIA\clFragmentMatrix.obj&quot;
+&quot;.\Release NVIDIA\clFragmentVector.obj&quot;
+&quot;.\Release NVIDIA\clMemMan.obj&quot;
+&quot;.\Release NVIDIA\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedVector.obj&quot;
+&quot;.\Release NVIDIA\clPoissonMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedVector.obj&quot;
+&quot;.\Release NVIDIA\clVertexMatrix.obj&quot;
+&quot;.\Release NVIDIA\DirectXUtils.obj&quot;
+&quot;.\Release NVIDIA\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000007.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000007.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\Common&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\tools\DirectXUtils.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000008.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000008.rsp"
+			ArgFileContents="/OUT:&quot;Release/Water.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Release\Water.res&quot;
+&quot;.\Release\dxstdafx.obj&quot;
+&quot;.\Release\DXUT.obj&quot;
+&quot;.\Release\DXUTEffectMap.obj&quot;
+&quot;.\Release\DXUTenum.obj&quot;
+&quot;.\Release\DXUTgui.obj&quot;
+&quot;.\Release\DXUTMesh.obj&quot;
+&quot;.\Release\DXUTmisc.obj&quot;
+&quot;.\Release\DXUTSettingsDlg.obj&quot;
+&quot;.\Release\clCGSolver.obj&quot;
+&quot;.\Release\clClass.obj&quot;
+&quot;.\Release\clCrNiMatrix.obj&quot;
+&quot;.\Release\clCrNiVector.obj&quot;
+&quot;.\Release\clFloat.obj&quot;
+&quot;.\Release\clFragmentMatrix.obj&quot;
+&quot;.\Release\clFragmentVector.obj&quot;
+&quot;.\Release\clMemMan.obj&quot;
+&quot;.\Release\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release\clPackedMatrix.obj&quot;
+&quot;.\Release\clPackedVector.obj&quot;
+&quot;.\Release\clPoissonMatrix.obj&quot;
+&quot;.\Release\clUnpackedMatrix.obj&quot;
+&quot;.\Release\clUnpackedVector.obj&quot;
+&quot;.\Release\clVertexMatrix.obj&quot;
+&quot;.\Release\DirectXUtils.obj&quot;
+&quot;.\Release\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000001.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000001.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\Common&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000002.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000002.rsp"
+			ArgFileContents="/OUT:&quot;Release/Water.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Release\Water.res&quot;
+&quot;.\Release\dxstdafx.obj&quot;
+&quot;.\Release\DXUT.obj&quot;
+&quot;.\Release\DXUTEffectMap.obj&quot;
+&quot;.\Release\DXUTenum.obj&quot;
+&quot;.\Release\DXUTgui.obj&quot;
+&quot;.\Release\DXUTMesh.obj&quot;
+&quot;.\Release\DXUTmisc.obj&quot;
+&quot;.\Release\DXUTSettingsDlg.obj&quot;
+&quot;.\Release\clCGSolver.obj&quot;
+&quot;.\Release\clClass.obj&quot;
+&quot;.\Release\clCrNiMatrix.obj&quot;
+&quot;.\Release\clCrNiVector.obj&quot;
+&quot;.\Release\clFloat.obj&quot;
+&quot;.\Release\clFragmentMatrix.obj&quot;
+&quot;.\Release\clFragmentVector.obj&quot;
+&quot;.\Release\clMemMan.obj&quot;
+&quot;.\Release\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release\clPackedMatrix.obj&quot;
+&quot;.\Release\clPackedVector.obj&quot;
+&quot;.\Release\clPoissonMatrix.obj&quot;
+&quot;.\Release\clUnpackedMatrix.obj&quot;
+&quot;.\Release\clUnpackedVector.obj&quot;
+&quot;.\Release\clVertexMatrix.obj&quot;
+&quot;.\Release\DirectXUtils.obj&quot;
+&quot;.\Release\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000003.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000003.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\\&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\tools\DirectXUtils.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000004.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release\RSP000004.rsp"
+			ArgFileContents="/OUT:&quot;Release/Water.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Release\Water.res&quot;
+&quot;.\Release\dxstdafx.obj&quot;
+&quot;.\Release\DXUT.obj&quot;
+&quot;.\Release\DXUTEffectMap.obj&quot;
+&quot;.\Release\DXUTenum.obj&quot;
+&quot;.\Release\DXUTgui.obj&quot;
+&quot;.\Release\DXUTMesh.obj&quot;
+&quot;.\Release\DXUTmisc.obj&quot;
+&quot;.\Release\DXUTSettingsDlg.obj&quot;
+&quot;.\Release\clCGSolver.obj&quot;
+&quot;.\Release\clClass.obj&quot;
+&quot;.\Release\clCrNiMatrix.obj&quot;
+&quot;.\Release\clCrNiVector.obj&quot;
+&quot;.\Release\clFloat.obj&quot;
+&quot;.\Release\clFragmentMatrix.obj&quot;
+&quot;.\Release\clFragmentVector.obj&quot;
+&quot;.\Release\clMemMan.obj&quot;
+&quot;.\Release\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release\clPackedMatrix.obj&quot;
+&quot;.\Release\clPackedVector.obj&quot;
+&quot;.\Release\clPoissonMatrix.obj&quot;
+&quot;.\Release\clUnpackedMatrix.obj&quot;
+&quot;.\Release\clUnpackedVector.obj&quot;
+&quot;.\Release\clVertexMatrix.obj&quot;
+&quot;.\Release\DirectXUtils.obj&quot;
+&quot;.\Release\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000005.rsp&quot; /nologo"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000005.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\\&quot; /D &quot;optNVIDIA&quot; /D &quot;useUpacked&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release NVIDIA/&quot; /Fd&quot;Release NVIDIA/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\tools\DirectXUtils.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clMemMan.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clFloat.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiVector.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clClass.cpp&quot;
+&quot;\Eigene Dateien\Visual Studio Projects\DirectX\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="link.exe &quot;@z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000006.rsp&quot;"
+			ArgFileName="z:\Eigene Dateien\Visual Studio Projects\DirectX\Water20\Release NVIDIA\RSP000006.rsp"
+			ArgFileContents="/OUT:&quot;Release NVIDIA/Water_NV.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release NVIDIA/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib 
+&quot;.\Release NVIDIA\Water.res&quot;
+&quot;.\Release NVIDIA\dxstdafx.obj&quot;
+&quot;.\Release NVIDIA\DXUT.obj&quot;
+&quot;.\Release NVIDIA\DXUTEffectMap.obj&quot;
+&quot;.\Release NVIDIA\DXUTenum.obj&quot;
+&quot;.\Release NVIDIA\DXUTgui.obj&quot;
+&quot;.\Release NVIDIA\DXUTMesh.obj&quot;
+&quot;.\Release NVIDIA\DXUTmisc.obj&quot;
+&quot;.\Release NVIDIA\DXUTSettingsDlg.obj&quot;
+&quot;.\Release NVIDIA\clCGSolver.obj&quot;
+&quot;.\Release NVIDIA\clClass.obj&quot;
+&quot;.\Release NVIDIA\clCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clCrNiVector.obj&quot;
+&quot;.\Release NVIDIA\clFloat.obj&quot;
+&quot;.\Release NVIDIA\clFragmentMatrix.obj&quot;
+&quot;.\Release NVIDIA\clFragmentVector.obj&quot;
+&quot;.\Release NVIDIA\clMemMan.obj&quot;
+&quot;.\Release NVIDIA\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedVector.obj&quot;
+&quot;.\Release NVIDIA\clPoissonMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedVector.obj&quot;
+&quot;.\Release NVIDIA\clVertexMatrix.obj&quot;
+&quot;.\Release NVIDIA\DirectXUtils.obj&quot;
+&quot;.\Release NVIDIA\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Debug\RSP000001.rsp&quot; /nologo"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Debug\RSP000001.rsp"
+			ArgFileContents="/Od /I &quot;..\..\\&quot; /D &quot;_DEBUG&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /Gm /EHsc /MLd /Fo&quot;Debug/&quot; /Fd&quot;Debug/vc70.pdb&quot; /W3 /c /Wp64 /ZI /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\tools\DirectXUtils.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clMemMan.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFloat.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clClass.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="rc.exe /d _UNICODE /d UNICODE /foDebug/Water.res .\Water.rc "/>
+		<Command
+			CmdLine="link.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Debug\RSP000002.rsp&quot;"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Debug\RSP000002.rsp"
+			ArgFileContents="/OUT:&quot;Debug/Water.exe&quot; /INCREMENTAL /NOLOGO /LIBPATH:&quot;c:\dx90sdk\lib&quot; /DEBUG /PDB:&quot;Debug/EmptyProject.pdb&quot; /SUBSYSTEM:WINDOWS /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9dt.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\DxErr9.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\dxguid.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3dx9dt.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3d9.lib&quot; 
+&quot;.\debug\Water.res&quot;
+&quot;.\debug\dxstdafx.obj&quot;
+&quot;.\debug\DXUT.obj&quot;
+&quot;.\debug\DXUTEffectMap.obj&quot;
+&quot;.\debug\DXUTenum.obj&quot;
+&quot;.\debug\DXUTgui.obj&quot;
+&quot;.\debug\DXUTMesh.obj&quot;
+&quot;.\debug\DXUTmisc.obj&quot;
+&quot;.\debug\DXUTSettingsDlg.obj&quot;
+&quot;.\debug\clCGSolver.obj&quot;
+&quot;.\debug\clClass.obj&quot;
+&quot;.\debug\clCrNiMatrix.obj&quot;
+&quot;.\debug\clCrNiVector.obj&quot;
+&quot;.\debug\clFloat.obj&quot;
+&quot;.\debug\clFragmentMatrix.obj&quot;
+&quot;.\debug\clFragmentVector.obj&quot;
+&quot;.\debug\clMemMan.obj&quot;
+&quot;.\debug\clPackedCrNiMatrix.obj&quot;
+&quot;.\debug\clPackedMatrix.obj&quot;
+&quot;.\debug\clPackedVector.obj&quot;
+&quot;.\debug\clPoissonMatrix.obj&quot;
+&quot;.\debug\clUnpackedMatrix.obj&quot;
+&quot;.\debug\clUnpackedVector.obj&quot;
+&quot;.\debug\clVertexMatrix.obj&quot;
+&quot;.\debug\DirectXUtils.obj&quot;
+&quot;.\debug\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release NVIDIA\RSP000003.rsp&quot; /nologo"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release NVIDIA\RSP000003.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\\&quot; /D &quot;optNVIDIA&quot; /D &quot;useUpacked&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release NVIDIA/&quot; /Fd&quot;Release NVIDIA/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\tools\DirectXUtils.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clMemMan.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFloat.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clClass.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="rc.exe /d _UNICODE /d UNICODE &quot;/foRelease NVIDIA/Water.res&quot; .\Water.rc "/>
+		<Command
+			CmdLine="link.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release NVIDIA\RSP000004.rsp&quot;"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release NVIDIA\RSP000004.rsp"
+			ArgFileContents="/OUT:&quot;Release NVIDIA/Water_NV.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release NVIDIA/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\DxErr9.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\dxguid.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3dx9.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3d9.lib&quot; 
+&quot;.\Release NVIDIA\Water.res&quot;
+&quot;.\Release NVIDIA\dxstdafx.obj&quot;
+&quot;.\Release NVIDIA\DXUT.obj&quot;
+&quot;.\Release NVIDIA\DXUTEffectMap.obj&quot;
+&quot;.\Release NVIDIA\DXUTenum.obj&quot;
+&quot;.\Release NVIDIA\DXUTgui.obj&quot;
+&quot;.\Release NVIDIA\DXUTMesh.obj&quot;
+&quot;.\Release NVIDIA\DXUTmisc.obj&quot;
+&quot;.\Release NVIDIA\DXUTSettingsDlg.obj&quot;
+&quot;.\Release NVIDIA\clCGSolver.obj&quot;
+&quot;.\Release NVIDIA\clClass.obj&quot;
+&quot;.\Release NVIDIA\clCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clCrNiVector.obj&quot;
+&quot;.\Release NVIDIA\clFloat.obj&quot;
+&quot;.\Release NVIDIA\clFragmentMatrix.obj&quot;
+&quot;.\Release NVIDIA\clFragmentVector.obj&quot;
+&quot;.\Release NVIDIA\clMemMan.obj&quot;
+&quot;.\Release NVIDIA\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clPackedVector.obj&quot;
+&quot;.\Release NVIDIA\clPoissonMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedMatrix.obj&quot;
+&quot;.\Release NVIDIA\clUnpackedVector.obj&quot;
+&quot;.\Release NVIDIA\clVertexMatrix.obj&quot;
+&quot;.\Release NVIDIA\DirectXUtils.obj&quot;
+&quot;.\Release NVIDIA\Water.obj&quot; "/>
+		<Command
+			CmdLine="cl.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release\RSP000005.rsp&quot; /nologo"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release\RSP000005.rsp"
+			ArgFileContents="/O2 /I &quot;..\..\\&quot; /D &quot;_UNICODE&quot; /D &quot;UNICODE&quot; /FD /EHsc /ML /GS /Fo&quot;Release/&quot; /Fd&quot;Release/vc70.pdb&quot; /W3 /c /Wp64 /Zi /TP 
+&quot;.\Water.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\tools\DirectXUtils.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clVertexMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clUnpackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPoissonMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clPackedCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clMemMan.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFragmentMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clFloat.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiVector.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCrNiMatrix.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clClass.cpp&quot;
+&quot;\Dokumente und Einstellungen\krueger\Desktop\source\dx\clFramework\clCGSolver.cpp&quot;
+&quot;.\Common\DXUTSettingsDlg.cpp&quot;
+&quot;.\Common\DXUTmisc.cpp&quot;
+&quot;.\Common\DXUTMesh.cpp&quot;
+&quot;.\Common\DXUTgui.cpp&quot;
+&quot;.\Common\DXUTenum.cpp&quot;
+&quot;.\Common\DXUTEffectMap.cpp&quot;
+&quot;.\Common\DXUT.cpp&quot;
+&quot;.\Common\dxstdafx.cpp&quot; "/>
+		<Command
+			CmdLine="rc.exe /d _UNICODE /d UNICODE /foRelease/Water.res .\Water.rc "/>
+		<Command
+			CmdLine="link.exe &quot;@c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release\RSP000006.rsp&quot;"
+			ArgFileName="c:\Dokumente und Einstellungen\krueger\Desktop\source\dx\Water20\Release\RSP000006.rsp"
+			ArgFileContents="/OUT:&quot;Release/Water.exe&quot; /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:&quot;Release/Water.pdb&quot; /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /MACHINE:X86 /MACHINE:I386 /IGNORE:4089 dxerr9.lib dxguid.lib d3dx9.lib d3d9.lib winmm.lib comctl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\DxErr9.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\dxguid.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3dx9.lib&quot; &quot;\Programme\Microsoft DirectX 9.0 SDK (October 2004)\Lib\d3d9.lib&quot; 
+&quot;.\Release\Water.res&quot;
+&quot;.\Release\dxstdafx.obj&quot;
+&quot;.\Release\DXUT.obj&quot;
+&quot;.\Release\DXUTEffectMap.obj&quot;
+&quot;.\Release\DXUTenum.obj&quot;
+&quot;.\Release\DXUTgui.obj&quot;
+&quot;.\Release\DXUTMesh.obj&quot;
+&quot;.\Release\DXUTmisc.obj&quot;
+&quot;.\Release\DXUTSettingsDlg.obj&quot;
+&quot;.\Release\clCGSolver.obj&quot;
+&quot;.\Release\clClass.obj&quot;
+&quot;.\Release\clCrNiMatrix.obj&quot;
+&quot;.\Release\clCrNiVector.obj&quot;
+&quot;.\Release\clFloat.obj&quot;
+&quot;.\Release\clFragmentMatrix.obj&quot;
+&quot;.\Release\clFragmentVector.obj&quot;
+&quot;.\Release\clMemMan.obj&quot;
+&quot;.\Release\clPackedCrNiMatrix.obj&quot;
+&quot;.\Release\clPackedMatrix.obj&quot;
+&quot;.\Release\clPackedVector.obj&quot;
+&quot;.\Release\clPoissonMatrix.obj&quot;
+&quot;.\Release\clUnpackedMatrix.obj&quot;
+&quot;.\Release\clUnpackedVector.obj&quot;
+&quot;.\Release\clVertexMatrix.obj&quot;
+&quot;.\Release\DirectXUtils.obj&quot;
+&quot;.\Release\Water.obj&quot; "/>
+	</Commands>
+</IVCSpawn_Log>

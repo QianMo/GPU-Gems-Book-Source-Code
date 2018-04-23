@@ -1,0 +1,42 @@
+#include "pug.cg";
+
+float4 rd(float2      coords : DOMAIN,
+          Stream      concentration,
+  uniform float4      windowDims,
+  uniform float4      rdParams) : RANGE
+{
+  // Sample the center and its 4 nearest neighbors.  The neighbor samples are 
+  // simply averaged to compute (part of) the Laplacian, and then scaled by the 
+  // diffusion coefficient
+  float2 centerSample = concentration.value2(coords.xy);
+  
+  float2 diffusion = concentration.value2(coords.xy + half2(1, 0));
+  diffusion += concentration.value2(coords.xy + half2(-1, 0));
+  diffusion += concentration.value2(coords.xy + half2(0, -1));;
+  diffusion += concentration.value2(coords.xy + half2(0,  1));
+
+  // Scale the sum by 1/4 to get the average, then multiply by diffusion coeffs
+  diffusion *= 0.25f * rdParams.xy;
+    
+  // The reaction operates only on the center sample.  Different computations 
+  // are performed on the x and y channels because they represent different 
+  // chemical concentrations, and are governed by two different PDEs.
+  float2 reaction = centerSample.xx * centerSample.yy * centerSample.yy;
+  reaction.x *= -1.0f;
+  
+  reaction.x += (1.0f - rdParams.x) * centerSample.x + 
+                rdParams.w * (1.0f - centerSample.x);
+  reaction.y += windowDims.z * centerSample.y;
+
+  // Now add the diffusion to the reaction to get the result.
+  return float4(diffusion + reaction, 0, 0);
+} 
+
+// Just a passthrough shader for rendering from a float buffer
+half4 passthrough(half2 coords : TEX0, 
+          uniform samplerRECT tex) : COLOR
+{
+  half4 color = texRECT(tex, coords);
+  
+  return lerp(color.zyyw, 0.95, color.r);
+} 

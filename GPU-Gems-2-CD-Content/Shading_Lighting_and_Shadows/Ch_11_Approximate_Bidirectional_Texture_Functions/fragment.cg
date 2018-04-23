@@ -1,0 +1,10 @@
+// Approximate BTF Rendering - Fragment Shader
+
+// now scale result with color (depending on vertex-shader)
+float3 main(float3 tc    : TEXCOORD0,
+            float3 color : TEXCOORD1,
+	    uniform sampler3D material : TEXUNIT0) : COLOR
+{
+  float3 r = (float3)tex3D( material, tc ).xyz;
+  return r * color;
+}

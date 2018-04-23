@@ -1,0 +1,13 @@
+built/dx9window.obj: ../../../include/brook/vc6vector.hpp
+built/dx9window.obj: ../../../include/brook/brtvector.hpp
+built/dx9window.obj: ../../../include/brook/type_promotion.hpp
+built/dx9window.obj: ../../../include/brook/kerneldesc.hpp
+built/dx9window.obj: ./dx9base.hpp
+built/dx9window.obj: ./../gpucontext.hpp
+built/dx9window.obj: ./../../runtime.hpp
+built/dx9window.obj: ./../../logger.hpp
+built/dx9window.obj: ./dx9window.hpp
+built/dx9window.obj: dx9window.cpp
+built/dx9window.obj: ./../../profiler.hpp
+built/dx9window.obj: ./../gpubase.hpp
+built/dx9window.obj: ../../../include/brook/brt.hpp

@@ -1,0 +1,9 @@
+built/cpuruntime.obj: ../../include/brook/brtarray.hpp
+built/cpuruntime.obj: ../../include/brook/vc6vector.hpp
+built/cpuruntime.obj: ../../include/brook/brtvector.hpp
+built/cpuruntime.obj: cpuruntime.cpp
+built/cpuruntime.obj: ../../include/brook/kerneldesc.hpp
+built/cpuruntime.obj: ./cpu.hpp
+built/cpuruntime.obj: ../../include/brook/brt.hpp
+built/cpuruntime.obj: ../../include/brook/type_promotion.hpp
+built/cpuruntime.obj: ./../runtime.hpp

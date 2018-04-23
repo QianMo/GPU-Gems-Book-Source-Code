@@ -1,0 +1,9 @@
+ROOTDIR = ..
+EXECUTABLE = subdiv_ati
+MAKE = make -f Makefile.ati
+FILES = loop model splyload voutfloatN vout1dfloatN timing
+
+LIBRARIES = $(RUNTIME_LIBS)
+BRCCFLAGS = 
+include $(ROOTDIR)/common.mk
+

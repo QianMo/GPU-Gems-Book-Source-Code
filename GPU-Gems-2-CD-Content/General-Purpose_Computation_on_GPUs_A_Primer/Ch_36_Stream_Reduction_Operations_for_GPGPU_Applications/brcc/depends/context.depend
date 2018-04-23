@@ -1,0 +1,14 @@
+built/context.obj: ./express.h
+built/context.obj: ./location.h
+built/context.obj: ./callback.h
+built/context.obj: ./identify.h
+built/context.obj: context.cpp
+built/context.obj: ./decl.h
+built/context.obj: ./context.h
+built/context.obj: ./config.h
+built/context.obj: ./stemnt.h
+built/context.obj: ./dup.h
+built/context.obj: ./symbol.h
+built/context.obj: ./project.h
+built/context.obj: ./parseenv.h
+built/context.obj: ./utype.h

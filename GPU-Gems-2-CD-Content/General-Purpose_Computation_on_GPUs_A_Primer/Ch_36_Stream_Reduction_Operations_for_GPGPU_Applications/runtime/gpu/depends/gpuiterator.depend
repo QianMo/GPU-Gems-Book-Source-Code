@@ -1,0 +1,13 @@
+built/gpuiterator.obj: ./gpuruntime.hpp
+built/gpuiterator.obj: ../../include/brook/vc6vector.hpp
+built/gpuiterator.obj: gpuiterator.cpp
+built/gpuiterator.obj: ../../include/brook/brtvector.hpp
+built/gpuiterator.obj: ./../logger.hpp
+built/gpuiterator.obj: ../../include/brook/kerneldesc.hpp
+built/gpuiterator.obj: ./gpubase.hpp
+built/gpuiterator.obj: ./gpuiterator.hpp
+built/gpuiterator.obj: ./gpucontext.hpp
+built/gpuiterator.obj: ./../profiler.hpp
+built/gpuiterator.obj: ../../include/brook/brt.hpp
+built/gpuiterator.obj: ../../include/brook/type_promotion.hpp
+built/gpuiterator.obj: ./../runtime.hpp

@@ -1,0 +1,12 @@
+ps.1.1
+
+// expects:
+// c0: reference value to subtract from calibration alpha
+
+tex t0
+
+// We copy the RGB colour to the output.  This is not necessary to measure the
+// texture's MIP level - only the alpha matters.  But the RGB values are useful
+// for debugging.
+mov r0.rgb, t0
+	+sub_x4 r0.a, t0, c0

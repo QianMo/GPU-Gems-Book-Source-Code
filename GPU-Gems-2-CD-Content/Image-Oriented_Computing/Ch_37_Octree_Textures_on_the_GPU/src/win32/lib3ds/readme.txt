@@ -1,0 +1,1 @@
+Lib3DS is available on http://lib3ds.sourceforge.net/

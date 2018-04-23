@@ -1,0 +1,15 @@
+/.cvsignore/1.1/Tue May 18 23:00:02 2004//
+/COPYRIGHT.txt/1.1/Thu Oct 14 19:07:08 2004//
+/Makefile/1.4/Tue Aug 17 22:26:20 2004//
+/gpu.hpp/1.2/Fri Aug 27 21:45:00 2004//
+/gpubase.hpp/1.8/Thu Oct 14 22:35:28 2004//
+/gpucontext.hpp/1.20/Mon Dec  6 23:11:47 2004//
+/gpuiterator.cpp/1.6/Thu Sep 16 19:34:10 2004//
+/gpuiterator.hpp/1.4/Thu Sep 16 19:34:10 2004//
+/gpukernel.cpp/1.32/Wed Dec  1 22:22:01 2004//
+/gpukernel.hpp/1.10/Thu Sep 16 19:34:10 2004//
+/gpuruntime.cpp/1.7/Mon Dec  6 23:11:47 2004//
+/gpuruntime.hpp/1.7/Mon Dec  6 23:11:47 2004//
+/gpustream.cpp/1.15/Fri Dec  3 00:32:40 2004//
+/gpustream.hpp/1.13/Fri Oct  8 20:48:17 2004//
+D

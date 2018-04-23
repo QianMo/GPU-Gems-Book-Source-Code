@@ -1,0 +1,55 @@
+Installation Instructions:
+
+Basic Installation:
+
+  First, compile VideoOrbits-2.204  (from comparametrics.sf.net), 
+  using :  "./configure; make"
+
+  Assuming you have all the packages listed below, type: 
+  
+  make VO_DIR=<path_of_videoorbits-2.204> CG_DIR=<path_of_SDK>
+
+    where <path_of_videorbits-2.204> is where videorbits-2.204 (or greater is)
+    and <path_of_SDK> is the Cg SDK path
+
+  example:
+ 
+    make VO_DIR=~/videorbits-2.204 CG_DIR=~/SDK
+
+  by default, the above options are assumed.  So if you download 
+  the Cg SDK to your home directory, and untar videorbits-2.204 from
+  your home directory, all you'll have to do is type: 'make'
+
+
+What you'll need:
+    * nvidia drivers
+
+    You likely have already the following, otherwise you'll need to install
+
+    * glut
+    * imlib-dev Imlib development libraries
+    * libxml-dev
+    * libdc1394-dev (and 1394 support (raw1394 or video1394))
+    * jpeg-mmx
+
+
+    You'll likely have to install the following before compiling Openvidia:
+
+    * videorbits (version later or equal to 2.204)
+    * Cg Compiler (cgc) (from nvidia.com website)
+    * Cg development kit (from nvidia.com website)
+    * xnee and libxnee (http://www.gnu.org/software/xnee/)
+     
+    and (http://www.gnu.org/directory/libs/cpp/commoncpp.html)
+    * libcommoncpp2-1.0-0c102 (available as apt package for easier install)
+    * libcommoncpp2-dev
+
+A note on shared memory areas: 
+
+  A number of the programs use shared memory areas, which are sometimes 
+  incorrectly created.  If you have this problem, try 'make glestpchirp2m'
+  then running it first.  It will create the shared memory areas.
+
+Additional Help:
+  
+   http://openvidia.sf.net has forums to post to and read.

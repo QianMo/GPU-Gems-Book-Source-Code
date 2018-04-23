@@ -1,0 +1,219 @@
+<html>
+
+<head>
+<title>OpenVIDIA : Parallel GPU Computer Vision</title>
+<meta name="description" content="The OpenVIDIA project implements some computer vision algorithms on computer graphics hardware, in OpenGL and Cg. The project provides useful example programs which run computer vision algorithms on single or parallel gfx processing units(GPU).">
+<meta name="keywords" content="computer vision, real time, GPU,
+graphics processing unit, openvidia, parallel graphics, parallel GPU, parallel,
+general purpose, machine vision augmented reality, mixed reality, software, tools, tool">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" />
+
+<style>
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 13px; color: #000000; }
+a                 { color: #002299 }
+#.pagetitle        { font-size: 28px; font-weight: bold; color: #336699; }
+.pagetitle        { font-size: 24px; font-weight: normal; color: #336699; }
+.dateheader       { font-size: 14px; font-weight: bold; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+<!--
+  <td colspan="6"><span class="pagetitle">$blog_title</span></td>
+-->
+<!--
+  <td bgcolor="#EEEEEE"></td>
+-->
+  <td colspan="5" height=40 bgcolor="#EEEEEE">
+       <h1> <span class="pagetitle"> 
+OpenVIDIA : Parallel GPU Computer Vision</span></h1>
+  </td>
+<!--
+  <td colspan="0" bgcolor = "#EEEEEE" height=40>
+ -->
+  <center>
+  </center>
+<!--
+  </td>
+-->
+    
+
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+<!--
+  <td bgcolor="#DDDDDD"><nobr>&nbsp; &nbsp; </nobr>
+-->
+  
+  <!-- left column -->
+  <td bgcolor="#DDDDDD" width="20%" >
+  <br><b>
+<a href="index.html">Home</a><br><br>
+<a href="screenshots.html">Screenshots</a><br><br>
+<a href="installation.html">Installation<br>Instructions</a><br><br>
+<a href="quickstart.html">Quickstart</a><br><br>
+<a href="programming.html">Programming<br>Example</a><br><br>
+<a href="openvidia-0.07.tar.gz">CD Source Code</a><br><br>
+   <a href="http://sourceforge.net/project/showfiles.php?group_id=98913">Download</a><br><br>
+<a href="papers.html">Papers</a><br></b>
+
+<hr>
+   <b>Project</b> <br>
+   <a href=http://sourceforge.net/projects/openvidia>sf.net project page</a><br>
+<!--#include virtual="projhtml.cache" -->
+<hr>
+
+   <p>
+   <b>Related Projects</b>
+   <br />
+   <p>
+   <a href="http://comparametric.sf.net">Comparametric Toolkit</a>
+   </p>
+
+   <p>
+   <b>Links</b> 
+     <p>
+   <a href="http://fly.cc.fer.hr/~unreal/theredbook/">Open GL Ref.</a>
+   </p>
+
+   <p>
+   <a href="http://www.linuxhardware.org/nvclock/">GeForce FX Overclocking</a>
+   </p>
+   <p>
+   <a href="http://www.gpgpu.org">GPGPU</a>
+   </p>
+    
+<p>
+   <a href="http://www.eyetap.org"><img src="eyetaplogo.png" border="1" hspace="3" vspace="3" /></a>
+   </p>
+
+   <p>
+  <a href="http://sourceforge.net"><img
+    src="sflogo.php"
+    width="88" height="31" border="0" hspace="3" vspace="3" alt="SourceForge.net Logo"
+    /></a></p>
+
+
+  <p>
+<i>   Page design based on <a href="http://www.blosxom.com">Blosxom</a> (which was
+   used originally before the move to sourceforge).</i></p>
+<p>
+<i>This page best viewed with Dillo, Lynx, w3m, Mozilla-Firefox, Galeon, Epiphany . . .</i></p>
+
+  </td>
+<!--
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td>
+-->
+
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#FFFFFF" width="100%"> 
+<br />
+
+<table>
+<tr>
+<td>
+<!--img src=pages_bookstore_cyborg_mannequin3_80x80.jpg-->
+
+<img src=openvidiascreenshot3-2.jpg>
+</td>
+<td valign=bottom>
+</td>
+
+</tr>
+</table>
+
+<h2>OpenVIDIA : GPU accelerated Computer Vision Library</h2>
+<p>
+The OpenVIDIA project implements computer vision algorithms on computer
+graphics hardware, using OpenGL and Cg. The project provides useful example
+programs which run real time computer vision algorithms on single or parallel
+graphics processing units(GPU).
+</p>
+<p>This project is released as part of the work conducted at the <a href="http://www.eyetap.org">Eyetap Personal Imaging Lab</a> (ePi Lab) at the <a href=http://www.eecg.toronto.edu>Electrical and Computer Engineering Group</a> at the University of Toronto.
+</p>
+
+<h3>Why use OpenVIDIA?</h3>
+<P>OpenVIDIA utilizes the computational power of the GPU to provide real--time
+computer vision much faster than the CPU is capable of, and leaves the CPU
+free to conduct other tasks beyond vision.
+<h3>
+
+<h2>
+<a href=openvidia-0.07.tar.gz>OpenVIDIA-0.07.tar.gz</a> : 
+CD Tarred GZIP Source Code for GPU Gems (see online for newer versions)
+</h2>
+
+What you need</h3>
+<ul>
+<li>A graphics card, with any of the GeForce FX series or later GPUs.
+<li><a href="http://www.nvidia.com/object/linux.html">nvidia drivers</a></li>
+<li>glut</li>
+<li>imlib-dev Imlib development libraries</li>
+<li>libxml-dev
+<li>libdc1394-dev (and 1394 support (raw1394 or video1394))<br> (note: firewire hardware is supported for video input, but it is not required. You can run many programs using image files).  Currently we support 1394 devices using the raw1394 and video1394 interfaces (typically webcam-like devices). </li>
+<li>jpeg (or jpeg-mmx better)</li>
+<li>fltk (fast,light toolkit)(optional)</li>
+<br>
+<li><a href="http://comparametric.sf.net">videorbits</a> (version later or equal to 2.204)</li>
+<li><a href="http://developer.nvidia.com/object/cg_toolkit.html">Cg Compiler (cgc)</a></li>
+<li><a href="http://developer.nvidia.com/object/linux_cg_toolkit.html">Cg development kit</a></li>
+<li>xnee and <a href="http://www.gnu.org/software/xnee/">libxnee</a></li>
+<li><a href="http://www.gnu.org/directory/libs/cpp/commoncpp.html">libcommoncpp2-1.0-0c102</a> (available as apt package)</li>
+<li>libcommoncpp2-dev</li>
+</ul>
+
+<!--
+<p>
+and for the LEsvd (eigentracking)<ul>
+<li>lapack-dev (LEsvd)</li>
+<li>blas-dev (LEsvd)</li>
+<li>f2c (LEsvd) </li>
+</ul>
+-->
+<h3>Contributors</h3>
+<a href=http://aimone.ca>Chris Aimone</a> (Vision Algorithms, 3d registrations)<br>
+<a href=http://eyetap.org/~billal>Billal Belmellat </a>(Cal3D rendering interface)<br>
+<a href=http://eyetap.org/~dan>Daniel Chen</a> (Handtracking algorithms) <br>
+<a href=http://eyetap.org/~fungja>James Fung</a> (algorithms)<br>
+<a href=http://roscohill.com>Rosco Hill</a> (3d windowing/UI interactions)<br>
+<a href=http://eyetap.org/~mobhit>Mohit Kansal</a> (Cal3D rendering interface), <br>
+<a href=http://animenfo.com>Suryadi</a> (3D studio model loader)<br>
+
+<h3>Getting Involved</h3>
+OpenVIDIA is currently being developed by volunteers and students, and 
+new help is always welcome.  This can range from contributing source code, 
+bug fixes, or documentation.  If you have a project related to OpenVIDIA,
+let us know, and we'd be happy to put a page link to it as well.  Contact the project admin email <a href=mailto:openvidia@eyetap.org>openvidia [at] eyetap.org</a> for
+more information.
+
+
+
+
+<br><br>
+<p>OpenVIDIA is Free Software in the terms of the GPL. This means you have four basic freedoms: 
+<ul>
+<li>Freedom to use the program any way you see fit. 
+<li>Freedom to study and modify the source code. 
+<li>Freedom to make backup copies. 
+<li>Freedom to redistribute it. 
+</ul>
+<p>The GPL is the legal mechanism that gives you these freedoms. It also protects them from being taken away: any derivative work based on the program must be under the GPL. 
+<p>For those interested in commercial use under different terms, contact the project admins at <a href=mailto:openvidia@eyetap.org>openvidia [at] eyetap.org</a> for information on dual licensing arrangements.
+
+
+
+</td>
+</table>

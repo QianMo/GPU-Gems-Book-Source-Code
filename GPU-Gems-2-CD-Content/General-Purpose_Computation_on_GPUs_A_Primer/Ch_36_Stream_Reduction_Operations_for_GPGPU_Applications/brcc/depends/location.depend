@@ -1,0 +1,2 @@
+built/location.obj: ./location.h
+built/location.obj: location.cpp

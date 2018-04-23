@@ -1,0 +1,3546 @@
+
+
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+extern unsigned int debug_vout;
+
+
+#define debugStreamPrint(stream,title) if (debug_vout) { printf ("%s\n",title); streamPrint(stream,1);  printf ("\n\n"); }
+
+
+kernel void kernelReadItem1d (float items[], float index, out float item<>) {
+  item = items[index];
+}
+void cpuGetIndexAt1d(float inputindex,
+                     float shiftRight,
+                     float maxvalue,
+                     float *index) {
+   *index=inputindex+shiftRight;
+   *index=*index > maxvalue-1?maxvalue-1:*index<0?0:*index;
+}
+
+
+const unsigned int MAX_VOUT_STREAMS=31;//if you change this, change one 5 lines
+kernel void calculateDividedIndex1d(float4 index, 
+                                  float modulus, 
+                                  out float newindex<>){
+   float epsilon=1.0f/32.0f;//this is needed because the division may result in
+   // loss of accuracy.  We know that for a 2048 texture the mantissa holds 
+   // 1/32 precision
+   newindex=floor(index.x/modulus+epsilon);
+}
+
+kernel void calculateIndexModulus1d (float4 index, 
+                                   float modulus, 
+                                   float offset,
+                                   out float which <>) {
+   which= floor(fmod(index.x,modulus)-offset);
+}
+
+#define VECTOR_TEMPLATIZED_FUNCTIONS
+reduce void valueProducedfloat1d (float input <>, 
+                                   reduce float output<>) {
+   output=isinf(input.x)?output:input;
+}
+kernel void isFiniteKernelfloat1d(float inp<>, out float outp<>) {
+   outp=!isinf(inp.x);
+}
+
+int finiteValueProduced1dfloat (float input<>) {
+   float output<1>;
+   float finiteout<1>;
+   float rettype;
+   float ret;
+  
+   debugStreamPrint (input,"Finite Values in...");
+   valueProducedfloat1d(input,output);
+   streamWrite(output,&rettype);
+   isFiniteKernelfloat1d(output,finiteout);
+   streamWrite(finiteout,&ret);
+   return (int)ret;
+}
+
+kernel void valueAtfloat1d (float value[],
+                             float index,
+                             out float output<>,
+                             float maxvalue,
+                             float nothing) {
+   if (index>=maxvalue||index<-.1)
+      output = nothing;
+   else 
+      output = value[index];
+}
+kernel void StartScanfloat1d (float value[], 
+                            out float output<>, 
+                            float sign,
+                            float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+sign;
+   float neighbor;
+   valueAtfloat1d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = (isinf(value[indexof(output)].x)?1:0) 
+      + (isinf(neighbor.x)?1:0);
+}
+kernel void Scanfloat1d (float value [],
+                                out float output<>,
+                                float twotoi,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+twotoi;
+   float neighbor;
+   valueAtfloat1d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = round(value[indexof(output)]+neighbor);
+}
+
+kernel void GatherGuessfloat1d(float scatterindex[],
+                        out float output<>,
+                        float value[],
+                        float twotologkminusi,
+                        float maxvalue,
+                        float halfk,
+                        float sign) {
+     float neighbor;
+      float nextPlaceToLook=(indexof output).x-sign*halfk;
+      valueAtfloat1d(scatterindex,nextPlaceToLook,neighbor,maxvalue,0);
+      if (neighbor>halfk) {
+         output=halfk+twotologkminusi;
+      }else {
+         float actualValue;
+         valueAtfloat1d(value,nextPlaceToLook,actualValue,maxvalue,0);
+         if (neighbor==halfk&&!isinf(actualValue.x)) {
+            output=halfk;
+         }else {
+            output = halfk-twotologkminusi;
+         }         
+      }
+}
+kernel void EstablishGuessfloat1d(float scatterindex[],
+                                   out float output<>,
+                                   float value[],
+                                   float twotologkminusi,
+                                   float maxvalue,
+                                   float halfk,
+                                   float sign) {
+   if (scatterindex[indexof(output)]==0) {
+      output=0;
+   } else {
+      GatherGuessfloat1d(scatterindex,
+                          output,
+                          value,
+                          twotologkminusi,
+                          maxvalue,
+                          halfk,
+                          sign);
+    }
+}
+kernel void UpdateGuessfloat1d(float scatterindex[],
+                                out float output<>,
+                                float value[],
+                                float twotologkminusi,
+                                float maxvalue,
+                                float lastguess<>,
+                                float sign) {
+   GatherGuessfloat1d(scatterindex,
+                       output,
+                       value,
+                       twotologkminusi,
+                       maxvalue,
+                       lastguess,
+                       sign);
+}
+
+kernel void RelGatherfloat1d(out float output<>,
+                                float gatherindex[],
+                                float value[],
+                                float2 sign,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x-sign.x*gatherindex[indexof(output)];
+   valueAtfloat1d(value,nextPlaceToLook,output,maxvalue,sign.y);   
+}
+
+
+float shiftValues1dfloat(float list_stream <>,
+                            float (*output_stream)<>,
+                       int WIDTH, 
+                       int unused,
+                       int sign) {
+   float tmp_stream<WIDTH>;
+   float ret_stream<WIDTH>;
+   float guess_stream<WIDTH>;
+   unsigned int i;
+   float maxvalue;
+   unsigned int logN;
+   unsigned int LogNMinusK;
+   float maxshift;
+   maxvalue=(float)WIDTH;
+   logN=(unsigned int)ceil(log((float)WIDTH)/log(2.0f));
+   debugStreamPrint(list_stream,"Combined...");
+   StartScanfloat1d (list_stream,ret_stream,(float)sign,maxvalue);   
+   for (i=1;i<logN;++i) {
+      streamSwap(ret_stream,tmp_stream);
+      Scanfloat1d(tmp_stream,ret_stream,(float)sign*(1<<i),maxvalue);
+   }
+   debugStreamPrint(ret_stream,"scattering...");
+   {
+     float item<1>;
+     float index;
+     if (sign==-1) {
+       index = (float)(WIDTH-1);
+     }else {
+       index=0;
+     }
+     kernelReadItem1d(ret_stream,index,item);
+     streamWrite(item,&maxshift);
+   }
+   LogNMinusK=logN-2;
+   i= logN-1;//could make this k! rather than N
+   // where k = num elements pushed (N-logN%2?ret_stream,tmp_stream
+   EstablishGuessfloat1d(ret_stream,
+                            guess_stream,
+                            list_stream,
+                            (float)(1 << LogNMinusK),
+                            maxvalue,
+                            (float)(1<<i),
+                            (float)sign);
+   for (i=1;i<logN;++i) {
+      LogNMinusK=logN-1-i;
+      streamSwap(tmp_stream,guess_stream);
+      UpdateGuessfloat1d (ret_stream,//scatter values
+                             guess_stream,//new guess
+                             list_stream,//actual values
+                             (float)(1<<LogNMinusK),
+                             maxvalue,
+                             tmp_stream, //old guess
+                             (float)sign);
+   }
+   debugStreamPrint(guess_stream,"Gather Value");
+   if (1) {
+      unsigned int size,width;
+      size = (unsigned int)WIDTH
+         - (unsigned int) maxshift;
+      width = size;
+      if (1) {
+        float proper_output_stream<width>;
+        if (width) {
+          RelGatherfloat1d(proper_output_stream,
+                                   guess_stream,
+                                   list_stream,
+                                   float2((float)sign,1.0f/(float)floor(.5)),
+                                   maxvalue);
+        }
+        streamSwap(*output_stream,proper_output_stream);
+      }
+      debugStreamPrint(*output_stream, "Final Value");
+   }
+   return maxshift;
+}
+
+kernel void float1dstreamCombine1(float input0[],
+                                float modulus,
+                                float offset,
+                                float oldoutput<>,
+                                out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float1dstreamCombine2f(float input0[],
+                            float input1[],
+                            float modulus,
+                            out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=input1[newindex];
+   }
+}
+
+kernel void float1dstreamCombine2(float input0[],
+                           float input1[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float1dstreamCombine3f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float modulus,
+                            out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=input2[newindex];
+   }
+}
+
+kernel void float1dstreamCombine3(float input0[],
+                           float input1[],
+                           float input2[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float1dstreamCombine4f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float input3[],
+                            float modulus,
+                            out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=input3[newindex];
+   }
+}
+
+kernel void float1dstreamCombine4(float input0[],
+                           float input1[],
+                           float input2[],
+                           float input3[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus,  newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float1dstreamCombine5f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float input3[],
+                            float input4[],
+                            float modulus,
+                            out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=input4[newindex];
+   }
+}
+/*
+kernel void floatstreamCombine5(float input0[],
+                           float input1[],
+                           float input2[],
+                           float input3[],
+                           float input4[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+
+kernel void floatstreamCombine6f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float input3[],
+                            float input4[],
+                            float input5[],
+                            float modulus,
+                            out float output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus,  newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=input5[newindex];
+   }
+}
+
+kernel void floatstreamCombine6(float input0[],
+                           float input1[],
+                           float input2[],
+                           float input3[],
+                           float input4[],
+                           float input5[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void floatstreamCombine7f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float input3[],
+                            float input4[],
+                            float input5[],
+                            float input6[],
+                            float modulus,
+                            out float output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=input6[newindex];
+   }
+}
+
+kernel void floatstreamCombine7(float input0[],
+                           float input1[],
+                           float input2[],
+                           float input3[],
+                           float input4[],
+                           float input5[],
+                           float input6[],
+                           float modulus,
+                           float offset,
+                           float oldoutput<>,
+                           out float output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void floatstreamCombine8f(float input0[],
+                            float input1[],
+                            float input2[],
+                            float input3[],
+                            float input4[],
+                            float input5[],
+                            float input6[],
+                            float input7[],
+                            float modulus,
+                            out float output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=input7[newindex];
+   }
+}
+*/
+void combineStreamsHelper1dfloat (float (**streams) <>,
+                                unsigned int num,
+                                float output<>,
+                                float modulus,
+                                float offset) {
+   switch (num) {
+   case 1:
+      float1dstreamCombine1(*streams[0],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 2:
+      float1dstreamCombine2(*streams[0],
+                     *streams[1],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 3:
+      float1dstreamCombine3(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 4:
+   default:
+      float1dstreamCombine4(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      if (num>4) {
+         combineStreamsHelper1dfloat(streams+4,
+                                      num-4,
+                                      output,
+                                      modulus,
+                                      4+offset);
+      }
+      /*
+   case 5:
+      floatstreamCombine5(streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 6:
+      floatstreamCombine6(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      break;
+   default:
+      floatstreamCombine7(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     *streams[6],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      if (num>7) {
+         combineStreamsHelper1dfloat(streams+7,
+                                      num-7,
+                                      output,
+                                      modulus,
+                                      7+offset);         
+      } 
+      */     
+   }
+}
+void combineStreams1dfloat (float (**streams)<>,
+                          unsigned int num,
+                          unsigned int width, 
+                          unsigned int UNUSED,
+                               float (*output)<>) {
+   float tmp<(num*width)>;
+   streamSwap(tmp,*output);
+   switch (num) {
+   case 0:
+      return;
+   case 1:
+      streamSwap(*output,*streams[0]);
+      break;
+   case 2:
+      float1dstreamCombine2f(*streams[0],
+                      *streams[1],
+                      (float)num,
+                      *output);
+      break;
+   case 3:
+      float1dstreamCombine3f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      (float)num,
+                      *output);
+      break;
+   case 4:
+      float1dstreamCombine4f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      (float)num,
+                      *output);
+      break;
+   case 5:
+   default:
+      float1dstreamCombine5f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      (float)num,
+                      *output);
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      if (num>5) {
+         combineStreamsHelper1dfloat(streams+5,
+                                      num-5,
+                                      *output,
+                                      (float)num,
+                                      (float)(5-.5));
+      }
+      /*
+      break;
+   case 6:
+      floatstreamCombine6f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      num,
+                      output);
+      break;
+   case 7:
+      floatstreamCombine7f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      num,
+                      output);
+      break;
+   default:
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      floatstreamCombine8f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      *streams[7],
+                      num,
+                      output);
+      if (num>8) {
+         combineStreamsHelperfloat(streams+8,
+                                      num-8,
+                                      output,
+                                      num,
+                                      8);
+      }
+      break;
+      */
+   }
+}
+
+
+
+
+kernel void combinefloat1d (float input1[], 
+                           float input2[], 
+                           out float output<>,
+                           float startsecond,
+                           float endsecond,
+                           float maxinput2value,
+                           float inf){
+   if ((indexof output).x>=startsecond.x) {
+      float secondindex=(indexof output).x-startsecond;
+      //getIndexAt(float4(maxinputvalue.x,maxinputvalue.y-1,0,0),
+      //           -shift2,
+      //           maxinput1value,
+      //           endsecond); // moved outside kernel
+      if (secondindex.x>=endsecond.x) {
+         output=inf;
+      }else {
+         output = input2[secondindex];
+      }
+   }else {
+      output=input1[(indexof output).x];
+   }
+}
+
+unsigned int  voutCombinefloat1d(float outleft_stream<>,
+                               float maxshiftleft,
+                               unsigned int LEFTWIDTH,
+                               float outright_stream<>,
+                               float maxshiftright,
+                               unsigned int RIGHTWIDTH,
+                                    float (*output)<>){
+   unsigned int totalsize;
+   float maxleftvalue,maxrightvalue;
+   maxleftvalue=(float)LEFTWIDTH;
+   maxrightvalue=(float)RIGHTWIDTH;
+   totalsize = (LEFTWIDTH
+                +RIGHTWIDTH
+                -(unsigned int)maxshiftleft-(unsigned int)maxshiftright);
+   if (1) {      
+      unsigned int width = totalsize;
+      float output_stream<width>;
+      float startsecond,endsecond;
+      cpuGetIndexAt1d(maxleftvalue-1,
+                    -maxshiftleft,
+                    maxleftvalue,
+                    &startsecond);
+      cpuGetIndexAt1d(maxrightvalue-1,
+                    -maxshiftright,
+                    maxrightvalue,
+                    &endsecond);
+      combinefloat1d(outleft_stream,
+                   outright_stream,
+                   output_stream,
+                   startsecond,
+                   endsecond,
+                   maxrightvalue,
+                   1.0f/(float)floor(.5));
+      streamSwap (*output,output_stream);
+   }
+   return totalsize;
+}
+
+unsigned int totalCombineVoutfloat1d (float list_stream<>, 
+                                    unsigned int WIDTH,
+                                    float list2_stream<>,
+                                    unsigned int WIDTH2,
+                                         float (*output)<>){
+
+   float outleft_stream<WIDTH>;
+   float outright_stream<WIDTH2>;
+   float maxshiftleft =shiftValues1dfloat(list_stream,
+                                           &outleft_stream,
+                                           WIDTH,1,
+                                           -1);
+   float maxshiftright=shiftValues1dfloat(list2_stream,
+                                           &outright_stream,
+                                           WIDTH2,1,
+                                           -1);
+   return voutCombinefloat1d (outleft_stream,
+                            maxshiftleft,
+                               WIDTH,
+                            outright_stream,
+                            maxshiftright,
+                               WIDTH2,
+                            output);
+}
+#undef VECTOR_TEMPLATIZED_FUNCTIONS
+#define VECTOR_TEMPLATIZED_FUNCTIONS
+reduce void valueProducedfloat21d (float2 input <>, 
+                                   reduce float2 output<>) {
+   output=isinf(input.x)?output:input;
+}
+kernel void isFiniteKernelfloat21d(float2 inp<>, out float outp<>) {
+   outp=!isinf(inp.x);
+}
+
+int finiteValueProduced1dfloat2 (float2 input<>) {
+   float2 output<1>;
+   float finiteout<1>;
+   float2 rettype;
+   float ret;
+  
+   debugStreamPrint (input,"Finite Values in...");
+   valueProducedfloat21d(input,output);
+   streamWrite(output,&rettype);
+   isFiniteKernelfloat21d(output,finiteout);
+   streamWrite(finiteout,&ret);
+   return (int)ret;
+}
+
+kernel void valueAtfloat21d (float2 value[],
+                             float index,
+                             out float2 output<>,
+                             float maxvalue,
+                             float nothing) {
+   if (index>=maxvalue||index<-.1)
+      output = nothing;
+   else 
+      output = value[index];
+}
+kernel void StartScanfloat21d (float2 value[], 
+                            out float output<>, 
+                            float sign,
+                            float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+sign;
+   float2 neighbor;
+   valueAtfloat21d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = (isinf(value[indexof(output)].x)?1:0) 
+      + (isinf(neighbor.x)?1:0);
+}
+kernel void Scanfloat21d (float value [],
+                                out float output<>,
+                                float twotoi,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+twotoi;
+   float neighbor;
+   valueAtfloat1d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = round(value[indexof(output)]+neighbor);
+}
+
+kernel void GatherGuessfloat21d(float scatterindex[],
+                        out float output<>,
+                        float2 value[],
+                        float twotologkminusi,
+                        float maxvalue,
+                        float halfk,
+                        float sign) {
+     float neighbor;
+      float nextPlaceToLook=(indexof output).x-sign*halfk;
+      valueAtfloat1d(scatterindex,nextPlaceToLook,neighbor,maxvalue,0);
+      if (neighbor>halfk) {
+         output=halfk+twotologkminusi;
+      }else {
+         float2 actualValue;
+         valueAtfloat21d(value,nextPlaceToLook,actualValue,maxvalue,0);
+         if (neighbor==halfk&&!isinf(actualValue.x)) {
+            output=halfk;
+         }else {
+            output = halfk-twotologkminusi;
+         }         
+      }
+}
+kernel void EstablishGuessfloat21d(float scatterindex[],
+                                   out float output<>,
+                                   float2 value[],
+                                   float twotologkminusi,
+                                   float maxvalue,
+                                   float halfk,
+                                   float sign) {
+   if (scatterindex[indexof(output)]==0) {
+      output=0;
+   } else {
+      GatherGuessfloat21d(scatterindex,
+                          output,
+                          value,
+                          twotologkminusi,
+                          maxvalue,
+                          halfk,
+                          sign);
+    }
+}
+kernel void UpdateGuessfloat21d(float scatterindex[],
+                                out float output<>,
+                                float2 value[],
+                                float twotologkminusi,
+                                float maxvalue,
+                                float lastguess<>,
+                                float sign) {
+   GatherGuessfloat21d(scatterindex,
+                       output,
+                       value,
+                       twotologkminusi,
+                       maxvalue,
+                       lastguess,
+                       sign);
+}
+
+kernel void RelGatherfloat21d(out float2 output<>,
+                                float gatherindex[],
+                                float2 value[],
+                                float2 sign,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x-sign.x*gatherindex[indexof(output)];
+   valueAtfloat21d(value,nextPlaceToLook,output,maxvalue,sign.y);   
+}
+
+
+float shiftValues1dfloat2(float2 list_stream <>,
+                            float2 (*output_stream)<>,
+                       int WIDTH, 
+                       int unused,
+                       int sign) {
+   float tmp_stream<WIDTH>;
+   float ret_stream<WIDTH>;
+   float guess_stream<WIDTH>;
+   unsigned int i;
+   float maxvalue;
+   unsigned int logN;
+   unsigned int LogNMinusK;
+   float maxshift;
+   maxvalue=(float)WIDTH;
+   logN=(unsigned int)ceil(log((float)WIDTH)/log(2.0f));
+   debugStreamPrint(list_stream,"Combined...");
+   StartScanfloat21d (list_stream,ret_stream,(float)sign,maxvalue);   
+   for (i=1;i<logN;++i) {
+      streamSwap(ret_stream,tmp_stream);
+      Scanfloat21d(tmp_stream,ret_stream,(float)sign*(1<<i),maxvalue);
+   }
+   debugStreamPrint(ret_stream,"scattering...");
+   {
+     float item<1>;
+     float index;
+     if (sign==-1) {
+       index = (float)(WIDTH-1);
+     }else {
+       index=0;
+     }
+     kernelReadItem1d(ret_stream,index,item);
+     streamWrite(item,&maxshift);
+   }
+   LogNMinusK=logN-2;
+   i= logN-1;//could make this k! rather than N
+   // where k = num elements pushed (N-logN%2?ret_stream,tmp_stream
+   EstablishGuessfloat21d(ret_stream,
+                            guess_stream,
+                            list_stream,
+                            (float)(1 << LogNMinusK),
+                            maxvalue,
+                            (float)(1<<i),
+                            (float)sign);
+   for (i=1;i<logN;++i) {
+      LogNMinusK=logN-1-i;
+      streamSwap(tmp_stream,guess_stream);
+      UpdateGuessfloat21d (ret_stream,//scatter values
+                             guess_stream,//new guess
+                             list_stream,//actual values
+                             (float)(1<<LogNMinusK),
+                             maxvalue,
+                             tmp_stream, //old guess
+                             (float)sign);
+   }
+   debugStreamPrint(guess_stream,"Gather Value");
+   if (1) {
+      unsigned int size,width;
+      size = (unsigned int)WIDTH
+         - (unsigned int) maxshift;
+      width = size;
+      if (1) {
+        float2 proper_output_stream<width>;
+        if (width) {
+          RelGatherfloat21d(proper_output_stream,
+                                   guess_stream,
+                                   list_stream,
+                                   float2((float)sign,1.0f/(float)floor(.5)),
+                                   maxvalue);
+        }
+        streamSwap(*output_stream,proper_output_stream);
+      }
+      debugStreamPrint(*output_stream, "Final Value");
+   }
+   return maxshift;
+}
+
+kernel void float21dstreamCombine1(float2 input0[],
+                                float modulus,
+                                float offset,
+                                float2 oldoutput<>,
+                                out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float21dstreamCombine2f(float2 input0[],
+                            float2 input1[],
+                            float modulus,
+                            out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=input1[newindex];
+   }
+}
+
+kernel void float21dstreamCombine2(float2 input0[],
+                           float2 input1[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float21dstreamCombine3f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float modulus,
+                            out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=input2[newindex];
+   }
+}
+
+kernel void float21dstreamCombine3(float2 input0[],
+                           float2 input1[],
+                           float2 input2[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float21dstreamCombine4f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float2 input3[],
+                            float modulus,
+                            out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=input3[newindex];
+   }
+}
+
+kernel void float21dstreamCombine4(float2 input0[],
+                           float2 input1[],
+                           float2 input2[],
+                           float2 input3[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus,  newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float21dstreamCombine5f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float2 input3[],
+                            float2 input4[],
+                            float modulus,
+                            out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=input4[newindex];
+   }
+}
+/*
+kernel void float2streamCombine5(float2 input0[],
+                           float2 input1[],
+                           float2 input2[],
+                           float2 input3[],
+                           float2 input4[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+
+kernel void float2streamCombine6f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float2 input3[],
+                            float2 input4[],
+                            float2 input5[],
+                            float modulus,
+                            out float2 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus,  newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=input5[newindex];
+   }
+}
+
+kernel void float2streamCombine6(float2 input0[],
+                           float2 input1[],
+                           float2 input2[],
+                           float2 input3[],
+                           float2 input4[],
+                           float2 input5[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float2streamCombine7f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float2 input3[],
+                            float2 input4[],
+                            float2 input5[],
+                            float2 input6[],
+                            float modulus,
+                            out float2 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=input6[newindex];
+   }
+}
+
+kernel void float2streamCombine7(float2 input0[],
+                           float2 input1[],
+                           float2 input2[],
+                           float2 input3[],
+                           float2 input4[],
+                           float2 input5[],
+                           float2 input6[],
+                           float modulus,
+                           float offset,
+                           float2 oldoutput<>,
+                           out float2 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float2streamCombine8f(float2 input0[],
+                            float2 input1[],
+                            float2 input2[],
+                            float2 input3[],
+                            float2 input4[],
+                            float2 input5[],
+                            float2 input6[],
+                            float2 input7[],
+                            float modulus,
+                            out float2 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=input7[newindex];
+   }
+}
+*/
+void combineStreamsHelper1dfloat2 (float2 (**streams) <>,
+                                unsigned int num,
+                                float2 output<>,
+                                float modulus,
+                                float offset) {
+   switch (num) {
+   case 1:
+      float21dstreamCombine1(*streams[0],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 2:
+      float21dstreamCombine2(*streams[0],
+                     *streams[1],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 3:
+      float21dstreamCombine3(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 4:
+   default:
+      float21dstreamCombine4(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      if (num>4) {
+         combineStreamsHelper1dfloat2(streams+4,
+                                      num-4,
+                                      output,
+                                      modulus,
+                                      4+offset);
+      }
+      /*
+   case 5:
+      float2streamCombine5(streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 6:
+      float2streamCombine6(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      break;
+   default:
+      float2streamCombine7(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     *streams[6],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      if (num>7) {
+         combineStreamsHelper1dfloat2(streams+7,
+                                      num-7,
+                                      output,
+                                      modulus,
+                                      7+offset);         
+      } 
+      */     
+   }
+}
+void combineStreams1dfloat2 (float2 (**streams)<>,
+                          unsigned int num,
+                          unsigned int width, 
+                          unsigned int UNUSED,
+                               float2 (*output)<>) {
+   float2 tmp<(num*width)>;
+   streamSwap(tmp,*output);
+   switch (num) {
+   case 0:
+      return;
+   case 1:
+      streamSwap(*output,*streams[0]);
+      break;
+   case 2:
+      float21dstreamCombine2f(*streams[0],
+                      *streams[1],
+                      (float)num,
+                      *output);
+      break;
+   case 3:
+      float21dstreamCombine3f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      (float)num,
+                      *output);
+      break;
+   case 4:
+      float21dstreamCombine4f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      (float)num,
+                      *output);
+      break;
+   case 5:
+   default:
+      float21dstreamCombine5f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      (float)num,
+                      *output);
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      if (num>5) {
+         combineStreamsHelper1dfloat2(streams+5,
+                                      num-5,
+                                      *output,
+                                      (float)num,
+                                      (float)(5-.5));
+      }
+      /*
+      break;
+   case 6:
+      float2streamCombine6f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      num,
+                      output);
+      break;
+   case 7:
+      float2streamCombine7f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      num,
+                      output);
+      break;
+   default:
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      float2streamCombine8f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      *streams[7],
+                      num,
+                      output);
+      if (num>8) {
+         combineStreamsHelperfloat2(streams+8,
+                                      num-8,
+                                      output,
+                                      num,
+                                      8);
+      }
+      break;
+      */
+   }
+}
+
+
+
+
+kernel void combinefloat21d (float2 input1[], 
+                           float2 input2[], 
+                           out float2 output<>,
+                           float startsecond,
+                           float endsecond,
+                           float maxinput2value,
+                           float inf){
+   if ((indexof output).x>=startsecond.x) {
+      float secondindex=(indexof output).x-startsecond;
+      //getIndexAt(float4(maxinputvalue.x,maxinputvalue.y-1,0,0),
+      //           -shift2,
+      //           maxinput1value,
+      //           endsecond); // moved outside kernel
+      if (secondindex.x>=endsecond.x) {
+         output=inf;
+      }else {
+         output = input2[secondindex];
+      }
+   }else {
+      output=input1[(indexof output).x];
+   }
+}
+
+unsigned int  voutCombinefloat21d(float2 outleft_stream<>,
+                               float maxshiftleft,
+                               unsigned int LEFTWIDTH,
+                               float2 outright_stream<>,
+                               float maxshiftright,
+                               unsigned int RIGHTWIDTH,
+                                    float2 (*output)<>){
+   unsigned int totalsize;
+   float maxleftvalue,maxrightvalue;
+   maxleftvalue=(float)LEFTWIDTH;
+   maxrightvalue=(float)RIGHTWIDTH;
+   totalsize = (LEFTWIDTH
+                +RIGHTWIDTH
+                -(unsigned int)maxshiftleft-(unsigned int)maxshiftright);
+   if (1) {      
+      unsigned int width = totalsize;
+      float2 output_stream<width>;
+      float startsecond,endsecond;
+      cpuGetIndexAt1d(maxleftvalue-1,
+                    -maxshiftleft,
+                    maxleftvalue,
+                    &startsecond);
+      cpuGetIndexAt1d(maxrightvalue-1,
+                    -maxshiftright,
+                    maxrightvalue,
+                    &endsecond);
+      combinefloat21d(outleft_stream,
+                   outright_stream,
+                   output_stream,
+                   startsecond,
+                   endsecond,
+                   maxrightvalue,
+                   1.0f/(float)floor(.5));
+      streamSwap (*output,output_stream);
+   }
+   return totalsize;
+}
+
+unsigned int totalCombineVoutfloat21d (float2 list_stream<>, 
+                                    unsigned int WIDTH,
+                                    float2 list2_stream<>,
+                                    unsigned int WIDTH2,
+                                         float2 (*output)<>){
+
+   float outleft_stream<WIDTH>;
+   float outright_stream<WIDTH2>;
+   float maxshiftleft =shiftValues1dfloat2(list_stream,
+                                           &outleft_stream,
+                                           WIDTH,1,
+                                           -1);
+   float maxshiftright=shiftValues1dfloat2(list2_stream,
+                                           &outright_stream,
+                                           WIDTH2,1,
+                                           -1);
+   return voutCombinefloat21d (outleft_stream,
+                            maxshiftleft,
+                               WIDTH,
+                            outright_stream,
+                            maxshiftright,
+                               WIDTH2,
+                            output);
+}
+#undef VECTOR_TEMPLATIZED_FUNCTIONS
+#define VECTOR_TEMPLATIZED_FUNCTIONS
+reduce void valueProducedfloat31d (float3 input <>, 
+                                   reduce float3 output<>) {
+   output=isinf(input.x)?output:input;
+}
+kernel void isFiniteKernelfloat31d(float3 inp<>, out float outp<>) {
+   outp=!isinf(inp.x);
+}
+
+int finiteValueProduced1dfloat3 (float3 input<>) {
+   float3 output<1>;
+   float finiteout<1>;
+   float3 rettype;
+   float ret;
+  
+   debugStreamPrint (input,"Finite Values in...");
+   valueProducedfloat31d(input,output);
+   streamWrite(output,&rettype);
+   isFiniteKernelfloat31d(output,finiteout);
+   streamWrite(finiteout,&ret);
+   return (int)ret;
+}
+
+kernel void valueAtfloat31d (float3 value[],
+                             float index,
+                             out float3 output<>,
+                             float maxvalue,
+                             float nothing) {
+   if (index>=maxvalue||index<-.1)
+      output = nothing;
+   else 
+      output = value[index];
+}
+kernel void StartScanfloat31d (float3 value[], 
+                            out float output<>, 
+                            float sign,
+                            float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+sign;
+   float3 neighbor;
+   valueAtfloat31d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = (isinf(value[indexof(output)].x)?1:0) 
+      + (isinf(neighbor.x)?1:0);
+}
+kernel void Scanfloat31d (float value [],
+                                out float output<>,
+                                float twotoi,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+twotoi;
+   float neighbor;
+   valueAtfloat1d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = round(value[indexof(output)]+neighbor);
+}
+
+kernel void GatherGuessfloat31d(float scatterindex[],
+                        out float output<>,
+                        float3 value[],
+                        float twotologkminusi,
+                        float maxvalue,
+                        float halfk,
+                        float sign) {
+     float neighbor;
+      float nextPlaceToLook=(indexof output).x-sign*halfk;
+      valueAtfloat1d(scatterindex,nextPlaceToLook,neighbor,maxvalue,0);
+      if (neighbor>halfk) {
+         output=halfk+twotologkminusi;
+      }else {
+         float3 actualValue;
+         valueAtfloat31d(value,nextPlaceToLook,actualValue,maxvalue,0);
+         if (neighbor==halfk&&!isinf(actualValue.x)) {
+            output=halfk;
+         }else {
+            output = halfk-twotologkminusi;
+         }         
+      }
+}
+kernel void EstablishGuessfloat31d(float scatterindex[],
+                                   out float output<>,
+                                   float3 value[],
+                                   float twotologkminusi,
+                                   float maxvalue,
+                                   float halfk,
+                                   float sign) {
+   if (scatterindex[indexof(output)]==0) {
+      output=0;
+   } else {
+      GatherGuessfloat31d(scatterindex,
+                          output,
+                          value,
+                          twotologkminusi,
+                          maxvalue,
+                          halfk,
+                          sign);
+    }
+}
+kernel void UpdateGuessfloat31d(float scatterindex[],
+                                out float output<>,
+                                float3 value[],
+                                float twotologkminusi,
+                                float maxvalue,
+                                float lastguess<>,
+                                float sign) {
+   GatherGuessfloat31d(scatterindex,
+                       output,
+                       value,
+                       twotologkminusi,
+                       maxvalue,
+                       lastguess,
+                       sign);
+}
+
+kernel void RelGatherfloat31d(out float3 output<>,
+                                float gatherindex[],
+                                float3 value[],
+                                float2 sign,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x-sign.x*gatherindex[indexof(output)];
+   valueAtfloat31d(value,nextPlaceToLook,output,maxvalue,sign.y);   
+}
+
+
+float shiftValues1dfloat3(float3 list_stream <>,
+                            float3 (*output_stream)<>,
+                       int WIDTH, 
+                       int unused,
+                       int sign) {
+   float tmp_stream<WIDTH>;
+   float ret_stream<WIDTH>;
+   float guess_stream<WIDTH>;
+   unsigned int i;
+   float maxvalue;
+   unsigned int logN;
+   unsigned int LogNMinusK;
+   float maxshift;
+   maxvalue=(float)WIDTH;
+   logN=(unsigned int)ceil(log((float)WIDTH)/log(2.0f));
+   debugStreamPrint(list_stream,"Combined...");
+   StartScanfloat31d (list_stream,ret_stream,(float)sign,maxvalue);   
+   for (i=1;i<logN;++i) {
+      streamSwap(ret_stream,tmp_stream);
+      Scanfloat31d(tmp_stream,ret_stream,(float)sign*(1<<i),maxvalue);
+   }
+   debugStreamPrint(ret_stream,"scattering...");
+   {
+     float item<1>;
+     float index;
+     if (sign==-1) {
+       index = (float)(WIDTH-1);
+     }else {
+       index=0;
+     }
+     kernelReadItem1d(ret_stream,index,item);
+     streamWrite(item,&maxshift);
+   }
+   LogNMinusK=logN-2;
+   i= logN-1;//could make this k! rather than N
+   // where k = num elements pushed (N-logN%2?ret_stream,tmp_stream
+   EstablishGuessfloat31d(ret_stream,
+                            guess_stream,
+                            list_stream,
+                            (float)(1 << LogNMinusK),
+                            maxvalue,
+                            (float)(1<<i),
+                            (float)sign);
+   for (i=1;i<logN;++i) {
+      LogNMinusK=logN-1-i;
+      streamSwap(tmp_stream,guess_stream);
+      UpdateGuessfloat31d (ret_stream,//scatter values
+                             guess_stream,//new guess
+                             list_stream,//actual values
+                             (float)(1<<LogNMinusK),
+                             maxvalue,
+                             tmp_stream, //old guess
+                             (float)sign);
+   }
+   debugStreamPrint(guess_stream,"Gather Value");
+   if (1) {
+      unsigned int size,width;
+      size = (unsigned int)WIDTH
+         - (unsigned int) maxshift;
+      width = size;
+      if (1) {
+        float3 proper_output_stream<width>;
+        if (width) {
+          RelGatherfloat31d(proper_output_stream,
+                                   guess_stream,
+                                   list_stream,
+                                   float2((float)sign,1.0f/(float)floor(.5)),
+                                   maxvalue);
+        }
+        streamSwap(*output_stream,proper_output_stream);
+      }
+      debugStreamPrint(*output_stream, "Final Value");
+   }
+   return maxshift;
+}
+
+kernel void float31dstreamCombine1(float3 input0[],
+                                float modulus,
+                                float offset,
+                                float3 oldoutput<>,
+                                out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float31dstreamCombine2f(float3 input0[],
+                            float3 input1[],
+                            float modulus,
+                            out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=input1[newindex];
+   }
+}
+
+kernel void float31dstreamCombine2(float3 input0[],
+                           float3 input1[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float31dstreamCombine3f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float modulus,
+                            out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=input2[newindex];
+   }
+}
+
+kernel void float31dstreamCombine3(float3 input0[],
+                           float3 input1[],
+                           float3 input2[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float31dstreamCombine4f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float3 input3[],
+                            float modulus,
+                            out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=input3[newindex];
+   }
+}
+
+kernel void float31dstreamCombine4(float3 input0[],
+                           float3 input1[],
+                           float3 input2[],
+                           float3 input3[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus,  newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float31dstreamCombine5f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float3 input3[],
+                            float3 input4[],
+                            float modulus,
+                            out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=input4[newindex];
+   }
+}
+/*
+kernel void float3streamCombine5(float3 input0[],
+                           float3 input1[],
+                           float3 input2[],
+                           float3 input3[],
+                           float3 input4[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+
+kernel void float3streamCombine6f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float3 input3[],
+                            float3 input4[],
+                            float3 input5[],
+                            float modulus,
+                            out float3 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus,  newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=input5[newindex];
+   }
+}
+
+kernel void float3streamCombine6(float3 input0[],
+                           float3 input1[],
+                           float3 input2[],
+                           float3 input3[],
+                           float3 input4[],
+                           float3 input5[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float3streamCombine7f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float3 input3[],
+                            float3 input4[],
+                            float3 input5[],
+                            float3 input6[],
+                            float modulus,
+                            out float3 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=input6[newindex];
+   }
+}
+
+kernel void float3streamCombine7(float3 input0[],
+                           float3 input1[],
+                           float3 input2[],
+                           float3 input3[],
+                           float3 input4[],
+                           float3 input5[],
+                           float3 input6[],
+                           float modulus,
+                           float offset,
+                           float3 oldoutput<>,
+                           out float3 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float3streamCombine8f(float3 input0[],
+                            float3 input1[],
+                            float3 input2[],
+                            float3 input3[],
+                            float3 input4[],
+                            float3 input5[],
+                            float3 input6[],
+                            float3 input7[],
+                            float modulus,
+                            out float3 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=input7[newindex];
+   }
+}
+*/
+void combineStreamsHelper1dfloat3 (float3 (**streams) <>,
+                                unsigned int num,
+                                float3 output<>,
+                                float modulus,
+                                float offset) {
+   switch (num) {
+   case 1:
+      float31dstreamCombine1(*streams[0],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 2:
+      float31dstreamCombine2(*streams[0],
+                     *streams[1],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 3:
+      float31dstreamCombine3(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 4:
+   default:
+      float31dstreamCombine4(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      if (num>4) {
+         combineStreamsHelper1dfloat3(streams+4,
+                                      num-4,
+                                      output,
+                                      modulus,
+                                      4+offset);
+      }
+      /*
+   case 5:
+      float3streamCombine5(streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 6:
+      float3streamCombine6(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      break;
+   default:
+      float3streamCombine7(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     *streams[6],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      if (num>7) {
+         combineStreamsHelper1dfloat3(streams+7,
+                                      num-7,
+                                      output,
+                                      modulus,
+                                      7+offset);         
+      } 
+      */     
+   }
+}
+void combineStreams1dfloat3 (float3 (**streams)<>,
+                          unsigned int num,
+                          unsigned int width, 
+                          unsigned int UNUSED,
+                               float3 (*output)<>) {
+   float3 tmp<(num*width)>;
+   streamSwap(tmp,*output);
+   switch (num) {
+   case 0:
+      return;
+   case 1:
+      streamSwap(*output,*streams[0]);
+      break;
+   case 2:
+      float31dstreamCombine2f(*streams[0],
+                      *streams[1],
+                      (float)num,
+                      *output);
+      break;
+   case 3:
+      float31dstreamCombine3f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      (float)num,
+                      *output);
+      break;
+   case 4:
+      float31dstreamCombine4f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      (float)num,
+                      *output);
+      break;
+   case 5:
+   default:
+      float31dstreamCombine5f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      (float)num,
+                      *output);
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      if (num>5) {
+         combineStreamsHelper1dfloat3(streams+5,
+                                      num-5,
+                                      *output,
+                                      (float)num,
+                                      (float)(5-.5));
+      }
+      /*
+      break;
+   case 6:
+      float3streamCombine6f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      num,
+                      output);
+      break;
+   case 7:
+      float3streamCombine7f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      num,
+                      output);
+      break;
+   default:
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      float3streamCombine8f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      *streams[7],
+                      num,
+                      output);
+      if (num>8) {
+         combineStreamsHelperfloat3(streams+8,
+                                      num-8,
+                                      output,
+                                      num,
+                                      8);
+      }
+      break;
+      */
+   }
+}
+
+
+
+
+kernel void combinefloat31d (float3 input1[], 
+                           float3 input2[], 
+                           out float3 output<>,
+                           float startsecond,
+                           float endsecond,
+                           float maxinput2value,
+                           float inf){
+   if ((indexof output).x>=startsecond.x) {
+      float secondindex=(indexof output).x-startsecond;
+      //getIndexAt(float4(maxinputvalue.x,maxinputvalue.y-1,0,0),
+      //           -shift2,
+      //           maxinput1value,
+      //           endsecond); // moved outside kernel
+      if (secondindex.x>=endsecond.x) {
+         output=inf;
+      }else {
+         output = input2[secondindex];
+      }
+   }else {
+      output=input1[(indexof output).x];
+   }
+}
+
+unsigned int  voutCombinefloat31d(float3 outleft_stream<>,
+                               float maxshiftleft,
+                               unsigned int LEFTWIDTH,
+                               float3 outright_stream<>,
+                               float maxshiftright,
+                               unsigned int RIGHTWIDTH,
+                                    float3 (*output)<>){
+   unsigned int totalsize;
+   float maxleftvalue,maxrightvalue;
+   maxleftvalue=(float)LEFTWIDTH;
+   maxrightvalue=(float)RIGHTWIDTH;
+   totalsize = (LEFTWIDTH
+                +RIGHTWIDTH
+                -(unsigned int)maxshiftleft-(unsigned int)maxshiftright);
+   if (1) {      
+      unsigned int width = totalsize;
+      float3 output_stream<width>;
+      float startsecond,endsecond;
+      cpuGetIndexAt1d(maxleftvalue-1,
+                    -maxshiftleft,
+                    maxleftvalue,
+                    &startsecond);
+      cpuGetIndexAt1d(maxrightvalue-1,
+                    -maxshiftright,
+                    maxrightvalue,
+                    &endsecond);
+      combinefloat31d(outleft_stream,
+                   outright_stream,
+                   output_stream,
+                   startsecond,
+                   endsecond,
+                   maxrightvalue,
+                   1.0f/(float)floor(.5));
+      streamSwap (*output,output_stream);
+   }
+   return totalsize;
+}
+
+unsigned int totalCombineVoutfloat31d (float3 list_stream<>, 
+                                    unsigned int WIDTH,
+                                    float3 list2_stream<>,
+                                    unsigned int WIDTH2,
+                                         float3 (*output)<>){
+
+   float outleft_stream<WIDTH>;
+   float outright_stream<WIDTH2>;
+   float maxshiftleft =shiftValues1dfloat3(list_stream,
+                                           &outleft_stream,
+                                           WIDTH,1,
+                                           -1);
+   float maxshiftright=shiftValues1dfloat3(list2_stream,
+                                           &outright_stream,
+                                           WIDTH2,1,
+                                           -1);
+   return voutCombinefloat31d (outleft_stream,
+                            maxshiftleft,
+                               WIDTH,
+                            outright_stream,
+                            maxshiftright,
+                               WIDTH2,
+                            output);
+}
+#undef VECTOR_TEMPLATIZED_FUNCTIONS
+#define VECTOR_TEMPLATIZED_FUNCTIONS
+reduce void valueProducedfloat41d (float4 input <>, 
+                                   reduce float4 output<>) {
+   output=isinf(input.x)?output:input;
+}
+kernel void isFiniteKernelfloat41d(float4 inp<>, out float outp<>) {
+   outp=!isinf(inp.x);
+}
+
+int finiteValueProduced1dfloat4 (float4 input<>) {
+   float4 output<1>;
+   float finiteout<1>;
+   float4 rettype;
+   float ret;
+  
+   debugStreamPrint (input,"Finite Values in...");
+   valueProducedfloat41d(input,output);
+   streamWrite(output,&rettype);
+   isFiniteKernelfloat41d(output,finiteout);
+   streamWrite(finiteout,&ret);
+   return (int)ret;
+}
+
+kernel void valueAtfloat41d (float4 value[],
+                             float index,
+                             out float4 output<>,
+                             float maxvalue,
+                             float nothing) {
+   if (index>=maxvalue||index<-.1)
+      output = nothing;
+   else 
+      output = value[index];
+}
+kernel void StartScanfloat41d (float4 value[], 
+                            out float output<>, 
+                            float sign,
+                            float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+sign;
+   float4 neighbor;
+   valueAtfloat41d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = (isinf(value[indexof(output)].x)?1:0) 
+      + (isinf(neighbor.x)?1:0);
+}
+kernel void Scanfloat41d (float value [],
+                                out float output<>,
+                                float twotoi,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x+twotoi;
+   float neighbor;
+   valueAtfloat1d(value,nextPlaceToLook,neighbor,maxvalue,0);
+   output = round(value[indexof(output)]+neighbor);
+}
+
+kernel void GatherGuessfloat41d(float scatterindex[],
+                        out float output<>,
+                        float4 value[],
+                        float twotologkminusi,
+                        float maxvalue,
+                        float halfk,
+                        float sign) {
+     float neighbor;
+      float nextPlaceToLook=(indexof output).x-sign*halfk;
+      valueAtfloat1d(scatterindex,nextPlaceToLook,neighbor,maxvalue,0);
+      if (neighbor>halfk) {
+         output=halfk+twotologkminusi;
+      }else {
+         float4 actualValue;
+         valueAtfloat41d(value,nextPlaceToLook,actualValue,maxvalue,0);
+         if (neighbor==halfk&&!isinf(actualValue.x)) {
+            output=halfk;
+         }else {
+            output = halfk-twotologkminusi;
+         }         
+      }
+}
+kernel void EstablishGuessfloat41d(float scatterindex[],
+                                   out float output<>,
+                                   float4 value[],
+                                   float twotologkminusi,
+                                   float maxvalue,
+                                   float halfk,
+                                   float sign) {
+   if (scatterindex[indexof(output)]==0) {
+      output=0;
+   } else {
+      GatherGuessfloat41d(scatterindex,
+                          output,
+                          value,
+                          twotologkminusi,
+                          maxvalue,
+                          halfk,
+                          sign);
+    }
+}
+kernel void UpdateGuessfloat41d(float scatterindex[],
+                                out float output<>,
+                                float4 value[],
+                                float twotologkminusi,
+                                float maxvalue,
+                                float lastguess<>,
+                                float sign) {
+   GatherGuessfloat41d(scatterindex,
+                       output,
+                       value,
+                       twotologkminusi,
+                       maxvalue,
+                       lastguess,
+                       sign);
+}
+
+kernel void RelGatherfloat41d(out float4 output<>,
+                                float gatherindex[],
+                                float4 value[],
+                                float2 sign,
+                                float maxvalue) {
+   float nextPlaceToLook=(indexof output).x-sign.x*gatherindex[indexof(output)];
+   valueAtfloat41d(value,nextPlaceToLook,output,maxvalue,sign.y);   
+}
+
+
+float shiftValues1dfloat4(float4 list_stream <>,
+                            float4 (*output_stream)<>,
+                       int WIDTH, 
+                       int unused,
+                       int sign) {
+   float tmp_stream<WIDTH>;
+   float ret_stream<WIDTH>;
+   float guess_stream<WIDTH>;
+   unsigned int i;
+   float maxvalue;
+   unsigned int logN;
+   unsigned int LogNMinusK;
+   float maxshift;
+   maxvalue=(float)WIDTH;
+   logN=(unsigned int)ceil(log((float)WIDTH)/log(2.0f));
+   debugStreamPrint(list_stream,"Combined...");
+   StartScanfloat41d (list_stream,ret_stream,(float)sign,maxvalue);   
+   for (i=1;i<logN;++i) {
+      streamSwap(ret_stream,tmp_stream);
+      Scanfloat41d(tmp_stream,ret_stream,(float)sign*(1<<i),maxvalue);
+   }
+   debugStreamPrint(ret_stream,"scattering...");
+   {
+     float item<1>;
+     float index;
+     if (sign==-1) {
+       index = (float)(WIDTH-1);
+     }else {
+       index=0;
+     }
+     kernelReadItem1d(ret_stream,index,item);
+     streamWrite(item,&maxshift);
+   }
+   LogNMinusK=logN-2;
+   i= logN-1;//could make this k! rather than N
+   // where k = num elements pushed (N-logN%2?ret_stream,tmp_stream
+   EstablishGuessfloat41d(ret_stream,
+                            guess_stream,
+                            list_stream,
+                            (float)(1 << LogNMinusK),
+                            maxvalue,
+                            (float)(1<<i),
+                            (float)sign);
+   for (i=1;i<logN;++i) {
+      LogNMinusK=logN-1-i;
+      streamSwap(tmp_stream,guess_stream);
+      UpdateGuessfloat41d (ret_stream,//scatter values
+                             guess_stream,//new guess
+                             list_stream,//actual values
+                             (float)(1<<LogNMinusK),
+                             maxvalue,
+                             tmp_stream, //old guess
+                             (float)sign);
+   }
+   debugStreamPrint(guess_stream,"Gather Value");
+   if (1) {
+      unsigned int size,width;
+      size = (unsigned int)WIDTH
+         - (unsigned int) maxshift;
+      width = size;
+      if (1) {
+        float4 proper_output_stream<width>;
+        if (width) {
+          RelGatherfloat41d(proper_output_stream,
+                                   guess_stream,
+                                   list_stream,
+                                   float2((float)sign,1.0f/(float)floor(.5)),
+                                   maxvalue);
+        }
+        streamSwap(*output_stream,proper_output_stream);
+      }
+      debugStreamPrint(*output_stream, "Final Value");
+   }
+   return maxshift;
+}
+
+kernel void float41dstreamCombine1(float4 input0[],
+                                float modulus,
+                                float offset,
+                                float4 oldoutput<>,
+                                out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float41dstreamCombine2f(float4 input0[],
+                            float4 input1[],
+                            float modulus,
+                            out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else {
+      output=input1[newindex];
+   }
+}
+
+kernel void float41dstreamCombine2(float4 input0[],
+                           float4 input1[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float41dstreamCombine3f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float modulus,
+                            out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else {
+      output=input2[newindex];
+   }
+}
+
+kernel void float41dstreamCombine3(float4 input0[],
+                           float4 input1[],
+                           float4 input2[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float41dstreamCombine4f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float4 input3[],
+                            float modulus,
+                            out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else {
+      output=input3[newindex];
+   }
+}
+
+kernel void float41dstreamCombine4(float4 input0[],
+                           float4 input1[],
+                           float4 input2[],
+                           float4 input3[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus,  newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float41dstreamCombine5f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float4 input3[],
+                            float4 input4[],
+                            float modulus,
+                            out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex1d(indexof(output), modulus, newindex);
+   calculateIndexModulus1d(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else {
+      output=input4[newindex];
+   }
+}
+/*
+kernel void float4streamCombine5(float4 input0[],
+                           float4 input1[],
+                           float4 input2[],
+                           float4 input3[],
+                           float4 input4[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+
+kernel void float4streamCombine6f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float4 input3[],
+                            float4 input4[],
+                            float4 input5[],
+                            float modulus,
+                            out float4 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus,  newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else {
+      output=input5[newindex];
+   }
+}
+
+kernel void float4streamCombine6(float4 input0[],
+                           float4 input1[],
+                           float4 input2[],
+                           float4 input3[],
+                           float4 input4[],
+                           float4 input5[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float4streamCombine7f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float4 input3[],
+                            float4 input4[],
+                            float4 input5[],
+                            float4 input6[],
+                            float modulus,
+                            out float4 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else {
+      output=input6[newindex];
+   }
+}
+
+kernel void float4streamCombine7(float4 input0[],
+                           float4 input1[],
+                           float4 input2[],
+                           float4 input3[],
+                           float4 input4[],
+                           float4 input5[],
+                           float4 input6[],
+                           float modulus,
+                           float offset,
+                           float4 oldoutput<>,
+                           out float4 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         offset,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=oldoutput;
+   }
+}
+
+kernel void float4streamCombine8f(float4 input0[],
+                            float4 input1[],
+                            float4 input2[],
+                            float4 input3[],
+                            float4 input4[],
+                            float4 input5[],
+                            float4 input6[],
+                            float4 input7[],
+                            float modulus,
+                            out float4 output <>) {
+   float2 newindex;
+   float whichmod;
+   calculateDividedIndex(indexof(output), modulus, newindex);
+   calculateIndexModulus(indexof(output), 
+                         modulus,
+                         -0.5f,
+                         whichmod);
+   if (whichmod==0||whichmod==modulus) {
+      output=input0[newindex];
+   }else if (whichmod==1) {
+      output=input1[newindex];
+   }else if (whichmod==2) {
+      output=input2[newindex];
+   }else if (whichmod==3) {
+      output=input3[newindex];
+   }else if (whichmod==4) {
+      output=input4[newindex];
+   }else if (whichmod==5) {
+      output=input5[newindex];
+   }else if (whichmod==6) {
+      output=input6[newindex];
+   }else {
+      output=input7[newindex];
+   }
+}
+*/
+void combineStreamsHelper1dfloat4 (float4 (**streams) <>,
+                                unsigned int num,
+                                float4 output<>,
+                                float modulus,
+                                float offset) {
+   switch (num) {
+   case 1:
+      float41dstreamCombine1(*streams[0],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 2:
+      float41dstreamCombine2(*streams[0],
+                     *streams[1],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 3:
+      float41dstreamCombine3(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 4:
+   default:
+      float41dstreamCombine4(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      if (num>4) {
+         combineStreamsHelper1dfloat4(streams+4,
+                                      num-4,
+                                      output,
+                                      modulus,
+                                      4+offset);
+      }
+      /*
+   case 5:
+      float4streamCombine5(streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     modulus,
+                     offset,
+                     output,
+                     output);
+      break;
+   case 6:
+      float4streamCombine6(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      break;
+   default:
+      float4streamCombine7(*streams[0],
+                     *streams[1],
+                     *streams[2],
+                     *streams[3],
+                     *streams[4],
+                     *streams[5],
+                     *streams[6],
+                     modulus,
+                     offset,
+
+                     output,
+                     output);
+      if (num>7) {
+         combineStreamsHelper1dfloat4(streams+7,
+                                      num-7,
+                                      output,
+                                      modulus,
+                                      7+offset);         
+      } 
+      */     
+   }
+}
+void combineStreams1dfloat4 (float4 (**streams)<>,
+                          unsigned int num,
+                          unsigned int width, 
+                          unsigned int UNUSED,
+                               float4 (*output)<>) {
+   float4 tmp<(num*width)>;
+   streamSwap(tmp,*output);
+   switch (num) {
+   case 0:
+      return;
+   case 1:
+      streamSwap(*output,*streams[0]);
+      break;
+   case 2:
+      float41dstreamCombine2f(*streams[0],
+                      *streams[1],
+                      (float)num,
+                      *output);
+      break;
+   case 3:
+      float41dstreamCombine3f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      (float)num,
+                      *output);
+      break;
+   case 4:
+      float41dstreamCombine4f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      (float)num,
+                      *output);
+      break;
+   case 5:
+   default:
+      float41dstreamCombine5f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      (float)num,
+                      *output);
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      if (num>5) {
+         combineStreamsHelper1dfloat4(streams+5,
+                                      num-5,
+                                      *output,
+                                      (float)num,
+                                      (float)(5-.5));
+      }
+      /*
+      break;
+   case 6:
+      float4streamCombine6f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      num,
+                      output);
+      break;
+   case 7:
+      float4streamCombine7f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      num,
+                      output);
+      break;
+   default:
+      if (num>MAX_VOUT_STREAMS) {
+         fprintf (stderr,
+                  "vout stream not reconstituted properly. %s%d streams",
+                  "Too little precision for more than ",MAX_VOUT_STREAMS);
+      }
+      float4streamCombine8f(*streams[0],
+                      *streams[1],
+                      *streams[2],
+                      *streams[3],
+                      *streams[4],
+                      *streams[5],
+                      *streams[6],
+                      *streams[7],
+                      num,
+                      output);
+      if (num>8) {
+         combineStreamsHelperfloat4(streams+8,
+                                      num-8,
+                                      output,
+                                      num,
+                                      8);
+      }
+      break;
+      */
+   }
+}
+
+
+
+
+kernel void combinefloat41d (float4 input1[], 
+                           float4 input2[], 
+                           out float4 output<>,
+                           float startsecond,
+                           float endsecond,
+                           float maxinput2value,
+                           float inf){
+   if ((indexof output).x>=startsecond.x) {
+      float secondindex=(indexof output).x-startsecond;
+      //getIndexAt(float4(maxinputvalue.x,maxinputvalue.y-1,0,0),
+      //           -shift2,
+      //           maxinput1value,
+      //           endsecond); // moved outside kernel
+      if (secondindex.x>=endsecond.x) {
+         output=inf;
+      }else {
+         output = input2[secondindex];
+      }
+   }else {
+      output=input1[(indexof output).x];
+   }
+}
+
+unsigned int  voutCombinefloat41d(float4 outleft_stream<>,
+                               float maxshiftleft,
+                               unsigned int LEFTWIDTH,
+                               float4 outright_stream<>,
+                               float maxshiftright,
+                               unsigned int RIGHTWIDTH,
+                                    float4 (*output)<>){
+   unsigned int totalsize;
+   float maxleftvalue,maxrightvalue;
+   maxleftvalue=(float)LEFTWIDTH;
+   maxrightvalue=(float)RIGHTWIDTH;
+   totalsize = (LEFTWIDTH
+                +RIGHTWIDTH
+                -(unsigned int)maxshiftleft-(unsigned int)maxshiftright);
+   if (1) {      
+      unsigned int width = totalsize;
+      float4 output_stream<width>;
+      float startsecond,endsecond;
+      cpuGetIndexAt1d(maxleftvalue-1,
+                    -maxshiftleft,
+                    maxleftvalue,
+                    &startsecond);
+      cpuGetIndexAt1d(maxrightvalue-1,
+                    -maxshiftright,
+                    maxrightvalue,
+                    &endsecond);
+      combinefloat41d(outleft_stream,
+                   outright_stream,
+                   output_stream,
+                   startsecond,
+                   endsecond,
+                   maxrightvalue,
+                   1.0f/(float)floor(.5));
+      streamSwap (*output,output_stream);
+   }
+   return totalsize;
+}
+
+unsigned int totalCombineVoutfloat41d (float4 list_stream<>, 
+                                    unsigned int WIDTH,
+                                    float4 list2_stream<>,
+                                    unsigned int WIDTH2,
+                                         float4 (*output)<>){
+
+   float outleft_stream<WIDTH>;
+   float outright_stream<WIDTH2>;
+   float maxshiftleft =shiftValues1dfloat4(list_stream,
+                                           &outleft_stream,
+                                           WIDTH,1,
+                                           -1);
+   float maxshiftright=shiftValues1dfloat4(list2_stream,
+                                           &outright_stream,
+                                           WIDTH2,1,
+                                           -1);
+   return voutCombinefloat41d (outleft_stream,
+                            maxshiftleft,
+                               WIDTH,
+                            outright_stream,
+                            maxshiftright,
+                               WIDTH2,
+                            output);
+}
+#undef VECTOR_TEMPLATIZED_FUNCTIONS
+
+
+
+
+
+
+
+
+
+

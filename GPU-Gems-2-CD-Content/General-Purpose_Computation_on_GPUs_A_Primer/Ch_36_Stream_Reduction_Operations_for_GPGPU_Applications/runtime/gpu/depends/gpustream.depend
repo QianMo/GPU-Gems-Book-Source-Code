@@ -1,0 +1,16 @@
+built/gpustream.obj: ./gpuruntime.hpp
+built/gpustream.obj: ./gpukernel.hpp
+built/gpustream.obj: ./gpubase.hpp
+built/gpustream.obj: ./gpu.hpp
+built/gpustream.obj: ./gpucontext.hpp
+built/gpustream.obj: ./../profiler.hpp
+built/gpustream.obj: ../../include/brook/brt.hpp
+built/gpustream.obj: ../../include/brook/type_promotion.hpp
+built/gpustream.obj: ./../runtime.hpp
+built/gpustream.obj: gpustream.cpp
+built/gpustream.obj: ../../include/brook/vc6vector.hpp
+built/gpustream.obj: ../../include/brook/brtvector.hpp
+built/gpustream.obj: ../../include/brook/kerneldesc.hpp
+built/gpustream.obj: ./../logger.hpp
+built/gpustream.obj: ./gpuiterator.hpp
+built/gpustream.obj: ./gpustream.hpp

@@ -1,0 +1,32 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : skyboxVP.cg
+//  Desc : skybox vertex program
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define inputs from application
+struct VpIn
+{
+    float4 Position      : POSITION;
+    float2 TexCoord0     : TEXCOORD0;      
+};
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPosition    : POSITION;    
+    float4 TexCoord0    : TEXCOORD0;
+};
+
+// vertex program
+VpOut main(VpIn IN, uniform float4x4 ModelViewProj, uniform float4 vCameraPosition)
+{
+    VpOut OUT;
+
+    // model must be centered
+    float4 vPos=float4(IN.Position.xyz+vCameraPosition.xyz, 1);
+    OUT.HPosition = mul(ModelViewProj, vPos);     // transform vertex position into homogenous clip-space
+    OUT.TexCoord0.xy = IN.TexCoord0.xy;           // output texture coordinates for decal/normal texture
+                   
+    return OUT;
+}

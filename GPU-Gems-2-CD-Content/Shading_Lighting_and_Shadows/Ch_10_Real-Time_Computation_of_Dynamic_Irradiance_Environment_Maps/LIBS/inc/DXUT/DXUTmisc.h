@@ -1,0 +1,817 @@
+//--------------------------------------------------------------------------------------
+// File: DXUTMisc.h
+//
+// Helper functions for Direct3D programming.
+//
+// Copyright (c) Microsoft Corporation. All rights reserved
+//--------------------------------------------------------------------------------------
+#pragma once
+#ifndef DXUT_MISC_H
+#define DXUT_MISC_H
+
+
+//--------------------------------------------------------------------------------------
+// A growable array
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+class CGrowableArray
+{
+public:
+    CGrowableArray()  { m_pData = NULL; m_nSize = 0; m_nMaxSize = 0; }
+    ~CGrowableArray() { RemoveAll(); }
+
+    const TYPE& operator[]( int nIndex ) const { return GetAt( nIndex ); }
+    TYPE& operator[]( int nIndex ) { return GetAt( nIndex ); }
+
+    HRESULT SetSize( int nNewMaxSize );
+    HRESULT Add( const TYPE& value );
+    HRESULT Insert( int nIndex, const TYPE& value );
+    HRESULT SetAt( int nIndex, const TYPE& value );
+    TYPE&   GetAt( int nIndex ) { assert( nIndex >= 0 && nIndex < m_nSize ); return m_pData[nIndex]; }
+    int     GetSize() const { return m_nSize; }
+    TYPE*   GetData() { return m_pData; }
+    bool    Contains( const TYPE& value ){ return ( -1 != IndexOf( value ) ); }
+
+    int     IndexOf( const TYPE& value ) { return ( m_nSize > 0 ) ? IndexOf( value, 0, m_nSize ) : -1; }
+    int     IndexOf( const TYPE& value, int iStart ) { return IndexOf( value, iStart, m_nSize - iStart ); }
+    int     IndexOf( const TYPE& value, int nIndex, int nNumElements );
+
+    int     LastIndexOf( const TYPE& value ) { return ( m_nSize > 0 ) ? LastIndexOf( value, m_nSize-1, m_nSize ) : -1; }
+    int     LastIndexOf( const TYPE& value, int nIndex ) { return LastIndexOf( value, nIndex, nIndex+1 ); }
+    int     LastIndexOf( const TYPE& value, int nIndex, int nNumElements );
+
+    HRESULT Remove( int nIndex );
+    void    RemoveAll() { SetSize(0); }
+
+protected:
+    TYPE* m_pData;      // the actual array of data
+    int m_nSize;        // # of elements (upperBound - 1)
+    int m_nMaxSize;     // max allocated
+
+    HRESULT SetSizeInternal( int nNewMaxSize );  // This version doesn't call ctor or dtor.
+};
+
+
+//--------------------------------------------------------------------------------------
+// Performs timer operations
+// Use DXUTGetGlobalTimer() to get the global instance
+//--------------------------------------------------------------------------------------
+class CDXUTTimer
+{
+public:
+    CDXUTTimer();
+
+    void Reset(); // resets the timer
+    void Start(); // starts the timer
+    void Stop();  // stop (or pause) the timer
+    void Advance(); // advance the timer by 0.1 seconds
+    double GetAbsoluteTime(); // get the absolute system time
+    double GetTime(); // get the current time
+    double GetElapsedTime(); // get the time that elapsed between GetElapsedTime() calls
+    bool IsStopped(); // returns true if timer stopped
+
+protected:
+    bool m_bUsingQPF;
+    bool m_bTimerStopped;
+    LONGLONG m_llQPFTicksPerSec;
+
+    LONGLONG m_llStopTime;
+    LONGLONG m_llLastElapsedTime;
+    LONGLONG m_llBaseTime;
+};
+
+CDXUTTimer* DXUTGetGlobalTimer();
+
+
+//-----------------------------------------------------------------------------
+// Resource cache for textures, fonts, meshs, and effects.  
+// Use DXUTGetGlobalResourceCache() to access the global cache
+//-----------------------------------------------------------------------------
+
+enum DXUTCACHE_SOURCELOCATION { DXUTCACHE_LOCATION_FILE, DXUTCACHE_LOCATION_RESOURCE };
+
+struct DXUTCache_Texture
+{
+    DXUTCACHE_SOURCELOCATION Location;
+    WCHAR wszSource[MAX_PATH];
+    HMODULE hSrcModule;
+    UINT Width;
+    UINT Height;
+    UINT Depth;
+    UINT MipLevels;
+    DWORD Usage;
+    D3DFORMAT Format;
+    D3DPOOL Pool;
+    D3DRESOURCETYPE Type;
+    IDirect3DBaseTexture9 *pTexture;
+};
+
+struct DXUTCache_Font : public D3DXFONT_DESC
+{
+    ID3DXFont *pFont;
+};
+
+struct DXUTCache_Effect
+{
+    DXUTCACHE_SOURCELOCATION Location;
+    WCHAR wszSource[MAX_PATH];
+    HMODULE hSrcModule;
+    DWORD dwFlags;
+    ID3DXEffect *pEffect;
+};
+
+
+class CDXUTResourceCache
+{
+public:
+    ~CDXUTResourceCache();
+
+    HRESULT CreateTextureFromFile( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, LPDIRECT3DTEXTURE9 *ppTexture );
+    HRESULT CreateTextureFromFileEx( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DTEXTURE9 *ppTexture );
+    HRESULT CreateTextureFromResource( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, LPDIRECT3DTEXTURE9 *ppTexture );
+    HRESULT CreateTextureFromResourceEx( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DTEXTURE9 *ppTexture );
+    HRESULT CreateCubeTextureFromFile( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, LPDIRECT3DCUBETEXTURE9 *ppCubeTexture );
+    HRESULT CreateCubeTextureFromFileEx( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, UINT Size, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DCUBETEXTURE9 *ppCubeTexture );
+    HRESULT CreateCubeTextureFromResource( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, LPDIRECT3DCUBETEXTURE9 *ppCubeTexture );
+    HRESULT CreateCubeTextureFromResourceEx( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, UINT Size, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DCUBETEXTURE9 *ppCubeTexture );
+    HRESULT CreateVolumeTextureFromFile( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, LPDIRECT3DVOLUMETEXTURE9 *ppVolumeTexture );
+    HRESULT CreateVolumeTextureFromFileEx( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, UINT Width, UINT Height, UINT Depth, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DVOLUMETEXTURE9 *ppTexture );
+    HRESULT CreateVolumeTextureFromResource( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, LPDIRECT3DVOLUMETEXTURE9 *ppVolumeTexture );
+    HRESULT CreateVolumeTextureFromResourceEx( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, UINT Width, UINT Height, UINT Depth, UINT MipLevels, DWORD Usage, D3DFORMAT Format, D3DPOOL Pool, DWORD Filter, DWORD MipFilter, D3DCOLOR ColorKey, D3DXIMAGE_INFO *pSrcInfo, PALETTEENTRY *pPalette, LPDIRECT3DVOLUMETEXTURE9 *ppVolumeTexture );
+    HRESULT CreateFont( LPDIRECT3DDEVICE9 pDevice, UINT Height, UINT Width, UINT Weight, UINT MipLevels, BOOL Italic, DWORD CharSet, DWORD OutputPrecision, DWORD Quality, DWORD PitchAndFamily, LPCTSTR pFacename, LPD3DXFONT *ppFont );
+    HRESULT CreateFontIndirect( LPDIRECT3DDEVICE9 pDevice, CONST D3DXFONT_DESC *pDesc, LPD3DXFONT *ppFont );
+    HRESULT CreateEffectFromFile( LPDIRECT3DDEVICE9 pDevice, LPCTSTR pSrcFile, const D3DXMACRO *pDefines, LPD3DXINCLUDE pInclude, DWORD Flags, LPD3DXEFFECTPOOL pPool, LPD3DXEFFECT *ppEffect, LPD3DXBUFFER *ppCompilationErrors );
+    HRESULT CreateEffectFromResource( LPDIRECT3DDEVICE9 pDevice, HMODULE hSrcModule, LPCTSTR pSrcResource, const D3DXMACRO *pDefines, LPD3DXINCLUDE pInclude, DWORD Flags, LPD3DXEFFECTPOOL pPool, LPD3DXEFFECT *ppEffect, LPD3DXBUFFER *ppCompilationErrors );
+
+public:
+    HRESULT OnCreateDevice( IDirect3DDevice9 *pd3dDevice );
+    HRESULT OnResetDevice( IDirect3DDevice9 *pd3dDevice );
+    HRESULT OnLostDevice();
+    HRESULT OnDestroyDevice();
+
+protected:
+    friend CDXUTResourceCache& DXUTGetGlobalResourceCache();
+    friend HRESULT DXUTInitialize3DEnvironment();
+    friend HRESULT DXUTReset3DEnvironment();
+    friend void DXUTCleanup3DEnvironment( bool bReleaseSettings );
+
+    CDXUTResourceCache() { }
+
+    CGrowableArray< DXUTCache_Texture > m_TextureCache;
+    CGrowableArray< DXUTCache_Effect > m_EffectCache;
+    CGrowableArray< DXUTCache_Font > m_FontCache;
+};
+
+CDXUTResourceCache& DXUTGetGlobalResourceCache();
+
+
+//--------------------------------------------------------------------------------------
+class CD3DArcBall
+{
+public:
+    CD3DArcBall();
+
+    // Functions to change behavior
+    void Reset(); 
+    void SetTranslationRadius( FLOAT fRadiusTranslation ) { m_fRadiusTranslation = fRadiusTranslation; }
+    void SetWindow( INT nWidth, INT nHeight, FLOAT fRadius = 0.9f ) { m_nWidth = nWidth; m_nHeight = nHeight; m_fRadius = fRadius; m_vCenter = D3DXVECTOR2(m_nWidth/2.0f,m_nHeight/2.0f); }
+
+    // Call these from client and use GetRotationMatrix() to read new rotation matrix
+    void OnBegin( int nX, int nY );  // start the rotation (pass current mouse position)
+    void OnMove( int nX, int nY );   // continue the rotation (pass current mouse position)
+    void OnEnd();                    // end the rotation 
+
+    // Or call this to automatically handle left, middle, right buttons
+    LRESULT     HandleMessages( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+
+    // Functions to get/set state
+    D3DXMATRIX* GetRotationMatrix() { return D3DXMatrixRotationQuaternion(&m_mRotation, &m_qNow); };
+    D3DXMATRIX* GetTranslationMatrix()      { return &m_mTranslation; }
+    D3DXMATRIX* GetTranslationDeltaMatrix() { return &m_mTranslationDelta; }
+    bool        IsBeingDragged()            { return m_bDrag; }
+    D3DXQUATERNION GetQuatNow()             { return m_qNow; }
+    void        SetQuatNow( D3DXQUATERNION q ) { m_qNow = q; }
+
+    static D3DXQUATERNION QuatFromBallPoints( const D3DXVECTOR3 &vFrom, const D3DXVECTOR3 &vTo );
+    
+
+protected:
+    D3DXMATRIXA16  m_mRotation;         // Matrix for arc ball's orientation
+    D3DXMATRIXA16  m_mTranslation;      // Matrix for arc ball's position
+    D3DXMATRIXA16  m_mTranslationDelta; // Matrix for arc ball's position
+
+    INT            m_nWidth;   // arc ball's window width
+    INT            m_nHeight;  // arc ball's window height
+    D3DXVECTOR2    m_vCenter;  // center of arc ball 
+    FLOAT          m_fRadius;  // arc ball's radius in screen coords
+    FLOAT          m_fRadiusTranslation; // arc ball's radius for translating the target
+
+    D3DXQUATERNION m_qDown;             // Quaternion before button down
+    D3DXQUATERNION m_qNow;              // Composite quaternion for current drag
+    bool           m_bDrag;             // Whether user is dragging arc ball
+
+    POINT          m_ptLastMouse;      // position of last mouse point
+    D3DXVECTOR3    m_vDownPt;           // starting point of rotation arc
+    D3DXVECTOR3    m_vCurrentPt;        // current point of rotation arc
+
+    D3DXVECTOR3    ScreenToVector( float fScreenPtX, float fScreenPtY );
+};
+
+
+//--------------------------------------------------------------------------------------
+// used by CCamera to map WM_KEYDOWN keys
+//--------------------------------------------------------------------------------------
+enum D3DUtil_CameraKeys
+{
+    CAM_STRAFE_LEFT = 0,
+    CAM_STRAFE_RIGHT,
+    CAM_MOVE_FORWARD,
+    CAM_MOVE_BACKWARD,
+    CAM_MOVE_UP,
+    CAM_MOVE_DOWN,
+    CAM_RESET,
+    CAM_CONTROLDOWN,
+    CAM_MAX_KEYS,
+    CAM_UNKNOWN = 0xFF
+};
+
+#define KEY_WAS_DOWN_MASK 0x80
+#define KEY_IS_DOWN_MASK  0x01
+
+#define MOUSE_LEFT_BUTTON   0x01
+#define MOUSE_MIDDLE_BUTTON 0x02
+#define MOUSE_RIGHT_BUTTON  0x04
+#define MOUSE_WHEEL         0x08
+
+
+//--------------------------------------------------------------------------------------
+// Simple base camera class that moves and rotates.  The base class
+//       records mouse and keyboard input for use by a derived class, and 
+//       keeps common state.
+//--------------------------------------------------------------------------------------
+class CBaseCamera
+{
+public:
+    CBaseCamera();
+
+    // Call these from client and use Get*Matrix() to read new matrices
+    virtual LRESULT HandleMessages( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+    virtual void    FrameMove( FLOAT fElapsedTime ) = 0;
+
+    // Functions to change camera matrices
+    virtual void Reset(); 
+    virtual void SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt );
+    virtual void SetProjParams( FLOAT fFOV, FLOAT fAspect, FLOAT fNearPlane, FLOAT fFarPlane );
+
+    // Functions to change behavior
+    void SetDragRect( RECT &rc ) { m_rcDrag = rc; }
+    void SetInvertPitch( bool bInvertPitch ) { m_bInvertPitch = bInvertPitch; }
+    void SetDrag( bool bMovementDrag, FLOAT fTotalDragTimeToZero = 0.25f ) { m_bMovementDrag = bMovementDrag; m_fTotalDragTimeToZero = fTotalDragTimeToZero; }
+    void SetEnableYAxisMovement( bool bEnableYAxisMovement ) { m_bEnableYAxisMovement = bEnableYAxisMovement; }
+    void SetEnablePositionMovement( bool bEnablePositionMovement ) { m_bEnablePositionMovement = bEnablePositionMovement; }
+    void SetClipToBoundary( bool bClipToBoundary, D3DXVECTOR3* pvMinBoundary, D3DXVECTOR3* pvMaxBoundary ) { m_bClipToBoundary = bClipToBoundary; if( pvMinBoundary ) m_vMinBoundary = *pvMinBoundary; if( pvMaxBoundary ) m_vMaxBoundary = *pvMaxBoundary; }
+    void SetScalers( FLOAT fRotationScaler = 0.01f, FLOAT fMoveScaler = 5.0f )  { m_fRotationScaler = fRotationScaler; m_fMoveScaler = fMoveScaler; }
+    void SetNumberOfFramesToSmoothMouseData( int nFrames ) { if( nFrames > 0 ) m_fFramesToSmoothMouseData = (float)nFrames; }
+    void SetResetCursorAfterMove( bool bResetCursorAfterMove ) { m_bResetCursorAfterMove = bResetCursorAfterMove; }
+
+    // Functions to get state
+    D3DXMATRIX*  GetViewMatrix()            { return &m_mView; }
+    D3DXMATRIX*  GetProjMatrix()            { return &m_mProj; }
+    D3DXVECTOR3* GetEyePt()                 { return &m_vEye; }
+    D3DXVECTOR3* GetLookAtPt()              { return &m_vLookAt; }
+
+    bool IsBeingDragged() { return (m_bMouseLButtonDown || m_bMouseMButtonDown || m_bMouseRButtonDown); }
+    bool IsMouseLButtonDown() { return m_bMouseLButtonDown; } 
+    bool IsMouseMButtonDown() { return m_bMouseMButtonDown; } 
+    bool IsMouseRButtonDown() { return m_bMouseRButtonDown; } 
+
+protected:
+    // Functions to map a WM_KEYDOWN key to a D3DUtil_CameraKeys enum
+    virtual D3DUtil_CameraKeys MapKey( UINT nKey );    
+    bool IsKeyDown( BYTE key )  { return( (key & KEY_IS_DOWN_MASK) == KEY_IS_DOWN_MASK ); }
+    bool WasKeyDown( BYTE key ) { return( (key & KEY_WAS_DOWN_MASK) == KEY_WAS_DOWN_MASK ); }
+
+    void ConstrainToBoundary( D3DXVECTOR3* pV );
+    void UpdateMouseDelta( float fElapsedTime );
+    void UpdateVelocity( float fElapsedTime );
+
+    D3DXMATRIX            m_mView;              // View matrix 
+    D3DXMATRIX            m_mProj;              // Projection matrix
+
+    BYTE                  m_aKeys[CAM_MAX_KEYS];  // State of input - KEY_WAS_DOWN_MASK|KEY_IS_DOWN_MASK
+    POINT                 m_ptLastMousePosition;  // Last absolute position of mouse cursor
+    bool                  m_bMouseLButtonDown;    // True if left button is down 
+    bool                  m_bMouseMButtonDown;    // True if middle button is down 
+    bool                  m_bMouseRButtonDown;    // True if right button is down 
+    int                   m_nCurrentButtonMask;   // mask of which buttons are down
+    int                   m_nMouseWheelDelta;     // Amount of middle wheel scroll (+/-) 
+    D3DXVECTOR2           m_vMouseDelta;          // Mouse relative delta smoothed over a few frames
+    float                 m_fFramesToSmoothMouseData; // Number of frames to smooth mouse data over
+
+    D3DXVECTOR3           m_vDefaultEye;          // Default camera eye position
+    D3DXVECTOR3           m_vDefaultLookAt;       // Default LookAt position
+    D3DXVECTOR3           m_vEye;                 // Camera eye position
+    D3DXVECTOR3           m_vLookAt;              // LookAt position
+    float                 m_fCameraYawAngle;      // Yaw angle of camera
+    float                 m_fCameraPitchAngle;    // Pitch angle of camera
+
+    RECT                  m_rcDrag;               // Rectangle within which a drag can be initiated.
+    D3DXVECTOR3           m_vVelocity;            // Velocity of camera
+    bool                  m_bMovementDrag;        // If true, then camera movement will slow to a stop otherwise movement is instant
+    D3DXVECTOR3           m_vVelocityDrag;        // Velocity drag force
+    FLOAT                 m_fDragTimer;           // Countdown timer to apply drag
+    FLOAT                 m_fTotalDragTimeToZero; // Time it takes for velocity to go from full to 0
+    D3DXVECTOR2           m_vRotVelocity;         // Velocity of camera
+
+    float                 m_fFOV;                 // Field of view
+    float                 m_fAspect;              // Aspect ratio
+    float                 m_fNearPlane;           // Near plane
+    float                 m_fFarPlane;            // Far plane
+
+    float                 m_fRotationScaler;      // Scaler for rotation
+    float                 m_fMoveScaler;          // Scaler for movement
+
+    bool                  m_bInvertPitch;         // Invert the pitch axis
+    bool                  m_bEnablePositionMovement; // If true, then the user can translate the camera/model 
+    bool                  m_bEnableYAxisMovement; // If true, then camera can move in the y-axis
+
+    bool                  m_bClipToBoundary;      // If true, then the camera will be clipped to the boundary
+    D3DXVECTOR3           m_vMinBoundary;         // Min point in clip boundary
+    D3DXVECTOR3           m_vMaxBoundary;         // Max point in clip boundary
+
+    bool                  m_bResetCursorAfterMove;// If true, the class will reset the cursor position so that the cursor always has space to move 
+};
+
+
+//--------------------------------------------------------------------------------------
+// Simple first person camera class that moves and rotates.
+//       It allows yaw and pitch but not roll.  It uses WM_KEYDOWN and 
+//       GetCursorPos() to respond to keyboard and mouse input and updates the 
+//       view matrix based on input.  
+//--------------------------------------------------------------------------------------
+class CFirstPersonCamera : public CBaseCamera
+{
+public:
+    CFirstPersonCamera();
+
+    // Call these from client and use Get*Matrix() to read new matrices
+    virtual void FrameMove( FLOAT fElapsedTime );
+
+    // Functions to change behavior
+    void SetRotateButtons( bool bLeft, bool bMiddle, bool bRight );
+
+    // Functions to get state
+    D3DXMATRIX*  GetWorldMatrix()            { return &m_mCameraWorld; }
+
+    D3DXVECTOR3  GetWorldRight()            { return D3DXVECTOR3( m_mCameraWorld._11, m_mCameraWorld._12, m_mCameraWorld._13 ); } 
+    D3DXVECTOR3  GetWorldUp()               { return D3DXVECTOR3( m_mCameraWorld._21, m_mCameraWorld._22, m_mCameraWorld._23 ); }
+    D3DXVECTOR3  GetWorldAhead()            { return D3DXVECTOR3( m_mCameraWorld._31, m_mCameraWorld._32, m_mCameraWorld._33 ); }
+    D3DXVECTOR3  GetEyePt()                 { return D3DXVECTOR3( m_mCameraWorld._41, m_mCameraWorld._42, m_mCameraWorld._43 ); }
+    
+protected:
+    D3DXMATRIX m_mCameraWorld;       // World matrix of the camera (inverse of the view matrix)
+
+    int        m_nActiveButtonMask;  // Mask to determine which button to enable for rotation
+};
+
+
+//--------------------------------------------------------------------------------------
+// Simple model viewing camera class that rotates around the object.
+//--------------------------------------------------------------------------------------
+class CModelViewerCamera : public CBaseCamera
+{
+public:
+    CModelViewerCamera();
+
+    // Call these from client and use Get*Matrix() to read new matrices
+    virtual LRESULT HandleMessages( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+    virtual void FrameMove( FLOAT fElapsedTime );
+
+   
+    // Functions to change behavior
+    void Reset(); 
+    void SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt );
+    void SetButtonMasks( int nRotateModelButtonMask = MOUSE_LEFT_BUTTON, int nZoomButtonMask = MOUSE_WHEEL, int nRotateCameraButtonMask = MOUSE_RIGHT_BUTTON ) { m_nRotateModelButtonMask = nRotateModelButtonMask, m_nZoomButtonMask = nZoomButtonMask; m_nRotateCameraButtonMask = nRotateCameraButtonMask; }
+    void SetAttachCameraToModel( bool bEnable = false ) { m_bAttachCameraToModel = bEnable; }
+    void SetWindow( int nWidth, int nHeight, float fArcballRadius=0.9f ) { m_WorldArcBall.SetWindow( nWidth, nHeight, fArcballRadius ); m_ViewArcBall.SetWindow( nWidth, nHeight, fArcballRadius ); }
+    void SetRadius( float fDefaultRadius=5.0f, float fMinRadius=1.0f, float fMaxRadius=FLT_MAX  ) { m_fDefaultRadius = m_fRadius = fDefaultRadius; m_fMinRadius = fMinRadius; m_fMaxRadius = fMaxRadius; }
+    void SetModelCenter( D3DXVECTOR3 vModelCenter ) { m_vModelCenter = vModelCenter; }
+    void SetLimitPitch( bool bLimitPitch ) { m_bLimitPitch = bLimitPitch; }
+    void SetViewQuat( D3DXQUATERNION q ) { m_ViewArcBall.SetQuatNow( q ); }
+    void SetWorldQuat( D3DXQUATERNION q ) { m_WorldArcBall.SetQuatNow( q ); }
+
+    // Functions to get state
+    D3DXMATRIX* GetWorldMatrix() { return &m_mWorld; }
+
+protected:
+    CD3DArcBall  m_WorldArcBall;
+    CD3DArcBall  m_ViewArcBall;
+    D3DXVECTOR3  m_vModelCenter;
+    D3DXMATRIX   m_mModelLastRot;        // Last arcball rotation matrix for model 
+    D3DXMATRIX   m_mModelRot;            // Rotation matrix of model
+    D3DXMATRIX   m_mWorld;               // World matrix of model
+
+    int          m_nRotateModelButtonMask;
+    int          m_nZoomButtonMask;
+    int          m_nRotateCameraButtonMask;
+
+    bool         m_bAttachCameraToModel;
+    bool         m_bLimitPitch;
+    float        m_fRadius;              // Distance from the camera to model 
+    float        m_fDefaultRadius;       // Distance from the camera to model 
+    float        m_fMinRadius;           // Min radius
+    float        m_fMaxRadius;           // Max radius
+
+    D3DXMATRIX   m_mCameraRotLast;
+
+};
+
+
+//--------------------------------------------------------------------------------------
+// Manages the intertion point when drawing text
+//--------------------------------------------------------------------------------------
+class CDXUTTextHelper
+{
+public:
+    CDXUTTextHelper( ID3DXFont* pFont, ID3DXSprite* pSprite, int nLineHeight );
+
+    void SetInsertionPos( int x, int y ) { m_pt.x = x; m_pt.y = y; }
+    void SetForegroundColor( D3DXCOLOR clr ) { m_clr = clr; }
+
+    void Begin();
+    HRESULT DrawFormattedTextLine( const WCHAR* strMsg, ... );
+    HRESULT DrawTextLine( const WCHAR* strMsg );
+    HRESULT DrawFormattedTextLine( RECT &rc, DWORD dwFlags, const WCHAR* strMsg, ... );
+    HRESULT DrawTextLine( RECT &rc, DWORD dwFlags, const WCHAR* strMsg );
+    void End();
+
+protected:
+    ID3DXFont*   m_pFont;
+    ID3DXSprite* m_pSprite;
+    D3DXCOLOR    m_clr;
+    POINT        m_pt;
+    int          m_nLineHeight;
+};
+
+
+//--------------------------------------------------------------------------------------
+// Manages a persistent list of lines and draws them using ID3DXLine
+//--------------------------------------------------------------------------------------
+class CDXUTLineManager
+{
+public:
+    CDXUTLineManager();
+    ~CDXUTLineManager();
+
+    HRESULT OnCreatedDevice( IDirect3DDevice9* pd3dDevice );
+    HRESULT OnResetDevice();
+    HRESULT OnRender();
+    HRESULT OnLostDevice();
+    HRESULT OnDeletedDevice();
+
+    HRESULT AddLine( int* pnLineID, D3DXVECTOR2* pVertexList, DWORD dwVertexListCount, D3DCOLOR Color, float fWidth, float fScaleRatio, bool bAntiAlias );
+    HRESULT AddRect( int* pnLineID, RECT rc, D3DCOLOR Color, float fWidth, float fScaleRatio, bool bAntiAlias );
+    HRESULT RemoveLine( int nLineID );
+    HRESULT RemoveAllLines();
+
+protected:
+    struct LINE_NODE
+    {
+        int      nLineID;
+        D3DCOLOR Color;
+        float    fWidth;
+        bool     bAntiAlias;
+        float    fScaleRatio;
+        D3DXVECTOR2* pVertexList;
+        DWORD    dwVertexListCount;
+    };
+
+    CGrowableArray<LINE_NODE*> m_LinesList;
+    IDirect3DDevice9* m_pd3dDevice;
+    ID3DXLine* m_pD3DXLine;
+};
+
+
+//--------------------------------------------------------------------------------------
+// Manages the mesh, direction, mouse events of a directional arrow that 
+// rotates around a radius controlled by an arcball 
+//--------------------------------------------------------------------------------------
+class CDXUTDirectionWidget
+{
+public:
+    CDXUTDirectionWidget();
+
+    static HRESULT StaticOnCreateDevice( IDirect3DDevice9* pd3dDevice );
+    HRESULT OnResetDevice( const D3DSURFACE_DESC* pBackBufferSurfaceDesc );
+    HRESULT OnRender( D3DXCOLOR color, D3DXMATRIX* pmView, D3DXMATRIX* pmProj, D3DXVECTOR3* pEyePt );
+    LRESULT HandleMessages( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
+    static void StaticOnLostDevice();
+    static void StaticOnDestroyDevice();
+
+    D3DXVECTOR3 GetLightDirection()         { return m_vCurrentDir; };
+    void        SetLightDirection( D3DXVECTOR3 vDir ) { m_vDefaultDir = m_vCurrentDir = vDir; };
+    void        SetButtonMask( int nRotate = MOUSE_RIGHT_BUTTON ) { m_nRotateMask = nRotate; }
+
+    float GetRadius()                 { return m_fRadius; };
+    void  SetRadius( float fRadius )  { m_fRadius = fRadius; };
+
+    bool  IsBeingDragged() { return m_ArcBall.IsBeingDragged(); };
+
+protected:
+    HRESULT UpdateLightDir();
+
+    static IDirect3DDevice9* s_pd3dDevice;
+    static ID3DXEffect* s_pEffect;       
+    static ID3DXMesh*   s_pMesh;    
+
+    float          m_fRadius;
+    int            m_nRotateMask;
+    CD3DArcBall    m_ArcBall;
+    D3DXVECTOR3    m_vDefaultDir;
+    D3DXVECTOR3    m_vCurrentDir;
+    D3DXMATRIX     m_mView;
+    D3DXMATRIXA16  m_mRot;
+    D3DXMATRIXA16  m_mRotSnapshot;
+};
+
+
+//--------------------------------------------------------------------------------------
+// Returns the DirectX SDK path, as stored in the system registry
+//       during the SDK install.
+//--------------------------------------------------------------------------------------
+HRESULT DXUTGetDXSDKMediaPathCch( WCHAR* strDest, int cchDest );
+HRESULT DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest, LPCWSTR strFilename );
+
+
+//--------------------------------------------------------------------------------------
+// Returns the string for the given D3DFORMAT.
+//       bWithPrefix determines whether the string should include the "D3DFMT_"
+//--------------------------------------------------------------------------------------
+LPCWSTR DXUTD3DFormatToString( D3DFORMAT format, bool bWithPrefix );
+
+
+//--------------------------------------------------------------------------------------
+// Builds and sets a cursor for the D3D device based on hCursor.
+//--------------------------------------------------------------------------------------
+HRESULT DXUTSetDeviceCursor( IDirect3DDevice9* pd3dDevice, HCURSOR hCursor, bool bAddWatermark );
+
+
+//--------------------------------------------------------------------------------------
+// Returns a view matrix for rendering to a face of a cubemap.
+//--------------------------------------------------------------------------------------
+D3DXMATRIX DXUTGetCubeMapViewMatrix( DWORD dwFace );
+
+
+//--------------------------------------------------------------------------------------
+// Debug printing support
+// See dxerr9.h for more debug printing support
+//--------------------------------------------------------------------------------------
+void DXUTOutputDebugString( LPCWSTR strMsg, ... );
+HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr, const WCHAR* strMsg, bool bPopMsgBox );
+
+// These macros are very similar to dxerr9's but it special cases the HRESULT defined
+// by the sample framework pop better message boxes. 
+#if defined(DEBUG) | defined(_DEBUG)
+#define DXUT_ERR(str,hr)           DXUTTrace( __FILE__, (DWORD)__LINE__, hr, str, false )
+#define DXUT_ERR_MSGBOX(str,hr)    DXUTTrace( __FILE__, (DWORD)__LINE__, hr, str, true )
+#define DXUTTRACE                  DXUTOutputDebugString
+#else
+#define DXUT_ERR(str,hr)           (hr)
+#define DXUT_ERR_MSGBOX(str,hr)    (hr)
+#define DXUTTRACE                  (__noop)
+#endif
+
+
+//--------------------------------------------------------------------------------------
+// Helper function to launch sample's readme 
+//--------------------------------------------------------------------------------------
+void DXUTLaunchReadme( HWND hWnd, LPCWSTR strLoc = NULL );
+
+
+//--------------------------------------------------------------------------------------
+// Implementation of CGrowableArray
+//--------------------------------------------------------------------------------------
+
+// This version doesn't call ctor or dtor.
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::SetSizeInternal( int nNewMaxSize )
+{
+    if( nNewMaxSize < 0 )
+    {
+        assert( false );
+        return E_INVALIDARG;
+    }
+
+    if( nNewMaxSize == 0 )
+    {
+        // Shrink to 0 size & cleanup
+        if( m_pData )
+        {
+            free( m_pData );
+            m_pData = NULL;
+        }
+
+        m_nMaxSize = 0;
+        m_nSize = 0;
+    }
+    else if( m_pData == NULL || nNewMaxSize > m_nMaxSize )
+    {
+        // Grow array
+        int nGrowBy = ( m_nMaxSize == 0 ) ? 16 : m_nMaxSize;
+        nNewMaxSize = max( nNewMaxSize, m_nMaxSize + nGrowBy );
+
+        TYPE* pDataNew = (TYPE*) realloc( m_pData, nNewMaxSize * sizeof(TYPE) );
+        if( pDataNew == NULL )
+            return E_OUTOFMEMORY;
+
+        m_pData = pDataNew;
+        m_nMaxSize = nNewMaxSize;
+    }
+
+    return S_OK;
+}
+
+
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::SetSize( int nNewMaxSize )
+{
+    int nOldSize = m_nSize;
+
+    if( nOldSize > nNewMaxSize )
+    {
+        // Removing elements. Call dtor.
+
+        for( int i = nNewMaxSize; i < nOldSize; ++i )
+            m_pData[i].~TYPE();
+    }
+
+    // Adjust buffer.  Note that there's no need to check for error
+    // since if it happens, nOldSize == nNewMaxSize will be true.)
+    HRESULT hr = SetSizeInternal( nNewMaxSize );
+
+    if( nOldSize < nNewMaxSize )
+    {
+        // Adding elements. Call ctor.
+
+        for( int i = nOldSize; i < nNewMaxSize; ++i )
+            ::new (&m_pData[i]) TYPE;
+    }
+
+    return hr;
+}
+
+
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::Add( const TYPE& value )
+{
+    HRESULT hr;
+    if( FAILED( hr = SetSizeInternal( m_nSize + 1 ) ) )
+        return hr;
+
+    // Construct the new element
+    ::new (&m_pData[m_nSize]) TYPE;
+
+    // Assign
+    m_pData[m_nSize] = value;
+    ++m_nSize;
+
+    return S_OK;
+}
+
+
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::Insert( int nIndex, const TYPE& value )
+{
+    HRESULT hr;
+
+    // Validate index
+    if( nIndex < 0 || 
+        nIndex > m_nSize )
+    {
+        assert( false );
+        return E_INVALIDARG;
+    }
+
+    // Prepare the buffer
+    if( FAILED( hr = SetSizeInternal( m_nSize + 1 ) ) )
+        return hr;
+
+    // Shift the array
+    MoveMemory( &m_pData[nIndex+1], &m_pData[nIndex], sizeof(TYPE) * (m_nSize - nIndex) );
+
+    // Construct the new element
+    ::new (&m_pData[nIndex]) TYPE;
+
+    // Set the value and increase the size
+    m_pData[nIndex] = value;
+    ++m_nSize;
+
+    return S_OK;
+}
+
+
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::SetAt( int nIndex, const TYPE& value )
+{
+    // Validate arguments
+    if( nIndex < 0 ||
+        nIndex >= m_nSize )
+    {
+        assert( false );
+        return E_INVALIDARG;
+    }
+
+    m_pData[nIndex] = value;
+    return S_OK;
+}
+
+
+//--------------------------------------------------------------------------------------
+// Searches for the specified value and returns the index of the first occurrence
+// within the section of the data array that extends from iStart and contains the 
+// specified number of elements. Returns -1 if value is not found within the given 
+// section.
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+int CGrowableArray<TYPE>::IndexOf( const TYPE& value, int iStart, int nNumElements )
+{
+    // Validate arguments
+    if( iStart < 0 || 
+        iStart >= m_nSize ||
+        nNumElements < 0 ||
+        iStart + nNumElements > m_nSize )
+    {
+        assert( false );
+        return -1;
+    }
+
+    // Search
+    for( int i = iStart; i < (iStart + nNumElements); i++ )
+    {
+        if( value == m_pData[i] )
+            return i;
+    }
+
+    // Not found
+    return -1;
+}
+
+
+//--------------------------------------------------------------------------------------
+// Searches for the specified value and returns the index of the last occurrence
+// within the section of the data array that contains the specified number of elements
+// and ends at iEnd. Returns -1 if value is not found within the given section.
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+int CGrowableArray<TYPE>::LastIndexOf( const TYPE& value, int iEnd, int nNumElements )
+{
+    // Validate arguments
+    if( iEnd < 0 || 
+        iEnd >= m_nSize ||
+        nNumElements < 0 ||
+        iEnd - nNumElements < 0 )
+    {
+        assert( false );
+        return -1;
+    }
+
+    // Search
+    for( int i = iEnd; i > (iEnd - nNumElements); i-- )
+    {
+        if( value == m_pData[i] )
+            return i;
+    }
+
+    // Not found
+    return -1;
+}
+
+
+
+//--------------------------------------------------------------------------------------
+template< typename TYPE >
+HRESULT CGrowableArray<TYPE>::Remove( int nIndex )
+{
+    if( nIndex < 0 || 
+        nIndex >= m_nSize )
+    {
+        assert( false );
+        return E_INVALIDARG;
+    }
+
+    // Destruct the element to be removed
+    m_pData[nIndex].~TYPE();
+
+    // Compact the array and decrease the size
+    MoveMemory( &m_pData[nIndex], &m_pData[nIndex+1], sizeof(TYPE) * (m_nSize - (nIndex+1)) );
+    --m_nSize;
+
+    return S_OK;
+}
+
+
+#endif

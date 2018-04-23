@@ -1,0 +1,9 @@
+built/cpukernel.obj: ../../include/brook/brtarray.hpp
+built/cpukernel.obj: cpukernel.cpp
+built/cpukernel.obj: ../../include/brook/vc6vector.hpp
+built/cpukernel.obj: ../../include/brook/brtvector.hpp
+built/cpukernel.obj: ../../include/brook/kerneldesc.hpp
+built/cpukernel.obj: ./cpu.hpp
+built/cpukernel.obj: ../../include/brook/brt.hpp
+built/cpukernel.obj: ../../include/brook/type_promotion.hpp
+built/cpukernel.obj: ./../runtime.hpp

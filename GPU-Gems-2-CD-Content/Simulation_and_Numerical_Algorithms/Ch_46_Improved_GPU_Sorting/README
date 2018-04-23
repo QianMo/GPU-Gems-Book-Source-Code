@@ -1,0 +1,56 @@
+GPUGems2 Demo: Sorting on the GPU
+---------------------------------
+
+
+Usage: 
+------
+
+Windows: run Sort.exe
+Linux:   run Sort_Linux
+
+The first argument is the power-of-2 field size to sort (default 8).
+The second argument is whether to sort floating point keys (default 0).
+
+Now press <1>,<2> or <3> to select a sorting algorithm. The program generates
+an inverse sorted sequence. Now step through the sorting stages and passes
+with <space> or complete the sorting sequence with <return>. For illustration
+on how values are moved around, you can insert zero and one values at random
+positions using <m>. Also check out <r>,<s> and <i> for the canonical border
+cases. The current field that is displayed can also be dumped to stdout with
+<d>. Finally check the sorting performance of your GPU by pressing <p>. This
+will do 100 full sorts of the field and report the obtained sorting rate.
+
+Have fun !
+
+
+Compiling the source:
+---------------------
+
+Windows: use the VisualStudio solution file GPUGems.sln
+Linux:   use the provided Makefile
+
+You'll need a working OpenGL installation. Other libraries should already be
+present in the Windows/Linux subdirectories.
+
+
+More info:
+----------
+
+Read the original paper: 
+
+Peter Kipfer and Mark Segal and Rüdiger Westermann, "UberFlow: A GPU-Based
+Particle Engine", Graphics Hardware 2004 Eurographics Symposium Proceedings,
+2004, pages 115-122
+
+Check for more GPGPU stuff:
+http://wwwcg.in.tum.de/GPU
+http://www.gpgpu.org
+
+
+Kontact:
+--------
+
+Peter Kipfer
+Computer Graphics & Visualization
+Technische Universität München
+email: kipfer@in.tum.de

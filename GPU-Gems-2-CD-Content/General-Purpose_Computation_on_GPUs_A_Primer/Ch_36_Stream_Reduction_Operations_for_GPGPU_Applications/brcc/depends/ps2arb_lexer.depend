@@ -1,0 +1,3 @@
+built/ps2arb_lexer.obj: ./ps2arb_gram.h
+built/ps2arb_lexer.obj: ./ps2arb.h
+built/ps2arb_lexer.obj: ps2arb_lexer.cpp

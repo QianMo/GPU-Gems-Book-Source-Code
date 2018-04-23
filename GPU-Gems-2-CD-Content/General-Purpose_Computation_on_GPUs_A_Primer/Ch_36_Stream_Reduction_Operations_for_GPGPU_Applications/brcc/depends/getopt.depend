@@ -1,0 +1,2 @@
+built/getopt.obj: getopt.c
+built/getopt.obj: ./getopt.h

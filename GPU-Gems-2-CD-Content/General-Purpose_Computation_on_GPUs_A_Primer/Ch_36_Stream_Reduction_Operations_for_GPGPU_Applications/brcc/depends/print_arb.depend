@@ -1,0 +1,3 @@
+built/print_arb.obj: ./autocloner.h
+built/print_arb.obj: ./ps2arb_intermediate.h
+built/print_arb.obj: print_arb.cpp

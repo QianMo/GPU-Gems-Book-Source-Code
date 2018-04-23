@@ -1,0 +1,25 @@
+static const int wipe_width = 20;
+static const int wipe_height = 20;
+static const int wipe_hotx = 10;
+static const int wipe_hoty = 10;
+static unsigned char wipe_data[] =
+"         OO         "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"    OO  OXXO  OO    "
+"   OXO  OXXO  OXO   "
+"  OXXOOOOXXOOOOXXO  "
+" OXXXXXXXXXXXXXXXXO "
+"OXXXXXXXXXXXXXXXXXXO"
+" OXXXXXXXXXXXXXXXXO "
+"  OXXOOOOXXOOOOXXO  "
+"   OXO  OXXO  OXO   "
+"    OO  OXXO  OO    "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"         OO         "
+"                    ";

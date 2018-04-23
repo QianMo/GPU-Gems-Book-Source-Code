@@ -1,0 +1,13 @@
+built/cgc.obj: ./cgc.h
+built/cgc.obj: ./location.h
+built/cgc.obj: ./callback.h
+built/cgc.obj: ./main.h
+built/cgc.obj: ./identify.h
+built/cgc.obj: ./config.h
+built/cgc.obj: ./decl.h
+built/cgc.obj: ./codegen.h
+built/cgc.obj: ./dup.h
+built/cgc.obj: ./subprocess.h
+built/cgc.obj: ./symbol.h
+built/cgc.obj: cgc.cpp
+built/cgc.obj: ./utype.h

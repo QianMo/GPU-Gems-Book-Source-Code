@@ -1,0 +1,25 @@
+ply
+format ascii 1.0
+comment created by platoply
+comment modified by MCH
+element vertex 6
+property float32 x
+property float32 y
+property float32 z
+element face 8
+property list uint8 int32 vertex_indices
+end_header
+-4 -4 -4
+-4 4 -4
+4 4 -4
+4 -4 -4
+0 0 28
+0 0 -4
+3 0 4 3
+3 0 1 4
+3 1 2 4
+3 2 3 4
+3 1 5 2
+3 2 5 3
+3 3 5 0
+3 0 5 1

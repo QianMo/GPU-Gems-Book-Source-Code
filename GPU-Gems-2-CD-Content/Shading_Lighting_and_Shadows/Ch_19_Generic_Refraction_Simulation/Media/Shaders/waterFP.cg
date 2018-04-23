@@ -1,0 +1,56 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : RefractiveFP.cg
+//  Desc : Water simulation fragment program
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "utilsFP.cg"
+
+half4 main(float3 Eye : TEXCOORD0,
+           float4 Wave0 : TEXCOORD1, float2 Wave1 : TEXCOORD2,
+           float2 Wave2 : TEXCOORD3, float2 Wave3 : TEXCOORD4,
+           float4 ScreenPos : TEXCOORD5,
+           uniform sampler2D tex0, uniform sampler2D tex1, uniform sampler2D tex2) : COLOR
+{
+
+  half3 vEye = normalize(Eye);
+
+  // Get bump layers
+  half3 vBumpTexA = tex2D(tex0, Wave0.xy).xyz;
+  half3 vBumpTexB = tex2D(tex0, Wave1.xy).xyz;
+  half3 vBumpTexC = tex2D(tex0, Wave2.xy).xyz;
+  half3 vBumpTexD = tex2D(tex0, Wave3.xy).xyz;
+  
+  // Average bump layers
+  half3 vBumpTex=normalize(2.0 * (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)-4.0);
+  
+  // Apply individual bump scale for refraction and reflection
+  half3 vRefrBump = vBumpTex.xyz * half3(0.02, 0.02, 1.0);
+  half3 vReflBump = vBumpTex.xyz * half3(0.1, 0.1, 1.0);  
+     
+  // Compute projected coordinates
+  half2 vProj = (ScreenPos.xy/ScreenPos.w);
+  half4 vReflection = tex2D(tex2, vProj.xy+ vReflBump.xy);
+  half4 vRefrA = tex2D(tex1, vProj.xy + vRefrBump.xy);
+  half4 vRefrB = tex2D(tex1, vProj.xy);
+  
+  // Mask occluders from refraction map
+  half4 vRefraction = vRefrB * vRefrA.w + vRefrA * (1 - vRefrA.w);
+
+  // Compute Fresnel term
+  half NdotL = max(dot(vEye, vReflBump), 0);
+  half facing = (1.0 - NdotL);
+  half fresnel = Fresnel(NdotL, 0.2, 5.0);
+
+  // Use distance to lerp between refraction and deep water color
+  half fDistScale = saturate(10.0/Wave0.w);
+  half3 WaterDeepColor = (vRefraction.xyz * fDistScale + (1 - fDistScale) * half3(0, 0.1, 0.125));  
+  
+  // Lerp between water color and deep water color
+  half3 WaterColor = half3(0, 0.1, 0.15);
+  half3 waterColor = (WaterColor * facing + WaterDeepColor * (1.0 - facing));
+  half3 cReflect = fresnel * vReflection;
+
+  // final water = reflection_color * fresnel + water_color
+  return half4(cReflect + waterColor, 1);  
+}

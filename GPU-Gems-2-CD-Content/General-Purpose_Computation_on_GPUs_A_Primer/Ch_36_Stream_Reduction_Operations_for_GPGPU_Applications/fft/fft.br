@@ -1,0 +1,493 @@
+#pragma warning(disable:4275)
+#include <complex>
+#include <cmath>
+// NOTE:
+// Please generate the dataset and the twiddle factors by running the data.cc program in this directory
+// and then run this program. This program currently works for power of 2 lengths. 
+
+
+// References:
+// [1] Alan V. Oppenheim and Ronald W. Schafer, ``Discrete-Time Signal Processing'', Prentice-Hall, 1989
+// [2] Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein,
+//     ``Introduction to Algorithms'', MIT Press, 2001.
+// NOTE:
+// We implement the Decimation in Frequency Algorithm of the FFT described in [1]
+int TwoPowerX(int nNumber) {
+  // Achieve the multiplication by left-shifting 
+  return (1<<nNumber);
+}
+
+
+// Procedure to reverse the bits. 
+// Example: 
+// INPUTS:  nNumberToReverse = 110; nNumberOfBits = 3;
+// OUTPUT:  nReversedNumber  = 011
+// CAUTION: Make sure that you pass atleast the minimum number of bits to represent the 
+//          number. For reversing 6 you need atleast 3 bits, if only 2 bits is passed then
+//          we get junk results.
+
+int LogN(int N) {
+  int i;
+  int logN;
+  for (i=1,logN=0;i<N;i*=2,++logN);
+  return logN;
+}
+int BitReverse(int nNumberToReverse, int nNumberOfBits) {
+  int nBitIndex;
+  int nReversedNumber = 0;
+  for (nBitIndex = nNumberOfBits-1; nBitIndex >= 0; --nBitIndex) {
+    if ((1 == nNumberToReverse >> nBitIndex)) {         
+      nReversedNumber  += TwoPowerX(nNumberOfBits-1-nBitIndex);    
+      nNumberToReverse -= TwoPowerX(nBitIndex);                      
+    }
+  }
+  return(nReversedNumber);
+}
+int __BitReverse_cpu_inner(int nNumberToReverse, int nNumberOfBits) {
+  
+  return BitReverse(nNumberToReverse,LogN(nNumberOfBits));
+}
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+int debug_fft=1;
+#ifdef USE_FFTW
+#include <fftw3.h>
+#endif
+//c version from FFT book
+#ifndef M_PI
+#define M_PI 3.1415926536
+#endif
+#define SWAP(a,b) tempr=(a); (a) = (b); (b) = tempr
+typedef int mycomplex;
+typedef int myplan;
+#define mycomplex fftwf_complex
+#define myplan fftwf_plan
+#ifdef USE_FFTW
+mycomplex * getMaxData () {
+  return (mycomplex*)fftwf_malloc(sizeof(fftwf_complex) * 4096*4096);
+}
+mycomplex * fftwoutput = getMaxData();
+void FftwTransform(float2 *data, unsigned long N, int isign, char cast) {
+  myplan p;
+  mycomplex *in;
+  mycomplex *output=fftwoutput;
+  unsigned long i;
+  if (!cast) {
+    in = (mycomplex*)fftwf_malloc(sizeof(fftwf_complex) * N);
+    for (i=0;i<N;++i) {
+      in[i][0]=data[i].x;
+      in[i][1]=data[i].y;
+    }
+  }else {
+     in = (mycomplex*)data;
+  }
+  p = fftwf_plan_dft_1d(N, in, output, FFTW_FORWARD, FFTW_ESTIMATE);
+  fftwf_execute(p); /* repeat as needed */
+  if (!debug_fft)
+    fftwf_execute(p); /* repeat as needed */
+  fftwf_destroy_plan(p);
+  if (debug_fft) {
+    printf("cpu version\n");
+    for (i=0;i<N;++i) {
+      float x = output[i][0];
+      float y = output[i][1];
+      printf ("{%.2f, %.2f}",x,y);
+    }
+    printf ("\n");
+
+  }
+  if (!cast) {
+    fftwf_free(in);
+  }
+}
+
+void FftwTransform2d(float2 *data, unsigned long N, unsigned long M,
+                     int isign, char cast) {
+  myplan p;
+  mycomplex *in;
+  mycomplex *output=fftwoutput;
+  unsigned long i,j;
+  
+  if (!cast) {
+    in = (mycomplex*)fftwf_malloc(sizeof(fftwf_complex) * N*M);
+    for (i=0;i<N*M;++i) {
+      in[i][0]=data[i].x;
+      in[i][1]=data[i].y;
+    }
+  }else {
+     in = (mycomplex*)data;
+  }
+  p = fftwf_plan_dft_2d(N, M, in, output, FFTW_FORWARD, FFTW_ESTIMATE);
+  fftwf_execute(p); /* repeat as needed */
+  fftwf_execute(p); /* repeat as needed */
+  fftwf_destroy_plan(p);
+  if (debug_fft) {
+    printf("cpu version\n");
+    for (i=0;i<N;++i) {
+      for (j=0;j<M;++j) {
+        float x = output[i*M+j][0];
+        float y = output[i*M+j][1];
+        printf ("{%.2f, %.2f}",x,y);
+      }
+      printf("\n");
+    }
+    printf ("\n");
+  }
+  if (!cast) {
+    fftwf_free(in);
+  }
+}
+
+
+
+#else
+
+#define fftwTransform FftwTransform
+#define fftwTransform2d FftwTransform2d
+void fftwTransform(float2 *data, unsigned long N, int isign, char cast) {}
+void fftwTransform2d(float2 *data, unsigned long N, unsigned long M, 
+	int isign, char cast) {}
+#endif
+
+void four1(float data[], unsigned long nn, int isign) {
+   unsigned long n, mmax, m, j, istep, i;
+   double wtemp, wr, wpr, wpi, wi, theta;
+   float tempr, tempi;
+   
+   n =nn<<1;
+   j=1;
+   for (i=1;i<n;i+=2) {
+      if (j>i) {
+         SWAP(data[j],data[i]);
+         SWAP(data[j+1],data[i+1]);
+      }
+      m= n>> 1;
+      while (m>=2&& j >m) {
+         j-=m;
+         m >>=1;
+      }
+      j+=m;
+   }
+   mmax =  2;
+   while (n>mmax) { 
+      istep =mmax<<1;
+      theta=isign*(2*M_PI/mmax);
+      wtemp = sin (0.5*theta);
+      wpr = cos(theta);//-2.0*wtemp*wtemp;
+      wpi = sin(theta);
+      wr = 1.0;
+      wi = 0.0;
+      for (m=1;m<mmax;m+=2) {
+         for (i=m;i<=n;i+=istep) {
+            j=i+mmax;
+            tempr=wr*data[j]-wi*data[j+1];
+            tempi=wr*data[j+1]+wi*data[j];
+            data[j]=data[i]-tempr;
+            data[j+1]=data[i+1]-tempi;
+            data[i]+=tempr;
+            data[i+1]+=tempi;
+         }
+         wr = (wtemp=wr)*wpr-wi*wpi+wr;
+         wi = wi*wpr+wtemp*wpi+wi;
+      }
+      mmax=istep;
+   }
+   printf ("Base Case FFT \n");
+   for (i=0;i<nn;++i) {
+     printf("{%f, %f}",data[2*i],data[2*i+1]);     
+   }
+   printf("\n");
+}
+
+
+kernel void streamInit(out float2 a<>)
+{
+  a.x = 0.0;
+  a.y = 0.0;
+}
+void init (float2 * a) {
+   a->x = a->y = 0.0;
+}
+
+kernel void streamCopy(out float2 a<>, float2 b<>)
+{
+  a.x = b.x;
+  a.y = b.y;
+}
+void copy (float2 * a, float2 * b) {
+   a->x = b->x;
+   a->y = b->y;
+}
+
+void __printf_cpu_inner(float inx, float iny, float outx, float outy) {
+   printf("%g %g -> %g %g\n",inx,iny,outx,outy);
+}
+void __print_cpu_inner(float inx, float iny, float outx, float outy) {
+   printf("%g %g && %g %g\n",inx,iny,outx,outy);
+}
+
+kernel void mult(float2 a <>, float2 b <>, out float2 c <>)
+{
+  c.x = a.x*b.x - a.y*b.y;
+  c.y = a.x*b.y + a.y*b.x;
+
+}
+float2 cmult (float2 a, float2 b) {
+   float2 c;
+   c.x = a.x*b.x - a.y*b.y;
+   c.y = a.x*b.y + a.y*b.x;
+   return c;
+}
+
+//////////////////////////////////////////////////
+//FIXME
+
+#if 0
+typedef float2 __BrtFloat2;
+typedef float __BrtFloat1;
+#endif
+
+void __printfy_cpu_inner(__BrtFloat2 x, __BrtFloat1 index, __BrtFloat1 stride, __BrtFloat1 n, __BrtFloat1 ang) {
+  printf("W(ind:%.1f, str:%.0f, N:%.0f, deg:%.2f): %f %f\n",index.unsafeGetAt(0),stride.unsafeGetAt(0),n.unsafeGetAt(0),180*ang.unsafeGetAt(0),x.unsafeGetAt(0),x.unsafeGetAt(1));
+}
+kernel float2 getW(float aindex, float Stride2, float N2) {
+  float N=N2;
+  float Stride=N/Stride2;
+  float bindex=(float)BitReverse(aindex,N2);
+  float index=bindex;
+  float2 ret;
+  float2 tmp;
+  float angnopi = (index-fmod(index,Stride))/N;
+  float ang =angnopi*3.1415926536;
+  if (ang>=3.1415) {
+    ang-=3.1415926536;
+  }
+  ret.x = cos(ang);
+  ret.y = sin(ang);
+  
+  printfy (ret,index,Stride,N2,angnopi);
+  return ret;
+}
+
+// DFT()
+// Implements the Perfect Shuffle algorithm
+kernel void
+DFT (float2 s[], 
+       float2 W[],
+       float Stride, float N,
+       out float4 s_prime<>) {
+  float index = (indexof s_prime).x;
+  float2 temp,r,t,twiddle;
+  r = s[index];
+  t = s[index+round(N/2)];
+  twiddle=getW(index,Stride,N);
+  mult(t,twiddle,temp);
+  s_prime.xy = r+temp;
+  s_prime.zw = r-temp;
+} 
+kernel void flattenS (out float2 s<>, 
+                      float4 s_prime<>)
+{
+  if (round (fmod((indexof(s)).x,2))==1.0f)
+      s = s_prime.zw;
+  else
+      s = s_prime.xy;
+}
+
+// Utilities and the BitReverse() procedure
+// To compute 2**x
+
+
+// BitReverseStream()
+// INPUT: s, nDataLength. 
+// OUTPUT: r. `r' contains the bit-reversed stream
+typedef int streamcmplx;
+#define streamcmplx brook::Stream *
+float * bitReversedIndices (int logN) {
+  int i,N = (1<< logN);
+  float * s_array;
+  s_array = (float*)calloc(N,sizeof(float));
+  s_array[0]=0;
+  for (i=1;i<N;++i) {
+    s_array[i]=(float)BitReverse(N-i,logN);
+  }
+  return s_array;
+}
+void BitReverseStream(streamcmplx r, streamcmplx s, int nDataLength) {
+  int nIndex, B = 1;  
+  float2 *s_array;
+  s_array  = (float2 *) calloc(nDataLength, sizeof(float2));
+
+
+  // This assumes that nDataLength is a power of 2
+  // Number of Bits
+  while ((nDataLength >> B) > 0)              
+    B++;
+
+
+  B--; // Now 2**B gives the nDataLength
+  
+  // copy the stream to the array
+  streamWrite(s, s_array);
+  
+  for(nIndex = 1; nIndex < nDataLength-1; ++nIndex) 
+    {
+      int nReversedIndex = BitReverse(nIndex, B);
+      float2 temp;
+      // Need to swap only half of the index 
+      // and no need to swap the first and last
+      if (nReversedIndex < nIndex) 
+        continue; 
+      // Swap by references 
+      init(&temp);
+      copy(&temp, s_array+nIndex);
+      copy(s_array+nIndex, s_array+nReversedIndex);
+      copy(s_array+nReversedIndex, &temp);
+    } 
+  
+  // copy the bit-reversed stream into r
+  streamRead(r, s_array);
+  // do the painful deallocation
+  free(s_array); 
+}
+
+float2 * getData(int N, char ** data) {
+   int i;
+   float2 *ret;
+   ret  = (float2*)malloc(sizeof(float2)*N/2);
+   for (i=0;i<N;i+=2 ) {
+      ret[i/2].x = atoi(data[i]);
+      ret[i/2].y = atoi(data[i+1]);
+   }
+   //   ret[1].x=1;
+   return ret;
+}
+float2 * getTwiddleFactor(int N) {
+   int i;
+   float2 *ret;
+   float theta = 2*M_PI/N;
+   float wtemp = sin(0.5*theta);
+   ret  = (float2 *)malloc(sizeof(float2)*N);
+   ret[0].x=1;ret[0].y=0;   
+   ret[1].x=cos(theta);
+   ret[1].y = sin(theta);
+   for (i=2;i<N;++i) {
+      ret[i]=cmult(ret[i-1],ret[1]);
+   }
+   for (i=1;i<N;++i) {
+     if (ret[i].y<0||ret[i].x==-1) {
+       ret[i].x*=-1;
+       ret[i].y*=-1;
+     }
+   }
+   return ret;
+}
+kernel void myGather(out float2 s_out<>, float indices<>,float2 s[]) {
+  s_out=s[indices];
+}
+int main(int argc, char **argv)
+{
+  int logN=LogN((argc-1)/2);
+  int N = (argc-1)/2;   
+  float2 s<N>;
+  float2 s_out<N>;
+  float2 r <N>;
+  float2 t <N>;
+  float2 W<N>;
+  
+  // passed as the out variable in the DFT
+  float4 s_prime<(N/2)>;
+  
+  // variables to get around the strange ways of Brook
+  // to get around the references in `flattening' the stream
+  float2 temp<N>; 
+
+  // Read the data
+
+
+  // NOTE: Twiddle factors
+  // Reference: Pg 601 OS (1/e) Fig 9.18
+  // Imagine Beginners Guide pg 23
+
+
+  // Please note that nPass and nBits denote the same but there
+  // are two different variables for cleaner coding and easier
+  // maintenance.
+  int nPass, nBits;
+  int nPassCounter;
+  int nDataLength;
+  float2 *dat = getData(argc-1,argv+1);
+  streamRead(s,dat);
+  
+  printf("The stream length is %d\n", N);
+  streamPrint(s); 
+  
+  FftwTransform(dat,N,1,1);
+  free (dat);
+  dat = getTwiddleFactor(N);  
+  streamRead(W,dat);
+  free(dat);
+  nDataLength = N;
+
+  // Just print the data for reference
+  printf("\n");
+  
+  // handle the base case
+  if(1 == nDataLength)
+    streamSwap(s_out,s); // do nothing  
+  else {  
+    // Number of passes = log2(nDataLength)
+    // Implementation Notes:
+    // There is an adjustment for nDataLength due to the fact that
+    // ceil(10.0) will give 11 not 10. Thus if are dealing with 
+    // nDataLength of powers of 2 then we have to subtract one 
+    // to get the correct number of passes
+    nPass        = logN;
+    nBits        = nPass;
+    nPassCounter = 0;   
+    
+    while(nPassCounter < nPass)
+      {
+        // Please remember that t = s[nDataLength/2 .. nDataLength) 
+        // Do a `Perfect Shuffle'
+        int nStride = (1<<nPassCounter);
+        // DFT merge call. The heart of this program!
+        DFT(s, W,nStride,N, s_prime);
+
+
+        // To support the `in-place' perfect-shuffle algorithm
+        if (1) {           
+           flattenS(s, s_prime);           
+        }
+        if (debug_fft){
+          printf ("stage %d ",nPassCounter);
+          streamPrint(s_prime);
+          printf ("\n");
+        }
+        // update the PassCounter
+        ++nPassCounter;
+      } // while()
+    
+    // Note that 's' now has a bitreversed version of the FFT.
+    // Since FFT is an in-place computation 's' contains the
+    // the FFT(s) itself.
+    // NOTE: streamBitReverse() isn't yet implemented. Just an emulation
+    if (1) {
+      float *rawindices=bitReversedIndices(logN);
+      static float indices<N>;
+      streamRead(indices,rawindices);
+      free(rawindices);
+      myGather(s_out,indices,s);
+    }
+//    printf("The scrambled FFT of the given data is\n");
+//    streamPrint(s); 
+    printf("\nThe FFT of the given data is\n");
+    streamPrint(s_out); 
+    printf("\n");
+    //    scanf("%d",&N);
+  } // end of else construct
+  
+  return 0;
+}

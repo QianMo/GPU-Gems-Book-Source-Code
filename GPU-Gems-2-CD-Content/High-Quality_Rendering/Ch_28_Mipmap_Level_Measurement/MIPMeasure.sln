@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MIPMeasure", "MIPMeasure.vcproj", "{AC710909-8ECC-42B3-B97A-16A951172F1C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{AC710909-8ECC-42B3-B97A-16A951172F1C}.Debug.ActiveCfg = Debug|Win32
+		{AC710909-8ECC-42B3-B97A-16A951172F1C}.Debug.Build.0 = Debug|Win32
+		{AC710909-8ECC-42B3-B97A-16A951172F1C}.Release.ActiveCfg = Release|Win32
+		{AC710909-8ECC-42B3-B97A-16A951172F1C}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

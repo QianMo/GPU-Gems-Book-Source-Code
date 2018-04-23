@@ -1,0 +1,16 @@
+built/brtdecl.obj: brtdecl.cpp
+built/brtdecl.obj: ./identify.h
+built/brtdecl.obj: ./config.h
+built/brtdecl.obj: ./decl.h
+built/brtdecl.obj: ./token.h
+built/brtdecl.obj: ./stemnt.h
+built/brtdecl.obj: ./brtdecl.h
+built/brtdecl.obj: ./dup.h
+built/brtdecl.obj: ./parseenv.h
+built/brtdecl.obj: ./callback.h
+built/brtdecl.obj: ./location.h
+built/brtdecl.obj: ./express.h
+built/brtdecl.obj: ./context.h
+built/brtdecl.obj: ./symbol.h
+built/brtdecl.obj: ./project.h
+built/brtdecl.obj: ./utype.h

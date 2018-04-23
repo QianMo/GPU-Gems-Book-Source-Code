@@ -1,0 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : refractiveMaskFP.cg
+//  Desc : refraction mask fragment program
+//
+//  History:
+//  - 20/04/2004: created by Tiago Sousa
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPosition    : POSITION;        
+};
+
+fragout main(VpOut IN)
+{
+    fragout OUT;    
+    OUT.col=0;    
+    return OUT;
+}

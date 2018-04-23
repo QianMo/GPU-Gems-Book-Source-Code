@@ -1,0 +1,200 @@
+<html>
+
+<head>
+<title>OpenVIDIA : Parallel GPU Computer Vision</title>
+<meta name="description" content="The OpenVIDIA project implements some computer vision algorithms on computer graphics hardware, in OpenGL and Cg. The project provides useful example programs which run computer vision algorithms on single or parallel gfx processing units(GPU).">
+<meta name="keywords" content="computer vision, real time, GPU,
+graphics processing unit, openvidia, parallel graphics, parallel GPU, parallel,
+general purpose, machine vision augmented reality, mixed reality, software, tools, tool">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" />
+
+<style>
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 13px; color: #000000; }
+a                 { color: #002299 }
+#.pagetitle        { font-size: 28px; font-weight: bold; color: #336699; }
+.pagetitle        { font-size: 24px; font-weight: normal; color: #336699; }
+.dateheader       { font-size: 14px; font-weight: bold; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+<!--
+  <td colspan="6"><span class="pagetitle">$blog_title</span></td>
+-->
+<!--
+  <td bgcolor="#EEEEEE"></td>
+-->
+  <td colspan="5" height=40 bgcolor="#EEEEEE">
+       <h1> <span class="pagetitle"> 
+OpenVIDIA : Parallel GPU Computer Vision</span></h1>
+  </td>
+<!--
+  <td colspan="0" bgcolor = "#EEEEEE" height=40>
+ -->
+  <center>
+  </center>
+<!--
+  </td>
+-->
+    
+
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+<!--
+  <td bgcolor="#DDDDDD"><nobr>&nbsp; &nbsp; </nobr>
+-->
+  
+  <!-- left column -->
+  <td bgcolor="#DDDDDD" width="20%" >
+  <br><b>
+<a href="index.html">Home</a><br><br>
+<a href="screenshots.html">Screenshots</a><br><br>
+<a href="installation.html">Installation<br>Instructions</a><br><br>
+<a href="quickstart.html">Quickstart</a><br><br>
+<a href="programming.html">Programming<br>Example</a><br><br>
+<a href="openvidia-0.07.tar.gz">CD Source Code</a><br><br>
+<a href="http://sourceforge.net/project/showfiles.php?group_id=98913">Download</a><br><br>
+<a href="papers.html">Papers</a><br></b>
+
+<hr>
+   <b>Project</b> <br>
+   <a href=http://sourceforge.net/projects/openvidia>sf.net project page</a><br>
+<!--#include virtual="projhtml.cache" -->
+<hr>
+
+   <p>
+   <b>Related Projects</b>
+   <br />
+   <p>
+   <a href="http://comparametric.sf.net">Comparametric Toolkit</a>
+   </p>
+
+   <p>
+   <b>Links</b> 
+     <p>
+   <a href="http://fly.cc.fer.hr/~unreal/theredbook/">Open GL Ref.</a>
+   </p>
+
+   <p>
+   <a href="http://www.linuxhardware.org/nvclock/">GeForce FX Overclocking</a>
+   </p>
+   <p>
+   <a href="http://www.gpgpu.org">GPGPU</a>
+   </p>
+    
+<p>
+   <a href="http://www.eyetap.org"><img src="eyetaplogo.png" border="1" hspace="3" vspace="3" /></a>
+   </p>
+
+   <p>
+  <a href="http://sourceforge.net"><img
+    src="sflogo.php"
+    width="88" height="31" border="0" hspace="3" vspace="3" alt="SourceForge.net Logo"
+    /></a></p>
+
+
+  <p>
+<i>   Page design based on <a href="http://www.blosxom.com">Blosxom</a> (which was
+   used originally before the move to sourceforge).</i></p>
+<p>
+<i>This page best viewed with Dillo, Lynx, w3m, Mozilla-Firefox, Galeon, Epiphany . . .</i></p>
+
+  </td>
+<!--
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td>
+-->
+
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#FFFFFF" width="100%"> 
+<br />
+
+<h2>Screenshots</h2>
+<a href=hexagraphics_identitycolor.jpg><img src="hexagraphic_thumb.jpg" alt="picture of computer with multiple graphics cards in it"></a><br>
+
+A computer vision machine with 6 PCI graphics cards, and 1 AGP graphics card.
+Each PCI card has a GeForce FX 5200 GPU which runs pattern recognition
+and computer vision tasks in parallel, creating a cheap, powerful, and easily
+constructed parallel architecture well suited for pattern recognition and
+computer vision.<br><br>
+
+<a href=glestpchirp2m-shot1.png><img src="glestpchirp2m-shot1-thumb.png" alt="screenshot of glestpchirp2m program"></a><br>
+glestpchirp2m running on the University College sequence<br><br>
+<img src=canny.png><br>
+Canny edge filter (implemented by Fung and Aimone)<br><br>
+
+<a href=canny.mpg><img src=cannycorners.jpg></a><br>
+Modified Canny edge filter which locates corners instead (Fung and Aimone)<br>
+OpenVIDIA locates corners and edges and calculates feature vectors for each corner in
+realtime on a FX6800</br>
+<b><a href=canny.mpg>Click the image for a movie. [mpg 1.2 MB]</a></b><br><br>
+
+<b>All the world's a marker: Markerless tracking</b><br>
+<a href=cannylocal.mpg><img src=featurematch.jpg></a><br>
+The above altered to track corner points in the image (Fung, Aimone). The
+green lines connect the same point in the previous image to its new location
+in the next image.
+<b><a href=cannylocal.mpg>Click the image for a movie. [mpg 6.0 MB high quality to see the lines properlly]</a></b><br><br>
+
+<br>
+<a href=ransac.mpg>
+<img src=v0000080.jpg><br>
+Download Video</a><br>
+
+Corner tracking + Projective RANSAC motion estimations.  Blue dots indicate
+found corners, green lines connect the points to its previous location, indicating corners which all have the same,
+dominant motion.   Notice that the moving hand and unmatchable corners are
+segmented out, and do not affect the estimation on the main projective
+motion.  It can track over 140 correspondences at 30 fps.  This video is live
+(you can see it when it looks at the monitor too), but is running at 22 fps on
+account of having to compress and write a jpeg to disk every frame (in order to
+make the video). <br><br>
+
+<a href=featurenumbering.mpg>
+<img src=featurenumbering.jpg></a><br>
+Features are tracked and given an ID number, possibly useful input
+for higher level vision tasks. [16MB video].<br><br>
+
+<!--
+<img src=skin.png><br> Skin tone segmentations locates people and hands, and is
+a useful first step in many applications, including gesture tracking, and giant
+robots.<br>
+
+<br>
+<img src=s1t.png><img src=s2t.png><img src=s3t.png><img src=s4t.png><br>
+Sequential filters are applied.  Left to right: 1. raw, 2. radial undistorted,
+3. rgb converted to hsv space and segmented in hsv, 4. cross erosion operator applied.
+-->
+<img src=3.jpg><br>
+Skin tone segmentations locates people and hands, and is
+a useful first step in many applications, including gesture tracking, and giant
+<br>The resulting load on a 2.0 GHz CPU machine was 0.02, 30fps, 320x240
+<br><br>
+<img src=3d.jpg><br>
+<a href=skeltable6.jpg><img src=sskeltable6.jpg></a><br>
+<a href=skeltable8.jpg><img src=sskeltable8.jpg></a><br>
+3D registration.  Imported objects from <a href=http://cal3d.sf.net>Cal3D</a> (import conducted thanks to Mohit Kansai and Billal Belmellat, 3d registration thanks to Chris Aimone).
+<br><br>
+<a href=inetdemo.mpg><img src=flcornersTrackScreenshot1.jpg></a><br>
+flcornersTrack scene tracking/annotation program.  
+<a href="quickstart.html">More info</a><br>
+<a href=inetdemo.mpg>Click for a video (1MB).</a><br>
+<br><br>
+<img src=shot3.jpg>
+<br>
+3D studio import. [v0.07]
+
+

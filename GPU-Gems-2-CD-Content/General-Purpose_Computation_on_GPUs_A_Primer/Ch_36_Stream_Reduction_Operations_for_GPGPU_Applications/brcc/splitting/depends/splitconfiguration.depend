@@ -1,0 +1,2 @@
+built/splitconfiguration.obj: splitconfiguration.cpp
+built/splitconfiguration.obj: ./splitconfiguration.h

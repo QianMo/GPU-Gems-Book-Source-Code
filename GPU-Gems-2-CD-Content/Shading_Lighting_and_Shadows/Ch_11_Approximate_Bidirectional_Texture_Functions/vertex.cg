@@ -1,0 +1,51 @@
+// Approximate BTF Rendering - Vertex Shader
+
+void main(float4 position : POSITION, 
+          float3 normal   : NORMAL, 
+          float3 tex  : TEXCOORD0,
+      out float4 HPOS : POSITION, 
+      out float3 TEX  : TEXCOORD0, 
+      out float4 COL0 : TEXCOORD1,
+          uniform float4x4 mvp,
+          uniform float3 lightpos, uniform float3 eye, uniform float lightintensity, 
+          uniform float Ka, uniform float Kd, uniform float Ks, uniform float N,
+          uniform float texScale, uniform float parameter)
+{
+    // compute light direction
+    float3 L = lightpos - (float3)position; 
+    L = normalize( L );
+
+    // compute reflected direction
+    float3 R = (2.0f*dot(eye,normal)*normal - eye);
+
+    // lighting (enhanced Phong model)
+    const float pi = 3.14159265;
+    float diffuse = dot( normal, L );
+    float specular = pow( dot(R,L), N);
+    float intensity = Kd/pi  +  Ks*(N+2.0)*specular/(2.0*pi);
+    intensity *= diffuse; // * cos(th)
+
+    // check boundaries
+    if( diffuse < 0.0 || intensity < 0.0 ) intensity = 0.0;
+    if( intensity > 1.0 ) intensity = 1.0;
+
+    // add ambient
+    intensity += Ka;
+
+    if( parameter == 0.0f ) { 
+        // approximate BTF
+        TEX.z = intensity; // based on lighting, a_max assumed to be 1
+        COL0.rgb = lightintensity;
+    } else { 
+        // simple texture mapping
+        TEX.z = 0.6f;
+        COL0.rgb = intensity * lightintensity;
+    }
+
+    // compute position and pass along tex-coordinate
+    HPOS = mul(mvp, position);
+    TEX.xy = tex.xy * texScale; // copy the 2D part from application
+
+    return;
+} 
+

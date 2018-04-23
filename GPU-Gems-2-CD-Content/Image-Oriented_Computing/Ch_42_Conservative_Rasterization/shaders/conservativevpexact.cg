@@ -1,0 +1,110 @@
+struct A2V {
+    float4 col:COLOR0;
+	
+	float  index:TEXCOORD2;
+    float4 prevPos:TEXCOORD0;
+    float4 currentPos:POSITION;
+    float4 nextPos:TEXCOORD1;
+};
+
+struct V2F {
+    float4 pos:POSITION;
+    float4 col:COLOR0;
+     
+    float4 clipSpace:TEXCOORD4;
+    float4 polyPlane:TEXCOORD6;
+    float2 Delta:TEXCOORD7;
+};
+
+#define THRESHOLD 0.0000125
+#define FLT_MAX 9999999999999.0
+#define NEAR 1.0f
+
+/**
+ * Compute the intersection point by the line segment and the near clipping 
+ * plane defined by w=NEAR
+ */
+float4 isect(float4 posA,float4 posB) {
+	float t = (posB.w-NEAR)/(posB.w-posA.w);
+	return posB*(1-t) + posA*t;
+}
+
+/**
+ * hPixel parameter is defined as (1/xres, 1/yres, 1/xres, 1/yres). 
+ * I.e, the size of a half pixel cell in clip space
+ */
+V2F main(A2V In, uniform float4x4 ModelViewProj,uniform float4 hPixel) {
+
+    V2F		Out;
+	float4  currentPos,prevPos,nextPos;
+
+	// Compute the translated positions of all vertices
+	prevPos = mul(ModelViewProj,In.prevPos);
+	currentPos = mul(ModelViewProj,In.currentPos);
+	nextPos = mul(ModelViewProj,In.nextPos);	
+
+	// Compute the (x,y,w,d) triangle plane		
+	float4 pPlane = float4( normalize(cross( currentPos.xyw-prevPos.xyw, nextPos.xyw-prevPos.xyw )), 0);
+	pPlane.w = -dot(pPlane.xyz,prevPos.xyw);
+
+	// Compute planes through the edges
+	float3 plane[2];
+	plane[0] = (cross(currentPos.xyw - prevPos.xyw, prevPos.xyw));
+	plane[1] = (cross(nextPos.xyw - currentPos.xyw, currentPos.xyw));
+
+	// Compute the semi diagonals in the same quadrants as the plane normal. Note that the use
+	// of the step function here is the same as sign(), but do not return zero for an input value 
+	// of zero (which sign() unfortunately does)
+	float2 semiDiagonal[2];
+	semiDiagonal[0] = (step(float2(0,0),plane[0].xy) - 0.5)*2.0;
+	semiDiagonal[1] = (step(float2(0,0),plane[1].xy) - 0.5)*2.0;
+
+	float4 finalPos = currentPos;
+
+	// Perform basic z-near plane clipping. This can be ignored when using orthographic projection
+	if (finalPos.w < NEAR) {
+		if ( (In.index < 1 && prevPos.w > NEAR) || (In.index >= 1 && nextPos.w < NEAR) )
+			finalPos = isect(prevPos,currentPos);
+		else
+			finalPos = isect(currentPos,nextPos);
+	}
+
+	// Test if the triangle is "almost back facing". Conservative rasterization is only performed for 
+	// front facing triangles
+	if (dot(currentPos.xyw,pPlane.xyz) > THRESHOLD && In.index >= 0) {
+		float dp = dot(semiDiagonal[0],semiDiagonal[1]);
+		float2 diag;
+		
+		if (dp > THRESHOLD) {
+			// The plane normals are in the same quadrant -> One vertex generated. 
+			diag = semiDiagonal[0];
+		}
+		else if ( dp >= -THRESHOLD) {
+			// The plane normals are in neighboring quadrants -> Two vertices generated
+			diag = (In.index == 0 ? semiDiagonal[0] : semiDiagonal[1]);
+		}
+		else {
+			// The plane normals are in opposite quadrants -> Three vertices generated
+			if (In.index == 1) 
+				// Special vertex inserted in the mid-quadrant
+				diag = float2( semiDiagonal[0].x*semiDiagonal[0].y*semiDiagonal[1].x, semiDiagonal[0].y*semiDiagonal[1].x*semiDiagonal[1].y );			
+			else 
+				diag = (In.index == 0 ? semiDiagonal[0] : semiDiagonal[1]);
+		}
+		
+		finalPos.xy += hPixel.xy*diag*finalPos.w;
+	}
+
+	Out.col = In.col;
+	Out.pos = finalPos;
+	Out.polyPlane = pPlane;		
+	Out.clipSpace = finalPos;
+
+#ifdef MAX_DEPTH
+	Out.Delta = -0.5*sign(pPlane.xy);
+#else
+	Out.Delta = 0.5*sign(pPlane.xy);
+#endif
+	
+    return Out;
+}

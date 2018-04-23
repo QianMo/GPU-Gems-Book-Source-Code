@@ -1,0 +1,4 @@
+built/ps2arb.obj: ./autocloner.h
+built/ps2arb.obj: ./ps2arb_intermediate.h
+built/ps2arb.obj: ./ps2arb.h
+built/ps2arb.obj: ps2arb.cpp

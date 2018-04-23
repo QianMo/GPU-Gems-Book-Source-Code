@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Water", "Water Shader 2.vcproj", "{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Debug NVIDIA = Debug NVIDIA
+		Release = Release
+		Release NVIDIA = Release NVIDIA
+		Shader Debug = Shader Debug
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Debug.ActiveCfg = Debug|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Debug.Build.0 = Debug|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Debug NVIDIA.ActiveCfg = Debug NVIDIA|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Debug NVIDIA.Build.0 = Debug NVIDIA|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Release.ActiveCfg = Release|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Release.Build.0 = Release|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Release NVIDIA.ActiveCfg = Release NVIDIA|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Release NVIDIA.Build.0 = Release NVIDIA|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Shader Debug.ActiveCfg = Shader Debug|Win32
+		{9C04CC2D-C188-4443-A185-CB0BCA6ED98D}.Shader Debug.Build.0 = Shader Debug|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,12 @@
+built/parseenv.obj: ./location.h
+built/parseenv.obj: ./callback.h
+built/parseenv.obj: ./identify.h
+built/parseenv.obj: ./decl.h
+built/parseenv.obj: ./context.h
+built/parseenv.obj: ./config.h
+built/parseenv.obj: parseenv.cpp
+built/parseenv.obj: ./dup.h
+built/parseenv.obj: ./symbol.h
+built/parseenv.obj: ./project.h
+built/parseenv.obj: ./parseenv.h
+built/parseenv.obj: ./utype.h

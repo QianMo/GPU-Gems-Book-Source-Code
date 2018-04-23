@@ -1,0 +1,25 @@
+static const int cross_width = 20;
+static const int cross_height = 20;
+static const int cross_hotx = 10;
+static const int cross_hoty = 10;
+static unsigned char cross_data[] =
+"         OO         "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"       OXOOXO       "
+" OOOOOOXO  OXOOOOOO "
+"OXXXXXXO    OXXXXXXO"
+"OXXXXXXO    OXXXXXXO"
+" OOOOOOXO  OXOOOOOO "
+"       OXOOXO       "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"        OXXO        "
+"         OO         ";

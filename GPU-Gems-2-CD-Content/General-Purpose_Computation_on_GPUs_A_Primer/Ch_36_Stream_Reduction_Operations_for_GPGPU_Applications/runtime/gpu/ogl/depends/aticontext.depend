@@ -1,0 +1,15 @@
+built/aticontext.obj: ../../../include/brook/vc6vector.hpp
+built/aticontext.obj: ./ogltexture.hpp
+built/aticontext.obj: ../../../include/brook/brtvector.hpp
+built/aticontext.obj: ../../../include/brook/type_promotion.hpp
+built/aticontext.obj: ../../../include/brook/kerneldesc.hpp
+built/aticontext.obj: ./oglcontext.hpp
+built/aticontext.obj: ./aticontext.hpp
+built/aticontext.obj: ./oglfunc.hpp
+built/aticontext.obj: ./../gpucontext.hpp
+built/aticontext.obj: aticontext.cpp
+built/aticontext.obj: ./../../runtime.hpp
+built/aticontext.obj: ./../../logger.hpp
+built/aticontext.obj: ./../../profiler.hpp
+built/aticontext.obj: ./../gpubase.hpp
+built/aticontext.obj: ../../../include/brook/brt.hpp

@@ -1,0 +1,20 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : skyboxFP.cg
+//  Desc : skybox fragment program
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPosition    : POSITION;    
+    float4 TexCoord0    : TEXCOORD0;
+};
+
+fragout main(VpOut IN, uniform sampler2D tex0)
+{
+    fragout OUT;
+    float4 vDiffuse=tex2D(tex0, IN.TexCoord0.xy);
+    OUT.col=vDiffuse;    
+    return OUT;
+}

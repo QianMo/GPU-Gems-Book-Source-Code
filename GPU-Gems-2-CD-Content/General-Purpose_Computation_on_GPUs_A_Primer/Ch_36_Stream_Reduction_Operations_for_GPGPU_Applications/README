@@ -1,0 +1,216 @@
+Brook GPU - Filtering Package
+
+
+Installation
+
+   * A quick start guide for getting Brook up and running on Windows
+     platforms is provided in QUICK_START.txt
+   * For the Filtering example programs, the directories subdivision 
+     and rapid_collide should contain the source code.
+   * The toplevel project Filtering.sln contains the subprojects 
+     written about in the Filtering chapter.
+
+Hardware Prerequisites
+
+   * The DirectX 9 runtime will work on ATI r3xx and r4xx video cards
+     such as the Radeon 9800 and Radeon X800, as well as NVIDIA nv4x
+     cards such as the GeForce 6800. Some nv3x (GeForce FX and
+     Quadro FX) cards may also work, but have not been extensively tested.
+
+   * The OpenGL runtime will work on r3xx, r4xx, nv3x and nv4x video
+     cards. This runtime is compatible with both Windows and Linux
+     targets, although compatibility may not be identical across
+     platforms.
+
+   * The CPU runtime should work on any platform for which the build
+     environment works.
+
+Software Prerequisites
+
+   * Running Brook applications requires up-to-date drivers for your
+     video card, as well as the latest version of DirectX 9 (if you
+     plan to use the DirectX Brook runtime).
+
+        * Drivers for ATI video cards can be found at:
+          (http://www.ati.com/support/driver.html)
+
+        * Drivers for NVIDIA video cards can be found at:
+          (http://www.nvidia.com/content/drivers/drivers.asp)
+
+     In addition, the environment variable BRT_RUNTIME must be set
+     to indicate which runtime should be used for running applications.
+     Valid settings are:
+
+        * "cpu" to use the CPU runtime
+
+        * "dx9" to use the DirectX 9 runtime
+
+        * "ogl" to use the OpenGL runtime
+
+   * Developing Brook applications requires a built BRCC compiler and
+     Brook runtime static library, as well as the command-line shader
+     compilers cgc and (on Windows) fxc.
+
+        * The required version of cgc is 1.3b2. The Cg Toolkit (including
+          cgc) can be obtained from:
+          (http://developer.nvidia.com/object/cg_toolkit.html)
+
+        * The required version of fxc is that included with the "Summer 2004"
+          update of the DirectX 9 SDK, available at:
+          (http://msdn.microsoft.com/library/default.asp?url=/downloads/list/directx.asp)
+          The fxc compiler is in the Utilties/ directory of the SDK install.
+
+     Both of these tools must be in your PATH environment variable in order
+     to be available to the BRCC compiler. In addition, your build system
+     must have the 'include' directory of the brook distribution in your
+     system include path.
+
+   * In general the BRCC compiler can be invoked on a Brook file foo.br as:
+     
+     brcc foo.br
+     
+     This will generate a file foo.cpp that can then be compiled with your
+     favorite C++ compiler. A few additional options to BRCC that may
+     be useful are:
+
+     -h         print a help message listing command-line options
+     -k         keep generated Cg/HLSL fragment program code (in foo.cg)
+     -y         generate code that assumes 4-output hardware support
+     -o prefix  prepend a prefix to all output file names
+     -p shader  generate code for specified shader architecture
+     -f cgc|fxc favor a particular compiler when both can generate code
+     -a arch    assume a particular GPU when generating code
+
+     The '-p shader' can appear multiple times to specify multiple
+     shader targets (if no -p is used, all targets are generated). Valid
+     shader formats include cpu, ps20, ps2a, ps2b, arb, fp30 and fp40.
+
+     By default BRCC generates arb code by translating ps20 code created
+     by fxc (because fxc generates more compatible code for ATI cards).
+     As an example of using the various flags, to compile foo.br to use
+     ARB fragment program on a GeForce 6800, one would execute:
+
+     brcc -p arb -f cgc -a 6800 foo.br
+
+   * In order to build BRCC and the runtime with Microsoft Visual Studio 7.1
+     you will need:
+
+        * A standard install of Visual Studio 7.1 (7.0 version may work),
+          including the C++ development tools and platform SDK.
+
+        * An installation of the Microsoft DirectX 9 SDK, as detailed above.
+          The installer should automatically add the appropriate headers
+          and libs to Visual Studio's paths.
+
+        * Flex and Bison must be installed (typically as part of a Cygwin
+          installation, as detailed abovie) and must be added to the
+          Visual Studio paths for executable commands.
+
+     Once these prerequisites are met, it should be possible to open brook.sln
+     at the top level of the repository and build both BRCC and the runtime.
+
+   * In order to build BRCC and the Brook runtime on Windows using Cygwin
+     you will need:
+
+        * A standard cygwin install with the following additional packages:
+          - Devel / Make
+          - Devel / Bison
+          - Devel / Flex
+          - Interpreters / Perl
+
+        * The Microsoft command-line compiler cl.exe and linker
+          link.exe available with Visual Studio 7.1, or as a free
+          download. These tools must be in your PATH (available from
+          the command line). The versions from Visual Studio 6.0 or
+          7.0 may work, but are not officially supported.
+
+        * Windows platform headers and libs. These are included with
+          Microsoft Visual Studio, and are also available for free
+          download as the Windows Platform SDK. The appropriate include
+          and lib directories must be in your INCLUDE and LIB
+          environment variables, respectively.
+
+        * The Microsoft DirectX 9 SDK must be installed (details above)
+          and it's Include/ and Lib/ directories must be added to the
+          INCLUDE and LIB environment variables.
+
+     With these tools installed you should be able to build BRCC, the runtime
+     and the applications by executing 'make' at the top level of the Brook
+     distribution.
+
+   * In order to build BRCC and the runtime on other platforms, you will
+     need the standard GNU toolchain including:
+        - g++ and gcc
+        - flex
+        - bison
+        - bin-utils
+        - perl (for our dependency-tracking script)
+
+     With these tools installed the system can be built by executing 'make'
+     at the top level of the Brook distribution.
+
+
+Running the included tests as a companion to the GPU Gems book
+
+   *Run Subdivision Surfaces
+     To run subdivision surfaces execute the commands listed in
+     subdivision/Makefile
+     (which are, for NVIDIA)
+     cd subdivision
+     set BRT_RUNTIME=ogl
+     ../bin/subdivision > data
+     ../bin/subdivision > data.liberal
+     ../bin/subdivision > data.conservative
+     ../bin/subdiv_ati > data.cracks
+     ../bin/modelviewer
+
+     (which are, for ATI)
+     cd subdivision
+     set BRT_RUNTIME=dx9
+     ../bin/subdivision > data
+     ../bin/subdivision > data.liberal
+     ../bin/subdivision > data.conservative
+     ../bin/subdiv_ati > data.cracks
+     ../bin/modelviewer
+     
+     The modelviewer should view the models you have generated
+
+	 -notice when you press 't' you toggle a wireframe showing the triangles
+
+	 -notice that when you press 2 or 3 you get the model generated by the 
+	 simpler code that works on older hardware, but those triangles 
+	 have pixel-sized gaps
+
+	 -The format of data.* is a list of vertices, where 3 vertices make a 
+	 triangle
+
+      The command line arguments for different test sets are as follows
+	  -eps.25  sets the smallest vertex to be rendered to be .25/distance to cam
+	  -cracks  turns off triangle T-junction repair
+	  -onlycracks only render slivers to fill in the T-junctions
+	  -noadaptive does not perform filtering, but merely does the basic loop subdivision
+	  the first argument without a dash indicates the model data to be loaded.
+
+	  The model in question must have a connectivity of no greater than 6 (each vertex
+	  must only be connected to 6 neighbors only)
+
+	  This could be changed by changing the structs in the code, but it would require 
+	  some time. The algorithm itself could handle such a change.
+
+
+   *Run Collision Detect (NVIDIA fp30 only)
+     To run collision detection merely execute ../bin/collide from the
+     rapid_collide directory (so it can find the 3d model to collide)
+     The command line arguments, which are parsed in collide_test.cpp are
+	 a)  -angle  (specifies the angle of the model)
+	 b) the model file to collide against (assumes 2 copies of the same
+	    file in the reading code only, the GPU code assumes 2 different 
+	    models)
+
+
+
+For more information, read the Brook GPU project pages at:
+	
+	http://graphics.stanford.edu/projects/brookgpu/
+
+

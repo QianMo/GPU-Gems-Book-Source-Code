@@ -1,0 +1,125 @@
+/*********************************************************************NVMH3****
+
+Copyright NVIDIA Corporation 2004
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
+*AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL NVIDIA OR ITS SUPPLIERS
+BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES
+WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS,
+BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY OTHER PECUNIARY LOSS)
+ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF NVIDIA HAS
+BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+
+Comments:
+
+******************************************************************************/
+
+#include "pug.cg"
+
+//
+// black-scholes in Cg, code based on examples from
+// http://home.online.no/~espehaug/SayBlackScholes.html
+//
+
+#define PI 3.1415926535f
+
+// The cumulative normal distribution function 
+float CND(float X)
+{
+    float L = abs(X);
+    // set up float4 so that K.x = K, K.y = K^2, K.z = K^3, K.w = K^4
+    // (In Cg, the elements of a float4 are .x, .y, .z, and .w, for various
+    // historical graphics-related reasons.)
+    float4 K;
+    K.x = 1.0 / (1.0 + 0.2316419 * L);
+    K.y = K.x * K.x;
+    K.zw = K.xy * K.yy;
+
+    // compute K, K^2, K^3 and K^4 terms, reordered for efficient
+    // vectorization.  above we precomputed the K powers, here we'll
+    // multiply each one by its corresponding scale and sum up the terms
+    // efficiently with the dot() routine.  
+    //
+    // dot(float4(a,b,c,d), float4(e,f,g,h)) efficiently computes the inner
+    // product a*e + b*f + c*g + d*h, making much better use of the 4-way
+    // vector floating point hardware than a straightforward implementation
+    // would.
+    float w = dot(float4(0.31938153f,  -0.356563782f,
+			 1.781477937f, -1.821255978f), K);
+    // and add in the K^5 term on its own
+    w += 1.330274429f * K.w * K.x;
+    w *= rsqrt(2.f * PI) * exp(-L * L * .5f); // rsqrt() returns 1/sqrt()
+
+    if (X > 0.) 
+	w = 1.0 - w;
+    return w;
+}
+
+float4 CND(float4 X)
+{
+    float4 L = abs(X);
+    float4 K = 1.0 / (1.0 + 0.2316419 * L);
+
+    float4 w = 0.31938153f * K - 0.356563782f * K * K +
+        1.781477937f * K * K * K - 1.821255978f * K * K * K * K +
+        1.330274429f * K * K * K * K * K;
+    w *= rsqrt(2.f * PI) * exp(-L * L * .5f);
+    w = (X > 0.) ? 1.0 - w : w;
+    return w;
+}
+
+
+// S : stock price
+// X : strike price
+// T : years to maturity
+// r : risk-free rate  (e.g. .04)
+// v : volatility      (e.g. .30)
+
+float BlackScholesCall(float S, float X, float T, float r, float v)
+{
+    float d1 = (log(S/X) + (r+v*v*.5f)*T) / (v*sqrt(T));
+    float d2 = d1 - v * sqrt(T);
+    return S * CND(d1) - X * exp(-r*T) * CND(d2);
+}
+
+
+float BlackScholesPut(float S, float X, float T, float r, float v)
+{
+    float d1 = (log(S/X) + (r+v*v*.5f)*T) / (v*sqrt(T));
+    float d2 = d1 - v * sqrt(T);
+    return X * exp(-r * T) * CND(-d2) - S * CND(-d1);
+}
+
+void EuropeanCall(Stream stockPrice,
+                  Stream strikePrice,
+                  Stream yearsToMaturity,
+                  Stream volatility,
+                  uniform float riskFreeRate,
+                  float2 offset : DOMAIN,
+                  out float4 result : RANGE)
+{
+    float val = BlackScholesCall(stockPrice.value(offset),
+				strikePrice.value(offset),
+				yearsToMaturity.value(offset),
+				riskFreeRate,
+				volatility.value(offset));
+    result = float4(val, val, val, val);
+}
+
+void EuropeanPut(Stream stockPrice,
+                 Stream strikePrice,
+                 Stream yearsToMaturity,
+                 Stream volatility,
+                 uniform float riskFreeRate,
+                 float2 offset : DOMAIN,
+                 out float4 result : RANGE)
+{
+    float val = BlackScholesPut(stockPrice.value(offset),
+				strikePrice.value(offset),
+				yearsToMaturity.value(offset),
+				riskFreeRate,
+				volatility.value(offset));
+    result = float4(val, val, val, val);
+}

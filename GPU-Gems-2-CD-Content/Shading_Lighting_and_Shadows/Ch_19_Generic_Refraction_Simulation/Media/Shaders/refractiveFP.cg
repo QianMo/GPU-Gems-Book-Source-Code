@@ -1,0 +1,48 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : RefractiveFP.cg
+//  Desc : Generic refraction fragment program. Simulates glass look (no lighting)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "utilsFp.cg"
+
+half4 main(float2 BaseUV : TEXCOORD0,
+           float4 ScreenPos : TEXCOORD1,
+           float3 Eye : TEXCOORD2,
+           uniform sampler2D tex0,
+           uniform sampler2D tex1,
+           uniform sampler2D tex2,
+           uniform sampler2D tex3) : COLOR
+{
+  half3 vEye = normalize(Eye.xyz);
+ 
+  // Get bump and apply scale, then get diffuse
+  half4 vBumpTex = 2.0 * tex2D(tex1, BaseUV.xy) - 1.0;
+  half3 vBump = normalize(vBumpTex.xyz * half3(0.2, 0.2, 1.0));
+  half4 vDiffuse = tex2D(tex0, BaseUV.xy);
+  
+  // Compute reflection vector
+  half LdotN = dot(vBump.xyz, vEye.xyz);
+  half3 vReflect = 2.0 * LdotN * vBump.xyz - vEye;
+  
+  // Reflection vector coordinates used for env. mapping
+  half4 vEnvMap = tex2D(tex3, (vReflect.xy + 1.0) * 0.5);
+  
+  // Compute projected coordinates and add perturbation
+  half2 vProj = (ScreenPos.xy/ScreenPos.w);
+  half4 vRefrA = tex2D(tex2, vProj.xy + vBump.xy);
+  half4 vRefrB = tex2D(tex2, vProj.xy);
+
+  // Mask occluders from refraction map
+  half4 vFinal = vRefrB * vRefrA.w + vRefrA * (1 - vRefrA.w);
+  
+  // Compute Fresnel term
+  half fresnel = Fresnel(LdotN, 0.4, 5.0);
+  
+  // Lerp between 1 and diffuse for glass transparency
+  vDiffuse.xyz = saturate(.1 + vDiffuse.xyz * 0.9);
+  
+  // Final output is blend between reflection and
+  // refraction using Fresnel term
+  return vDiffuse * vFinal * (1 - fresnel) + vEnvMap * fresnel;  
+}

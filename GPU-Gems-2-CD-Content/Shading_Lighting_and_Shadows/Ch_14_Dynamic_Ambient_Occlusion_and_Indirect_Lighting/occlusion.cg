@@ -1,0 +1,69 @@
+
+uniform float passNumber;
+
+float SolidAngle(float3 v, float d2, float3 receiverNormal,
+    float3 emitterNormal, float emitterArea)
+{
+    return (1 - rsqrt(emitterArea/d2 + 1)) *
+        saturate(dot(emitterNormal, v)) * saturate(3*dot(receiverNormal, v));
+}
+
+float FormFactor(float3 v, float d2, float3 receiverNormal,
+    float3 emitterNormal, float emitterArea)
+{
+	return emitterArea * saturate(dot(emitterNormal, v)) *
+        saturate(dot(receiverNormal, v)) / (d2 + emitterArea);
+}
+
+float4 main(float4 position : WPOS,
+            float4 normOffset : TEX1,
+            uniform samplerRECT lastResultMap : TEXUNIT0,
+            uniform samplerRECT elementPositionMap : TEXUNIT1,
+            uniform samplerRECT elementNormalMap : TEXUNIT2,
+            uniform samplerRECT indexMap : TEXUNIT3) : COL
+{
+	float emitterArea;
+	float emitterArea2;
+	float4 emitterPosition;
+	float4 emitterNormal;
+	float2 receiverIndex = position.xy;
+	float3 receiverPosition = texRECT(elementPositionMap, receiverIndex).xyz;
+	float3 receiverNormal = texRECT(elementNormalMap, receiverIndex.xy).xyz;
+	float3 v;
+    float total = 0;
+    float4 emitterIndex = 0.5;
+    float3 bentNormal = receiverNormal;
+    float value;
+    float d2;
+    float result;
+
+    while (emitterIndex.x != 0)
+    while (emitterIndex.x != 0) { // while not finished traversal
+        emitterPosition = texRECT(elementPositionMap, emitterIndex.xy);
+        emitterNormal = texRECT(elementNormalMap, emitterIndex.xy);
+        emitterArea = emitterNormal.w;
+        emitterIndex = texRECT(indexMap, emitterIndex.xy);  // go to next element
+        v = emitterPosition.xyz - receiverPosition;  // calc receiver to emitter vector
+        d2 = dot(v, v) + 1e-16; // calc distance squared to emitter - make sure it's not 0
+        if (d2 < -emitterArea*4) {  // parents have negative area
+            emitterIndex.xy = emitterIndex.zw;  // use alternate index (go down hierarchy)
+            emitterArea = 0;      // ignore this element
+        }
+        v *= rsqrt(d2);         // normalize v
+        value = SolidAngle(v, d2, receiverNormal, emitterNormal.xyz, abs(emitterArea));
+        if (PASS == 2)
+             value *= texRECT(lastResultMap, emitterIndex.xy).w; // modulate by last pass result
+      
+        bentNormal -= value*v;  // subtract vector from bent normal
+        total += value;
+    }
+    if (PASS == 1)  // only need bent normal for last pass
+        result = saturate(1 - total);   // return accessibility only
+    else
+        result = saturate(1 - total) * 0.6 + texRECT(lastResultMap, receiverIndex.xy).x * 0.4;
+        
+    return result;
+    
+    // use this return for the last pass if using bent normal
+    // return (result*normalize(bentNormal)).xyzx;  // return bent normal
+} // main

@@ -1,0 +1,17 @@
+built/oglkernel.obj: ./nvcontext.hpp
+built/oglkernel.obj: ../../../include/brook/vc6vector.hpp
+built/oglkernel.obj: ./oglcheckgl.hpp
+built/oglkernel.obj: ../../../include/brook/type_promotion.hpp
+built/oglkernel.obj: ../../../include/brook/kerneldesc.hpp
+built/oglkernel.obj: ./../gpucontext.hpp
+built/oglkernel.obj: ./oglfunc.hpp
+built/oglkernel.obj: ./../../runtime.hpp
+built/oglkernel.obj: ./../../logger.hpp
+built/oglkernel.obj: oglkernel.cpp
+built/oglkernel.obj: ./../../profiler.hpp
+built/oglkernel.obj: ./../gpubase.hpp
+built/oglkernel.obj: ../../../include/brook/brt.hpp
+built/oglkernel.obj: ../../../include/brook/brtvector.hpp
+built/oglkernel.obj: ./ogltexture.hpp
+built/oglkernel.obj: ./oglcontext.hpp
+built/oglkernel.obj: ./oglwindow.hpp

@@ -1,0 +1,25 @@
+static const int hand_width = 20;
+static const int hand_height = 20;
+static const int hand_hotx = 10;
+static const int hand_hoty = 10;
+static unsigned char hand_data[] =
+"                    "
+"                    "
+"         XX         "
+"     XX XOOXXX      "
+"    XOOXXOOXOOX     "
+"    XOOXXOOXOOX X   "
+"     XOOXOOXOOXXOX  "
+"     XOOXOOXOOXOOX  "
+"   XX XOOOOOOOXOOX  "
+"  XOOXXOOOOOOOOOOX  "
+"  XOOOXOOOOOOOOOX   "
+"   XOOOOOOOOOOOOX   "
+"    XOOOOOOOOOOOX   "
+"    XOOOOOOOOOOX    "
+"     XOOOOOOOOOX    "
+"      XOOOOOOOX     "
+"       XOOOOOOX     "
+"       XOOOOOOX     "        
+"        XXXXXX      "            
+"                    ";

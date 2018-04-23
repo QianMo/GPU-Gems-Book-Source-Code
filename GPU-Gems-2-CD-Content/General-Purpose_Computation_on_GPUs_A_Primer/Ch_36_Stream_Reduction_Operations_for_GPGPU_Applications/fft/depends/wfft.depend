@@ -1,0 +1,9 @@
+built/wfft.obj: ../include/brook/brook.hpp
+built/wfft.obj: ../include/brook/type_promotion.hpp
+built/wfft.obj: wfft.cpp
+built/wfft.obj: ../include/brook/brt.hpp
+built/wfft.obj: ../include/brook/kerneldesc.hpp
+built/wfft.obj: ../include/brook/brtvector.hpp
+built/wfft.obj: ../include/brook/brtintrinsic.hpp
+built/wfft.obj: ../include/brook/vc6vector.hpp
+built/wfft.obj: ../include/brook/brtarray.hpp

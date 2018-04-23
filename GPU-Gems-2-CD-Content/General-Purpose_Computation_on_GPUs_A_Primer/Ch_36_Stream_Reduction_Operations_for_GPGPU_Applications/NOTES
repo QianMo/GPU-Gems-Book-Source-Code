@@ -1,0 +1,109 @@
+			    Brook GPU Release Notes
+
+Known Issues In Filtering Applications
+   * rapid_collide only works on nVidia hardware on the FX and 6xxx series nVIDIA chipsets
+       -fp40 code generates invalid results for the collision, and fp30 fallback must be used
+
+   * subdivision only works Radeon x800
+
+   * subdivision_ati works on all supported platforms but leaves small gaps between polygons
+       - This can be observed by running the modelviewer and pressing 2 or 3 to view the data.cracks
+
+
+
+Known Issues In BRCC
+
+   * There is very little type checking on stream arguments-- especially in
+     terms of length or dimensionality.  Passing a stream that's too small
+     to streamRead() or streamWrite() can cause all sorts of misbehaviors.
+
+   * Handling of floatN (float2, float3, float4) constructors is very
+     fragile.  They're only legal in three places: variable declaration
+     initializers, iterator stream constructors, and as bare statements.
+
+   * The preprocessor is not run on .br files, though it is run on the
+     resulting C++ output.  This can make it hard to use #defines and macros
+     in conjunction with kernels or stream constructs.
+   
+   * GatherOps and ScatterOps require the CPU runtime and programs using
+     them must compile for at least the CPU target.
+
+   * In addition to the above problem with GatherOp/ScatterOp, any program
+     that uses reductions will generate some boilerplate CPU code. This code
+     will fail to compile unless the CPU compile target is enabled.
+     
+Known Issues in the Runtimes
+
+   * In general, error conditions result in undefined behaviors and
+     incorrect results, not necessarily crashes or reported errors.
+   
+   * OpenGL runtime performance is sub-optimal, because of issues with
+     allocating and switching pbuffers. Of particular note:
+
+        * Switching from one output stream type to another may degrade
+          performance. For best results all output streams should be of
+          a single type.
+
+        * Switching the number of outputs being written may degrade
+          performance on hardware that is capable of multiple outputs
+          per pass.
+
+     Once a stable spec and implementation of the frame_buffer_object
+     OpenGL extension becomes available, some of these issues may be
+     resolved.
+
+   * The Linux OpenGL runtime is even slower and more constrained than
+     the Windows OpenGL runtime.
+
+        * Driver bugs keep us from reallocating pbuffers at runtime,
+          so only a single pbuffer is allocated at application startup.
+
+        * As a result, maximum stream size is limited to 2048x1024.
+
+        * Attempting to run a multiple-output shader will fail.
+
+        * All GPU kernels will be compiled with cgc. The cgc compiler
+          may fail to generate code, or produce incorrect code for
+          some shaders for which the Windows-only fxc compiler
+          succeeds.
+
+   * When writing to multiple outputs on a GPU runtime, incorrect results
+     may be generated unless all outputs are of the same type.
+
+   * The dx9 runtime cannot allocate streams that are longer than 2048 in
+     any dimension.
+
+   * The CPU runtime only supports a subset of the builtin Cg / HLSL
+     functions.
+
+   * The domain functionality is not fully orthogonal:
+
+        * indexof values for stream domains are incorrect on the GPU
+
+        * The domain operator cannot be applied to iterators
+
+   * The reduction functionality is not fully orthogonal:
+    
+        * Reductions of domain() streams are not implemented
+
+        * Reductions of streams of structure type are not implemented
+
+        * Reductions of streams using address translation unimplemented
+
+   * The constant argument functionality is not fully orthogonal
+
+        * Constant arguments of structure type are unsupported
+
+        * Constant arguments of array types are unsupported
+
+   * Note that some Brook application errors may be the result of video
+     card driver bugs.  Please refer to the GPGPU.org forums or the
+     Brook project pages at (http://graphics.stanford.edu/projects/brookgpu)
+     for up to date information regarding any known driver issues.
+
+
+Revision History
+
+12/16/03:  Initial Beta Release
+
+12/19/03:  Added Linux/BRCC fixes/Makefile improvements/nv30gl bug fixes

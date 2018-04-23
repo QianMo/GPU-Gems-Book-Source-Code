@@ -1,0 +1,10 @@
+VOL
+rawfile dragon128f.raw
+type GL_FLOAT
+shift 0.085
+scale 9.0
+volres 128 128 128
+voldim 1.2 0.845973 0.53661
+isovalue 0.8
+reflectance 0.5
+inverse 1

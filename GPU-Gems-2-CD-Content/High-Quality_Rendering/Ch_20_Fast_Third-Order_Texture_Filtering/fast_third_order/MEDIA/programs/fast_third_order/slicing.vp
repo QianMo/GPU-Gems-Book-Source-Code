@@ -1,0 +1,39 @@
+!!ARBvp1.0
+
+# ipos: cube slices in [0,1]^3
+# env1: vp_bias {1-1/volres, 0.5/volres, ?, ?}
+
+# ******* attributes *********
+
+ATTRIB ipos     = vertex.position; 
+
+# ******* parameters *********
+
+PARAM mvp_mat[]  = { state.matrix.mvp };
+PARAM vp_bias    = program.env[1];
+
+# ******** temporaries *********
+
+TEMP temp;
+
+# ******* outputs *********
+
+OUTPUT opos = result.position;
+OUTPUT otc0 = result.texcoord[0];
+
+# ******** program *********
+
+# scale to edge
+MAD temp.xyz, ipos, vp_bias.x, vp_bias.y;
+MOV temp.w, ipos.w;
+
+# write texture coordinate (in [0, 1]^3)
+MOV otc0.xyz, temp;
+
+# transform vertex position
+DP4 opos.x, mvp_mat[0], temp;
+DP4 opos.y, mvp_mat[1], temp;
+DP4 opos.z, mvp_mat[2], temp;
+DP4 opos.w, mvp_mat[3], temp;
+
+END

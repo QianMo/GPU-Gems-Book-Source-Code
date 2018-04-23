@@ -1,0 +1,3 @@
+# animation file for dmapdemo
+keyframes bigguy_%02d.obj 58
+add ground.obj

@@ -1,0 +1,477 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>High-Quality Antialiased Rasterization Source Code</title>
+  </head>
+
+  <body>
+    <body text="#000000" bgcolor=#ffffff marginwidth=72 leftmargin=72 rightmargin=72>
+
+      <br>
+      <h1>High-Quality Antialiased Rasterization Source Code</h1>
+      <hr size=1 noshade>
+      </h1>
+
+      <blockquote>
+        <a href=#introduction>Introduction</a><br>
+        <a href=#controlloop>Top-level Control Loop</a><br>
+        <a href=#downsample>Downsample and Accumulate</a><br>
+        <a href=#Extensions>Extensions</a><br>
+        <a href=#gpulib>Gpu Library</a><br>
+        <a href=#utillib>Utility Library</a><br>
+      </blockquote>
+
+      <a name="introduction">&nbsp;</a>
+      <br><br>
+      <h3>Introduction</h3>
+
+      <p>This source code implements the concepts discussed in Chapter
+      21 of <i>GPU Gems II</i>.  The code is a slightly modified
+      version of the actual source code used in <b>NVIDIA Gelato</b>,
+      a film-quality renderer.  More information on Gelato can be
+      found at the <a href="http://film.nvidia.com">NVIDIA Film Group</a>
+      website.</p>
+
+      <p>The concepts are implemented in a command-line (console)
+      program which can render Gelato <i>grid dump</i> files, a number
+      of which are included as examples.  The code works under both
+      Windows XP and Linux.  The program can render directly to an
+      onscreen window, or to a PPM file.  Each image is rendered as an
+      array of tiles with an arbitrary super-sample resolution which
+      are downsampled to the final resolution using an arbitrarily
+      large filter kernel.  The code is structured such that it should
+      be relatively easy to replace the gridfile rendering with your
+      own rendering code.</p>
+
+      <p>To compile the code under Windows XP using Visual Studio .NET:</p>
+
+      <blockquote>
+        <ol>
+          <li>Open the solution file <code>hqaa/hqaa.vcproj</code></li>
+          <li>Build and run the example with <code>Debug -> Start</code>
+        </ol>
+      </blockquote>
+
+      <p>The code will be compiled and the killeroo example scene
+      (courtesy Headus) will be rendered to an onscreen window.  You
+      can also compile the Debug solution if you want to enable a host
+      of debugging code in the Gpu library.  This slows down rendering
+      significantly.  Note that the debug mode automatically defines
+      the pre-processing directive <code>DEBUG</code> which is used
+      within the code to enable extra checks and assertions (see
+      <code>dassert.h</code>).</p>
+
+      <p>To compile the code under Linux:</p>
+
+      <blockquote>
+        <ol>
+          <li><code>% cd top-level-directory</code></li>
+          <li><code>% make</code></li>
+        </ol>
+      </blockquote>
+
+      <p>To remove all build objects and executables, use <code>"make
+      clean"</code>.  To compile the code with lots of slow debugging
+      checks enabled, use "<code>make DEBUG=1</code>".</p>
+
+      <p>The <code>scenes</code> directory contains a number of
+      example scenes that can be rendered with the test program,
+      including:</p>
+
+      <ul>
+        <li><i>grids.pyg</i> simplified killeroo (courtesy Headus) model</li>
+        <li><i>aatest.pyg</i> useful for testing standard aliasing
+        issues</li>
+      </ul>
+      
+      <p>Additional utilities are provided to help create new scenes
+      using gelato, which is a <a
+      href="http://film.nvidia.com/page/gelato_download.html">free
+      download</a>.  To create new scenes, you can use Maya and
+      gelato's <i>Mango</i> plugin to create PYG or RIB files which
+      can then be converted to gridfiles for use in hqaa.</p>
+
+      <ul>
+          <li><i>rendergrids.pyg</i> is a gelato scene file that can be
+	  used to render a grid dump file in gelato.
+          Use by changing the Input() file and rendering
+          with:<br>&nbsp;&nbsp;&nbsp;&nbsp;<code>%&nbsp;gelato&nbsp;onetile.pyg&nbsp;-iv</code></li><br>
+
+          <li><i>griddump.pyg</i> is a gelato scene file that can be
+          included to generate griddump pyg files for use in hqaa.
+          Make sure to put griddump.pyg as the first scene file on the
+          gelato command line.</li>
+
+       </ul>
+
+      <a name="controlloop">&nbsp;</a>
+      <br><br>
+      <h3>Top-level Control Loop</h3>
+
+      <p>The code in <code>hqaa.cpp</code> contains command-line
+      argument processing and the top-level control loop.  It relies
+      on two application classes in <code>downsample.cpp</code> and
+      <code>accumulate.cpp</code> which perform the 2D downsample and
+      accumulation directly on the GPU.  All of these files rely on
+      various utilities in the <a href=#utillib>utility library</a>
+      and the <a href=#gpulib>gpu library</a> which is a high-level
+      C++ wrapper around common OpenGL functions along with nice state
+      management and debugging features.</p>
+
+      <p>The top level control loop handles the argument processing
+      using the utility library's ArgParse class.  You can set any of
+      the input parameters and choose the name of the output file.
+      Here is the usage message:</p>
+      
+<pre>
+       scenefile          Input scene file
+       -camera x y z      Camera location
+       -lookat x y z      Camera direction
+       -fov angle         Camera field of view
+       -nearfar near far  Camera clipping planes
+       -resolution x y    Image resolution in pixels
+       -bucketsize x y    Bucket size in pixels
+       -supersample x y   Super-sample resolution
+       -filter name x y   Filter name and radii in pixels
+       -bitdepth b        32, 16, or 8 bits per channel
+       -o filename        Output image filename
+</pre>
+
+      <p>If you don't specify an output filename, the image is
+      rendered directly to an onscreen window.</p>
+
+      <p>Pseudo-code for the main loop:</p>
+      <blockquote>
+<pre>
+construct camera matrices and initialize tile drawing surface
+for each tile row:
+  for each tile column:
+    compute the offset matrix for this tile's view
+    render the entire scene into super-sampled tile buffer
+    downsample the super-sampled tile to final resolution
+    accumulate the final-resolution tile into the output buffer
+</pre>
+        </blockquote>
+
+      <p>Note that when setting up the camera to tile matrix, the
+      flipy option is used to display images in onscreen windows
+      flipped with respect to the compute order used when outputting
+      scanlines to a file.</p>
+
+      <p>The following variables are used below:</p>
+
+      <blockquote>
+        <table cellpadding=5 border=1>
+            <tr>
+              <td><code>tx, ty</code></td>
+              <td>Tile Size in final image pixels</td>
+            </tr>
+            <tr>
+              <td><code>ssx, ssy</code></td>
+              <td>Supersamples per final pixel</td>
+            </tr>
+            <tr>
+              <td><code>fx, fy</code></td>
+              <td>Filter radius in final image pixels</td>
+            </tr>
+        </table>
+      </blockquote>
+
+      <p>During computation, the application allocates the following
+      rendering surfaces:</p>
+
+      <blockquote>
+        <table cellpadding=5 border=1>
+            <tr>
+              <td><code>tx*ssx, ty*ssy</code></td>
+              <td>Tile rendering buffer</td>
+            </tr>
+            <tr>
+              <td><code>tx+2*fx, ssy*(ty+2*fx)</code></td>
+              <td>Downsample intermediate buffer</td>
+            </tr>
+            <tr>
+              <td><code>resx, resy</code></td>
+              <td>Accumulate (when rendering to window)</td>
+            </tr>
+            <tr>
+              <td><code>resx, ty+2*fx</code></td>
+              <td>Accumulate (when rendering to a file)</td>
+            </tr>
+        </table>
+      </blockquote>
+
+      <p>These limits must fall below the GPU-imposed limits, or
+      buffer allocation will fail.  When outputting to a file, the
+      image is computed one tile strip at a time to reduce memory
+      requirements.  </p>
+
+      <a name="downsample">&nbsp;</a>
+      <br><br>
+      <h3>Downsample and Accumulate</h3>
+
+      <p>The <code>GpuDownsample</code> class handles the downsampling
+      and filtering of the tile rendered at super-sample resolution
+      returning a texture that contains a high-quality version of the
+      final tile padded by the filter radius.  The work is performed
+      using an intermediate pbuffer to render the two separable
+      filtering passes.  The final result is left on the GPU in the
+      form of a usable texture.</p>
+
+      <blockquote>
+        <table cellpadding=5 border=1>
+            <tr>
+              <td><code>GpuDownsample</code></td>
+              <td>Constructor, no required arguments</td>
+            </tr>
+            <tr>
+              <td><code>~GpuDownsample</code></td>
+              <td>Destructor, frees any allocated resources</td>
+            </tr>
+            <tr>
+              <td><code>GpuDownsample::tile </code></td>
+              <td>Downsamples a tile stored in the passed-in texture
+              with the specified dimensions and filter and returns the
+              result in a GpuTexture reference.</td>
+            </tr>
+        </table>
+      </blockquote>
+
+      <p>The <code>GpuAccumulate</code> class handles the accumulation
+      of the final downsampled and filtered tiles into the final image
+      buffer.  It can work in two different modes: whole image or tile
+      strips.  The accumulate class is started either once for the
+      entire image using <code>begin_image()</code> or once for each
+      strip of tiles using <code>begin_strip()</code>.  Strips are
+      assumed to be computed from the origin to the top of the
+      image.</p>
+
+      <blockquote>
+        <table cellpadding=5 border=1>
+            <tr>
+              <td><code>GpuAccumulate</code></td>
+              <td>Constructor, no required arguments</td>
+            </tr>
+            <tr>
+              <td><code>~GpuAccumulate</code></td>
+              <td>Destructor, frees any allocated resources</td>
+            </tr>
+            <tr>
+              <td><code>GpuAccumulate::begin_strip</code></td>
+              <td>Call when computing the image in strips before
+              beginning a new strip of tiles.  Note that it is assumed
+              that strips are computed starting at the origin and
+              moving up to the height of the image.</td>
+            </tr>
+            <tr>
+              <td><code>GpuAccumulate::begin_image</code></td>
+              <td>Call when compute the image with a single
+              accumulation buffer or rendering directly to a window.
+              Since this allocates a larger buffer than when rendering
+              in strips, this rendering mode may not work with large
+              resolutions.</td>
+            </tr>
+            <tr>
+              <td><code>GpuAccumulate::tile</code></td>
+              <td>Pass in a downsampled, padded tile for accumulation</td>
+            </tr>
+            <tr>
+              <td><code>GpuAccumulate::end</code></td>
+              <td>Call after rendering a tile strip or the entire
+              image to retrieve the accumulated texture buffer. When
+              rendering to a window, this will also enable a simple
+              event loop to repaint the window and wait for the Escape
+              key.</td>
+            </tr>
+        </table>
+      </blockquote>
+
+      <a name="Extensions">&nbsp;</a>
+      <br><br>
+      <h3>Extensions</h3>
+
+      <p>This code can be easily extended or optimized.  Here are a
+      few ideas:</p>
+
+      <ul>
+        <li><i>Arbitrarily wide images</i>.  Extend the
+        <code>GpuAccumulate</code> class to handle non-zero x origins
+        and use a list of GpuAccumulate objects to tile strips wider
+        than the maximum pbuffer width.</li><br>
+
+        <li><i>Transparency</i>.  Implement transparent surface
+        support by adding either a sorting pass followed by
+        back-to-front rendering, or by using depth peeling.</li><br>
+
+        <li><i>Bucketed geometry</i>.  Instead of rendering the entire
+        list of <code>GpuPrimitive</code> objects for each tile,
+        restrict rendering to only those primitives whose bounding box
+        intersects the active tile.</li><br>
+
+        <li><i>Render to texture</i>.  Under Windows, the render-to-texture
+	functions can be used to skip copying framebuffers
+        into texture in both the <code>Downsample</code> and
+        <code>Accumulate</code> classes.  See the code blocks in the
+        <code>Gpu</code> library that are bracked by <code>#ifdef
+        RTT</code> for some helpful routines.</li><br>
+
+        <li><i>Multithreading</i>.  Render tiles in separate threads.
+        Start by making the Gpu library threadsafe, and then extend
+        the tiled rendering loop to render each tile in a separate
+        thread.</li><br>
+
+        <li><i>glDrawElements and Vertex Buffer Objects</i>.  Extend
+        the Gpu library to render quadmeshes with a single
+        glDrawElements call using the VBO extension for additional
+        performance when re-rendering meshes for each tile.</li><br>
+
+        <li><i>Skip empty buckets</i>.  There is no need to downsample
+        empty buckets, or with a 1x1 box filter.</li><br>
+
+        <li><i>Extend to non-NVIDIA GPUs</i>.  The current code only
+        works on NV30-class hardware due to the use of NVIDIA-specific
+        vertex and fragment program code and certain extensions
+        including occlusion query and texture rectangles.  Switch this
+        platform- dependent code over to OpenGL ARB
+        extensions.</li><br>
+
+      </ul>
+
+      <a name="gpulib">&nbsp;</a>
+      <br><br>
+      <h3>Gpu Library</h3>
+
+      <p>The Gpu library is a C++ wrapper around high-level OpenGL
+      graphics functions.  It is designed to make it easy to create
+      on- or off-screen buffers for doing computational work with the
+      GPU.  It provides a stateful environment that is designed to
+      facilitate debugging complex GPGPU applications.  It works under
+      both Windows and Linux to provide a platform-independent GPU
+      API.</p>
+
+      <p>Texture objects make it easy to define and use textures from
+      CPU-side data and directly from framebuffers.  Since
+      render-to-texture is not supported under Linux currently, the
+      Gpu library only supports copy-fb-to-texture.  All textures are
+      treated as single-level, rectangular textures with no support
+      for mip-mapping.</p>
+
+      <p>For more details, please see the <code>gpu.h</code> header file.</p>
+
+      <p>Simplest way to draw a 2D rectangle:</p>
+<pre>
+    GpuPBuffer pbuffer (256, 256);
+    GpuCanvas canvas (pbuffer);
+    GpuDrawmode drawmode ();
+    GpuPrimitive rect (xmin, xmax, ymin, ymax);
+    rect.render (drawmode, canvas);
+</pre>
+    
+      <p>Create a 2x2 texture and bind it to texture unit 0:</p>
+<pre>
+    GpuTexture texture ("my texture");
+    Vector3 color[4] = {{1,0,0}, {0,1,0}, {0,0,1}, {1,1,1}};
+    texture.load (&color, 2, 2);
+    drawmode.texture (0, &texture);
+</pre>
+    
+      <p>Make the drawmode 3D drawing mode and create and draw a quadmesh:</p>
+<pre>
+    Matrix4 c2s = Matrix4::PerspectiveMatrix (45, 1, 0.01, 10000);
+    drawmode.view (&c2s, 256, 256);
+    Vector3 P[4] = {{0,0,0}, {1,0,0}, {1,1,0}, {0,1,0}};
+    GpuQuadmesh quadmesh (2, 2, P)
+    Vector3 texcoord[4] = {{1,0,0}, {0,1,0}, {0,0,1}, {1,1,1}};
+    quadmesh.texcoord (0, texcoord);
+    quadmesh.render (drawmode, canvas);
+</pre>
+
+      <p>Creating and using a fragment program with a constant parameter:</p>
+<pre>
+    const char *fp10 = "!!FP1.0\nMOVR o[COLR], p[0];\nEND\n";
+    GpuFragmentProgram fp ("red", fp10);
+    fp.parameter (0, Vector4(1,0,0,0));
+    drawmode.fragment_program (&fp);
+</pre>
+    
+      <p>An example of how to do an occlusion query with multiple draw
+      statements:</p>
+<pre>
+    GpuOcclusionQuery oq ("depth peel");
+    canvas.begin_occlusion_query (oq);
+    quadmesh.render (drawmode, canvas);
+    ...
+    quadmesh.render (drawmode, canvas);
+    canvas.end_occlusion_query (oq);
+    ... < do something to hide latency > ...
+    printf ("occlusion query had %d visible fragments\n", oq.count());
+</pre>
+  
+      <p>An example of how copy-from-fb-to-texture works:</p>
+<pre>
+    GpuTexture fromfb ("rendered texture");
+    fromfb.load (canvas, 0, 0, 256, 256);
+    drawmode.texture (0, &fromfb);
+</pre>
+
+      <a name="utillib">&nbsp;</a>
+      <br><br>
+      <h3>Utility Library</h3>
+
+      <p>The utility library contains a number of useful classes:</p>
+
+      <blockquote>
+        <table cellpadding=5 border=1>
+            <tr>
+              <td><code>vecmat.h</code></td>
+              <td>a basic set of 3- and 4-tuple vector and 4x4 matrix,
+              and 3D bounding box CPU functions.  The structures in
+              the library are guaranteed to be the same as an array of
+              floats.  Basic vector and matrix operations are
+              overloaded and a handful of useful utility functions are
+              provided.</td>
+            </tr>
+            <tr>
+              <td><code>color.h</code></td>
+              <td>Common color space operations similar to the
+              <code>Vector3</code> class.</td>
+            </tr>
+            <tr>
+              <td><code>filter.h</code></td>
+              <td>A set of common 2D filters including box, triangle,
+              gaussian, catmull-rom, blackman-harris, sinc, mitchell,
+              disk</td>
+            </tr>
+            <tr>
+              <td><code>peakcounter.h</code></td>
+              <td>A simple class to help track resource usage</td>
+            </tr>
+            <tr>
+              <td><code>argparse.h</code></td>
+              <td>Parses standard command line arguments using strings
+              similar to printf.  Based on Paul Heckbert's command line
+              parsing utilities.</td>
+            </tr>
+            <tr>
+              <td><code>ppm.h</code></td>
+              <td>A basic implementation of PPM image file output.</td>
+            </tr>
+            <tr>
+              <td><code>dassert.h</code></td>
+              <td>Simple assert-like wrapper that can be used in
+              either release or debug builds</td>
+            </tr>
+            <tr>
+              <td><code>gelendian.h</code></td>
+              <td>Utilities for handling endian-ness</td>
+            </tr>
+        </table>
+      </blockquote>
+
+    <hr>
+<!-- Created: Sun Dec 26 11:53:05 Pacific Standard Time 2004 -->
+<!-- hhmts start -->
+Last modified: Tue Dec 28 09:14:24 Pacific Standard Time 2004
+<!-- hhmts end -->
+  </body>
+</html>

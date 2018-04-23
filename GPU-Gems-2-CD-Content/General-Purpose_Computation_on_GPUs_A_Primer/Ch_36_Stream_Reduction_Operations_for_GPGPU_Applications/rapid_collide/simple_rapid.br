@@ -1,0 +1,647 @@
+//all matrices stored in row major order
+//[Rotationx.x Rotationx.y Rotationx.z] [Vec.x]
+//[Rotationy.x Rotationy.y Rotationy.z] [Vec.y]
+//[Rotationz.x Rotationz.y Rotationz.z] [Vec.z]
+// Rotation * Vec is
+// float3 (dot(Rotationx,Vec),dot(Rotationy,Vec),dot(Rotationz,Vec));
+typedef struct traverser_t {
+  float4 index;//.xy is index into the aTree  .zw is index into bTree
+  float3 Translation; 
+  float3 Rotationx;
+  float3 Rotationy;
+}Traverser;
+
+typedef struct transposedbbox_t{
+  float3 transp_rotx;
+  float3 transp_roty;
+  // float3 mRotationz  // since Rotationx and Rotationy are orthogonal
+  /// cross(Rotationx,Rotationy);
+  float3 Translation;
+  float4 Radius; // if it's a leaf Radius.w is 1 else Radius.w = 0
+
+  // if leaf, the Children.xy is an index to the Triangle
+  // if node, the Children.xy is an index to left child
+  // assert right.xy is always left + {1,0} this may require gaps in the tree
+  float2 Children;  
+}TransposedBBox;
+
+
+typedef struct bbox_t{
+  float3 Rotationx;
+  float3 Rotationy;
+  // float3 mRotationz  // since Rotationx and Rotationy are orthogonal
+  /// cross(Rotationx,Rotationy);
+  float3 Translation;
+  float4 Radius;// if it's a leaf Radius.w is 1 else Radius.w = 0
+
+  // if leaf, the Children.xy is an index to the Triangle
+  // if node, the Children.xy is an index to left child
+  // assert right.xy is always left + {1,0} this may require gaps in the tree
+  float2 Children;  
+}BBox;
+
+
+typedef struct tri_t {
+  float3 A;
+  float3 B;
+  float3 C;
+} Tri;
+
+kernel float modTwo(float who) {
+  float tmp = fmod(who,2.0);
+  return (tmp>.5&&tmp<1.5)?1.0:0.0;
+}
+kernel void getMatrixTranspose(float3 rX<>, float3 rY<>, float3 rZ <>,
+                               out float3 oX<>, out float3 oY<>, out float3 oZ<>) {
+   oX=float3(rX.x,
+             rY.x,
+             rZ.x);
+   oY=float3(rX.y,
+             rY.y,
+             rZ.y);
+   oZ=float3(rX.z,
+             rY.z,
+             rZ.z);
+}
+kernel void matMult(float3 aX<>, float3 aY<>, float3 aZ<>,
+                    float3 bX<>, float3 bY<>, float3 bZ<>,
+                    out float3 oX<>, out float3 oY<>) {
+  float3 t_bX,t_bY,t_bZ;
+  getMatrixTranspose(bX,bY,bZ,t_bX,t_bY,t_bZ);
+  oX = float3(dot(aX,t_bX), dot(aX,t_bY), dot(aX,t_bZ));
+  oY = float3(dot(aY,t_bX), dot(aY,t_bY), dot(aY,t_bZ));
+}
+kernel float3 matVecMult(float3 aX<>, float3 aY<>, float3 aZ<>,
+                         float3 v<>) {
+  float3 temp;
+  return temp=float3(dot(v,aX),
+                     dot(v,aY),
+                     dot(v,aZ));
+}
+
+kernel void ISECT(float3 VV<>, float3 D, out float2 isect<>) {
+  isect =float2(VV.x + (VV.y-VV.x)*D.x/(D.x-D.y),
+                VV.x + (VV.z-VV.x)*D.x/(D.x-D.z));
+}
+kernel float COMPUTE_INTERVALS (float3 VV<>,
+                                float3 D<>,
+                                float DOD1<>, float DOD2<>,
+                                out float2 isect<>) {
+  float pred;
+  float3 VVord = VV.zxy;
+  float3 Dord = D.zxy;
+  float ret = DOD1>0.0f?0:1.0f;
+  pred = (float)(ret&&DOD2>0.0f);
+  VVord = pred.xxx?VV.yxz:VVord; Dord = pred.xxx?D.yxz:Dord;
+  ret=pred?0:ret;
+  
+  pred=(float) (ret&&(D.y * D.z > 0.0f || D.x != 0.0f));
+  //  VVord = pred.xxx?VV.xyz:VVord.xyz; Dord=  pred.xxx?D.xyz:Dord.xyz;
+
+  VVord = pred?VV:VVord; 
+
+  Dord=  pred?D:Dord;
+
+  ret=pred?0:ret;
+  
+  pred= (float)(ret&&D.y!=0.0f);
+  VVord = pred.xxx?VV.yxz:VVord; Dord = pred.xxx?D.yxz:Dord;
+  ret=pred?0:ret;
+  
+  pred=  (float)(ret&&D.z!=0.0f);
+  VVord = pred.xxx?VV.zxy:VVord; Dord = pred.xxx?D.zxy:Dord;
+  ret=pred?0:ret;
+  ISECT(VVord,Dord,isect);
+  return ret;
+}
+kernel float2 sort2(float2 input) {
+  return (input.x>input.y)?input.yx:input;
+}
+kernel float coplanar_tri_tri(float3 N<>,
+                              float3 V0<>,float3 V1<>,float3 V2<>,
+                              float3 U0<>,float3 U1<>,float3 U2<>) {
+  
+  return 0;
+}
+
+/* TIM: this code is broken. kernels are only
+legally allowed to have void return type
+kernel float3 make_float3 (float a, float b, float c) {
+  float3 temp={a,b,c};
+  return temp;
+}
+*/
+
+
+kernel float min3(float a<>, float b<>, float c<>) {
+  return a>b?(b>c?c:b):a;
+}
+kernel float max3(float a<>, float b<>, float c<>) {
+  return a<b?(b<c?c:b):a;
+}
+
+kernel float project6 (float3 ax<>, float3 p1<>, float3 p2<>, float3 p3,
+  float3 q1<>, float3 q2<>, float3 q3<>)
+{
+  float P1 = dot(ax,p1);
+  float P2 = dot(ax,p2);
+  float P3 = dot(ax,p3);
+  float Q1 = dot(ax,q1);
+  float Q2 = dot(ax,q2);
+  float Q3 = dot(ax,q3);
+
+  float mx1 = max3 (P1, P2, P3);
+  float mn1 = min3 (P1, P2, P3);
+  float mx2 = max3 (Q1, Q2, Q3);
+  float mn2 = min3 (Q1, Q2, Q3);
+  return (float)((!(mn1>mx2))&&(!(mn2>mx1)));
+  //if (mn1 > mx2) return 0;
+  //if (mn2 > mx1) return 0;
+  //return 1;
+}
+
+kernel float tri_contact_nodiv (float3 P1, float3 P2, float3 P3,
+                                float3 Q1, float3 Q2, float3 Q3)
+{
+  //
+  // One triangle is (p1,p2,p3).  Other is (q1,q2,q3).
+  // Edges are (e1,e2,e3) and (f1,f2,f3).
+  // Normals are n1 and m1
+  // Outwards are (g1,g2,g3) and (h1,h2,h3).
+  //
+  // We assume that the triangle vertices are in the same coordinate system.
+  //
+  // First thing we do is establish a new c.s. so that p1 is at (0,0,0).
+  //
+
+  float3 p1 = P1 - P2;
+  float3 p2 = P2 - P1;
+  float3 p3 = P3 - P1;
+
+  float3 q1 = Q1 - P1;
+  float3 q2 = Q2 - P1;
+  float3 q3 = Q3 - P1;
+
+  float3 e1 = p2 - p1;
+  float3 e2 = p3 - p2;
+  float3 e3 = p1 - p3;
+
+  float3 f1 = q2 - q1;
+  float3 f2 = q3 - q2;
+  float3 f3 = q1 - q3;
+
+  float3 n1 = cross(e1,e2);
+  float3 m1 = cross(f1,f2);
+
+  float3 g1 = cross(e1 , n1);
+  float3 g2 = cross(e2 , n1);
+  float3 g3 = cross(e3 , n1);
+  float3 h1 = cross(f1 , m1);
+  float3 h2 = cross(f2 , m1);
+  float3 h3 = cross(f3 , m1);
+
+  float3 ef11 = cross(e1 , f1);
+  float3 ef12 = cross(e1 , f2);
+  float3 ef13 = cross(e1 , f3);
+
+  float3 ef21 = cross(e2 , f1);
+  float3 ef22 = cross(e2 , f2);
+  float3 ef23 = cross(e2 , f3);
+
+  float3 ef31 = cross(e3 , f1);
+  float3 ef32 = cross(e3 , f2);
+  float3 ef33 = cross(e3 , f3);
+
+  // now begin the series of tests
+
+  float ret = project6(n1, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(m1, p1, p2, p3, q1, q2, q3);
+
+  ret = ret&&project6(ef11, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef12, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef13, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef21, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef22, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef23, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef31, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef32, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(ef33, p1, p2, p3, q1, q2, q3);
+
+  ret = ret&&project6(g1, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(g2, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(g3, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(h1, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(h2, p1, p2, p3, q1, q2, q3);
+  ret = ret&&project6(h3, p1, p2, p3, q1, q2, q3);
+
+  return ret;
+}
+
+
+kernel float tri_contact(float3 V0<>, float3 V1<>, float3 V2<>,
+                         float3 U0<>, float3 U1<>, float3 U2<>) {
+
+  float3 E1,E2;
+  float3 N1,N2;
+  float d1,d2;
+  float3 du;
+  float3 dv;
+  float3 D;
+  float2 isect1;
+  float2 isect2;
+  float du0du1;
+  float du0du2;
+  float dv0dv1;
+  float dv0dv2;
+  float3 vp;
+  float3 up;
+  float EPSILON=.000001;
+  float3 z3ro = 0;
+  float b,c,max;
+  float ret,coplanar;
+  float b_biggest,c_biggest;
+  
+  float3 tim_temp0;
+  float3 tim_temp1;
+  float3 tim_temp2;
+  float3 tim_temp3;
+  
+  E1 = V1-V0;
+  E2 = V2-V0;
+  N1 = cross(E1,E2);
+  d1 = -dot(N1,V0);
+  du = float3(dot(N1,U0)+d1,
+              dot(N1,U1)+d1,
+              dot(N1,U2)+d1);
+//  du=abs(du)>=EPSILON?du:z3ro;
+  du0du1 = du.x *du.y;
+  du0du2 = du.x *du.z;
+  
+  ret= (du0du1<= 0.0f||du0du2<= 0.0f)?1:0;
+  E1 = U1-U0;
+  E2 = U2-U0;
+  N2 = cross(E1,E2);
+  d2 = -dot(N2,U0);
+  dv = float3(dot(N2,V0)+d2,
+              dot(N2,V1)+d2,
+              dot(N2,V2)+d2);
+//  dv = abs(dv)>=EPSILON?dv:z3ro;
+  dv0dv1 = dv.x*dv.y;
+  dv0dv2 = dv.x*dv.z;
+  ret= (ret&&(dv0dv1<= 0.0f || dv0dv2 <=0.0f))?1:0;
+      
+  D = cross(N2,N1);
+  // compute and index to the largest component of D 
+  max = abs  (D .x);
+  vp=float3(V0.x,V1.x,V2.x);
+  up=float3(U0.x,U1.x,U2.x);
+  b = abs  (D .y);
+  c = abs  (D .z);
+  b_biggest = (b>max&&!(c>b))?1:0;
+  c_biggest = (c>max)?1:0;
+  
+  tim_temp0 = float3(V0.z,V1.z,V2.z);
+  tim_temp1 = float3(V0.y,V1.y,V2.y);
+  tim_temp2 = float3(U0.z,U1.z,U2.z);
+  tim_temp3 = float3(U0.y,U1.y,U2.y);
+  
+  vp = (c_biggest) ? tim_temp0 : vp;
+  vp = (b_biggest) ? tim_temp1 : vp;
+  up = (c_biggest) ? tim_temp2 : up;
+  up = (b_biggest)? tim_temp3 : up;
+  max = c_biggest?c:max;
+  max = b_biggest? b:max;
+ 
+  // this is the simplified projection onto L
+  // compute interval for triangle 1 
+  coplanar= (COMPUTE_INTERVALS (vp,dv,dv0dv1,dv0dv2,isect1)
+             ||COMPUTE_INTERVALS (up,du,du0du1,du0du2,isect2))?1:0;
+  ret= (ret&&coplanar)?coplanar_tri_tri (N1, V0,V1,V2, U0,U1,U2):ret;
+  // compute interval for triangle 2
+  isect1 = sort2 (isect1);
+  isect2 = sort2 (isect2);
+    
+  ret= (ret&&!coplanar)
+     ?
+     ((!(isect1 .y < isect2 .x || isect2 .y < isect1 .x))
+      ?1
+      :0)
+     :ret;    
+  
+  return ret;
+}
+
+
+kernel float TrianglesHaveContact (float3 mRx,
+                                   float3 mRy,
+                                   float3 mRz,
+                                   float3 mT,
+                                   float3 t1A<>, 
+                                   float3 t1B<>, 
+                                   float3 t1C<>, 
+                                   float3 t2A<>,
+                                   float3 t2B<>,
+                                   float3 t2C<>) {
+  float3 i1 = matVecMult(mRx,mRy,mRz,t1A)+mT;
+  float3 i2 = matVecMult(mRx,mRy,mRz,t1B)+mT;
+  float3 i3 = matVecMult(mRx,mRy,mRz,t1C)+mT;
+  return tri_contact(i1,i2,i3,t2A,t2B,t2C);
+
+}
+
+kernel void SimpleCheckTriangleCollide(float3 mRx,
+                                       float3 mRy,
+                                       float3 mRz,
+                                       float3 mT,
+                                       float3 t1A<>,
+                                       float3 t1B<>,
+                                       float3 t1C<>,
+                                       float3 t2A<>,
+                                       float3 t2B<>,
+                                       float3 t2C<>,
+                                       out float4 hits<>) {
+  float4 neg1=-1;
+  //  hits= TrianglesHaveContact(mRx,mRy,mRz,mT,
+  //                           t1,t2)?(indexof hits):neg1;
+  hits= tri_contact(t1A,t1B,t1C,t2A,t2B,t2C)?(indexof hits):neg1;
+}
+void doTest (float * matrix, int trisizex, int trisizey, float3 *a, float3 * b, float4 * ohits) {
+  float3 triangles1A <trisizex,trisizey>;
+  float3 triangles1B <trisizex,trisizey>;
+  float3 triangles1C <trisizex,trisizey>;
+  float3 triangles2A <trisizex,trisizey>;
+  float3 triangles2B <trisizex,trisizey>;
+  float3 triangles2C <trisizex,trisizey>;
+  float4 hits <trisizex,trisizey>;
+  float3 mRx,mRy,mRz,mT;
+  int i;
+  float3 * temptri;
+  temptri = (float3*)malloc(sizeof(float3)*trisizex*trisizey);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3];
+  }
+  streamRead(triangles1A,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3+1];
+  }
+  streamRead(triangles1B,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3+2];
+  }
+  streamRead(triangles1C,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3];
+  }
+  streamRead(triangles2A,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3+1];
+  }
+  streamRead(triangles2B,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3+2];
+  }
+  streamRead(triangles2C,temptri);
+  free(temptri);
+  mRx.x=matrix[0];
+  mRx.y=matrix[1];
+  mRx.z=matrix[2];
+  mRy.x=matrix[4];
+  mRy.y=matrix[5];
+  mRy.z=matrix[6];
+  mRz.x=matrix[8];
+  mRz.y=matrix[9];
+  mRz.z=matrix[10];
+  mT.x=matrix[12];
+  mT.y=matrix[13];
+  mT.z=matrix[14];
+
+  //streamRead(trianglesA,a);
+  //streamRead(trianglesB,b);
+  SimpleCheckTriangleCollide(mRx,mRy,mRz,mT,
+                             triangles1A,triangles1B,triangles1C,
+                             triangles2A,triangles2B,triangles2C,hits);
+  streamWrite(hits,ohits);
+}
+
+
+kernel void SimpleCheckTriangleCollideNoDiv(float3 mRx,
+                                            float3 mRy,
+                                            float3 mRz,
+                                            float3 mT,
+                                            float3 t1A<>,
+                                            float3 t1B<>,
+                                            float3 t1C<>,
+                                            float3 t2A<>,
+                                            float3 t2B<>,
+                                            float3 t2C<>,
+                                            out float4 hits<>) {
+  float4 neg1=-1;
+  hits= tri_contact_nodiv(t1A,t1B,t1C,t2A,t2B,t2C)?(indexof hits):neg1;
+}
+void doTestNoDiv (float * matrix, int trisizex, int trisizey, float3 *a, float3 * b, float4 * ohits) {
+  float3 triangles1A <trisizex,trisizey>;
+  float3 triangles1B <trisizex,trisizey>;
+  float3 triangles1C <trisizex,trisizey>;
+  float3 triangles2A <trisizex,trisizey>;
+  float3 triangles2B <trisizex,trisizey>;
+  float3 triangles2C <trisizex,trisizey>;
+  float4 hits <trisizex,trisizey>;
+  float3 mRx,mRy,mRz,mT;
+  int i;
+  float3 * temptri;
+  temptri = (float3*)malloc(sizeof(float3)*trisizex*trisizey);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3];
+  }
+  streamRead(triangles1A,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3+1];
+  }
+  streamRead(triangles1B,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = a[i*3+2];
+  }
+  streamRead(triangles1C,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3];
+  }
+  streamRead(triangles2A,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3+1];
+  }
+  streamRead(triangles2B,temptri);
+  for (i=0;i<trisizex*trisizey;++i) {
+    temptri[i] = b[i*3+2];
+  }
+  streamRead(triangles2C,temptri);
+  free(temptri);
+
+  mRx.x=matrix[0];
+  mRx.y=matrix[1];
+  mRx.z=matrix[2];
+  mRy.x=matrix[4];
+  mRy.y=matrix[5];
+  mRy.z=matrix[6];
+  mRz.x=matrix[8];
+  mRz.y=matrix[9];
+  mRz.z=matrix[10];
+  mT.x=matrix[12];
+  mT.y=matrix[13];
+  mT.z=matrix[14];
+  
+  //streamRead(trianglesA,a);
+  //streamRead(trianglesB,b);
+  SimpleCheckTriangleCollideNoDiv(mRx,mRy,mRz,mT,
+                                  triangles1A,
+                                  triangles1B,
+                                  triangles1C,
+                                  triangles2A,
+                                  triangles2B,
+                                  triangles2C,
+                                  hits);
+  streamWrite(hits,ohits);
+}
+
+
+kernel float obb_disjoint (float3 Bx,
+                           float3 By,
+                           float3 Bz,
+                           float3 T,
+                           float3 a<>,
+                           float3 b<>) {
+  float t, s;
+  float r;
+  float3 Bfx;
+  float3 Bfy;
+  float3 Bfz;
+  const float reps = 1e-6;
+
+  // Bf = abs (B)
+  Bfx = abs(Bx)+reps;
+  Bfy = abs(By)+reps;
+  Bfz = abs(Bz)+reps;
+
+  // if any of these tests are one-sided, then the polyhedra are disjoint
+  r = 1;
+
+  // A1 x A2 = A0
+  t = abs (T.x);
+
+  r = r&& (t <= (a.x + dot(b,Bfx)));
+  //if (!r) return 1;
+
+  // B1 x B2 = B0
+  s = T.x * Bx.x + T.y * By.x + T.z * Bz.x;
+  t = abs (s);
+
+  r =r&& (t <= (b.x + a.x * Bfx.x + a.y * Bfy.x + a.z * Bfz.x));
+  //if (!r) return 2;
+
+  // A2 x A0 = A1
+  t = abs (T.y);
+
+  r = r&&(t <= (a.y + dot(b,Bfy)));
+  //if (!r) return 3;
+
+  // A0 x A1 = A2
+  t = abs (T.z);
+
+  r =r&& (t <= (a.z + dot(b,Bfz)));
+  //if (!r) return 4;
+
+  // B2 x B0 = B1
+  s = T.x * Bx.y + T.y * By.y + T.z * Bz.y;
+  t = abs (s);
+
+  r =r&& (t <= (b.y + a.x * Bfx.y + a.y * Bfy.y + a.z * Bfz.y));
+  //if (!r) return 5;
+
+  // B0 x B1 = B2
+  s = T.x * Bx.z + T.y * By.z + T.z * Bz.z;
+  t = abs (s);
+
+  r =r&& (t <= (b.z + a.x * Bfx.z + a.y * Bfy.z + a.z * Bfz.z));
+  //if (!r) return 6;
+
+  // A0 x B0
+  s = T.z * By.x - T.y * Bz.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.x + a.z * Bfy.x + b.y * Bfx.z + b.z * Bfx.y));
+  //if (!r) return 7;
+
+  // A0 x B1
+  s = T.z * By.y - T.y * Bz.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.y + a.z * Bfy.y + b.x * Bfx.z + b.z * Bfx.x));
+  //if (!r) return 8;
+
+  // A0 x B2
+  s = T.z * By.z - T.y * Bz.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.z + a.z * Bfy.z + b.x * Bfx.y + b.y * Bfx.x));
+  //if (!r) return 9;
+
+  // A1 x B0
+  s = T.x * Bz.x - T.z * Bx.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.x + a.z * Bfx.x + b.y * Bfy.z + b.z * Bfy.y));
+  //if (!r) return 10;
+
+  // A1 x B1
+  s = T.x * Bz.y - T.z * Bx.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.y + a.z * Bfx.y + b.x * Bfy.z + b.z * Bfy.x));
+  //if (!r) return 11;
+
+  // A1 x B2
+  s = T.x * Bz.z - T.z * Bx.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.z + a.z * Bfx.z + b.x * Bfy.y + b.y * Bfy.x));
+  //if (!r) return 12;
+
+  // A2 x B0
+  s = T.y * Bx.x - T.x * By.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.x + a.y * Bfx.x + b.y * Bfz.z + b.z * Bfz.y));
+  //if (!r) return 13;
+
+  // A2 x B1
+  s = T.y * Bx.y - T.x * By.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.y + a.y * Bfx.y + b.x * Bfz.z + b.z * Bfz.x));
+  //if (!r) return 14;
+
+  // A2 x B2
+  s = T.y * Bx.z - T.x * By.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.z + a.y * Bfx.z + b.x * Bfz.y + b.y * Bfz.x));
+  //if (!r) return 15;
+
+  return r?0:1;  // should equal 0
+}
+
+kernel void OBBDisjoint(float3 X, float3 Y, float3 Z, float3 T,
+                        float3 a<>, float3 b<>, out float rez<>) {
+  rez = obb_disjoint(X,Y,Z,T,a,b);
+}
+float TestObbDisjoint (float3 X, float3 Y, float3 Z, float3 T,
+                      float3  a, float3 b) {
+  float rez;
+  float rez_stream<1,1>;
+  float3 a_stream<1,1>;
+  float3 b_stream<1,1>;
+  streamRead(a_stream,&a);
+  streamRead(b_stream,&b);
+  OBBDisjoint(X,Y,Z,T,a_stream,b_stream,rez_stream);
+  streamWrite(rez_stream,&rez);
+  return rez;
+}

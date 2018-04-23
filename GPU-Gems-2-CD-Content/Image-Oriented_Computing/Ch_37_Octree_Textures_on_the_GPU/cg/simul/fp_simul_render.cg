@@ -1,0 +1,75 @@
+#include "../liboctreegpu/fp_tree_lookup.cg"
+#include "../../src/simul/config.h"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float4 Color0       : COLOR0;
+  float3 TCoord0      : TEXCOORD0;
+  float3 N            : TEXCOORD1;
+  float3 I            : TEXCOORD2;
+  float3 L            : TEXCOORD3;
+  float2 Tex          : TEXCOORD4;
+  float4 W            : WPOS;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+              uniform sampler2D   ScreenBuffer,
+              uniform samplerCUBE Envmap,
+              uniform sampler2D   Tex
+	      )
+{
+  PixelOut OUT;
+  
+  float2 uv=IN.W.xy/SCREEN_SIZE;
+  float3 nrm=normalize(IN.N);
+  float  nrmuv=1.0/SCREEN_BUFFER_SIZE; //lerp(1.0/SCREEN_BUFFER_SIZE,1.0,length(nrm.xy)/SCREEN_SIZE);
+  float3 clr=(float3)tex2D(ScreenBuffer,uv,nrmuv.xx,nrmuv.xx);
+
+  float v=clr.x;
+//  if (v > 0.95)
+//    v=clr.y*4.0;
+//  if (v > 0.95)
+//    v=clr.z*16.0;
+
+  float dcdx=0.0;
+  float dcdy=0.0;
+  
+  float atten=clamp(v*4.0,0.0,1.0);
+  dcdx=ddx(v*2.0);
+  dcdy=ddy(v*2.0);
+  float3 n=normalize(IN.N+float3(-dcdx,-dcdy,0.0));
+  
+  float diff=max(0.2,dot(IN.L,n));
+  float3 i=normalize(IN.I);
+  float3 refl=reflect(-i,n);
+  float spec=pow(max(0.0,dot(IN.L,refl)),30.0);
+  
+  float4 color=//(float4)tex2D(Tex,IN.Tex)*
+    float4(1.0,1.0,1.0,1.0);
+  float4 fluid_color=
+//    lerp(float4(0.7,0.8,0.9,1.0),float4(0.4,0.9,0.5,1.0), // green paint
+    lerp(float4(1.0,0.0,0.0,1.0),float4(0.9,0.1,0.3,1.0),   // blood
+//    lerp(float4(0.7,0.8,1.0,1.0),float4(0.4,0.5,1.0,1.0), // water
+	 clamp(v,0.0,1.0));
+
+//    float4 reflcolor=(float4)texCUBE(Envmap,n);
+//    float3 refr=refract(i,n,1.01);
+//    float4 refrcolor=(float4)texCUBE(Envmap,refr);
+
+  float4 finalclr=lerp(color,fluid_color,atten);
+//  float4 finalclr=lerp(color,fluid_color*reflcolor,atten);
+
+  // done
+  OUT.COL=(0.4+0.6*(1.0-atten*0.5))*finalclr*diff + spec*atten;
+
+//  OUT.COL=(float4)tex2D(ScreenBuffer,IN.W.xy/SCREEN_SIZE);
+  return OUT;
+}

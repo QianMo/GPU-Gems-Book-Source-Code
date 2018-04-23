@@ -1,0 +1,134 @@
+#include "../../src/simul/config.h"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float3 TCoord0      : TEXCOORD0;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+	      uniform SAMPLER DensityIn,
+	      uniform SAMPLER N0,
+	      uniform SAMPLER N1,
+	      uniform SAMPLER N2,
+	      uniform SAMPLER N3,
+	      uniform SAMPLER N4,
+	      uniform SAMPLER N5,
+	      uniform SAMPLER N6,
+	      uniform SAMPLER N7,
+	      uniform SAMPLER N8,
+	      uniform SAMPLER N9,
+	      uniform SAMPLER N10,
+	      uniform SAMPLER N11,
+	      uniform SAMPLER N12,
+	      uniform SAMPLER N13,
+	      uniform SAMPLER N14
+	      )
+{
+  PixelOut OUT;
+
+  float4 i0=(float4)TEX0(N0,IN.TCoord0.xy);
+  float4 i1=(float4)TEX0(N1,IN.TCoord0.xy);
+  float4 i2=(float4)TEX0(N2,IN.TCoord0.xy);
+  float4 i3=(float4)TEX0(N3,IN.TCoord0.xy);
+  float4 i4=(float4)TEX0(N4,IN.TCoord0.xy);
+  float4 i5=(float4)TEX0(N5,IN.TCoord0.xy);
+  float4 i6=(float4)TEX0(N6,IN.TCoord0.xy);
+  float4 i7=(float4)TEX0(N7,IN.TCoord0.xy);
+  float4 i8=(float4)TEX0(N8,IN.TCoord0.xy);
+  float4 i9=(float4)TEX0(N9,IN.TCoord0.xy);
+  float4 i10=(float4)TEX0(N10,IN.TCoord0.xy);
+  float4 i11=(float4)TEX0(N11,IN.TCoord0.xy);
+  float4 i12=(float4)TEX0(N12,IN.TCoord0.xy);
+  float4 i13=(float4)TEX0(N13,IN.TCoord0.xy);
+  float4 i14=(float4)TEX0(N14,IN.TCoord0.xy);
+
+  float4 c0=(float4)TEX1(DensityIn,i0.xy);
+  float4 c1=(float4)TEX1(DensityIn,i1.xy);
+  float4 c2=(float4)TEX1(DensityIn,i2.xy);
+  float4 c3=(float4)TEX1(DensityIn,i3.xy);
+  float4 c4=(float4)TEX1(DensityIn,i4.xy);
+  float4 c5=(float4)TEX1(DensityIn,i5.xy);
+  float4 c6=(float4)TEX1(DensityIn,i6.xy);
+  float4 c7=(float4)TEX1(DensityIn,i7.xy);
+  float4 c8=(float4)TEX1(DensityIn,i8.xy);
+  float4 c9=(float4)TEX1(DensityIn,i9.xy);
+  float4 c10=(float4)TEX1(DensityIn,i10.xy);
+  float4 c11=(float4)TEX1(DensityIn,i11.xy);
+  float4 c12=(float4)TEX1(DensityIn,i12.xy);
+  float4 c13=(float4)TEX1(DensityIn,i13.xy);
+  float4 c14=(float4)TEX1(DensityIn,i14.xy);
+  float4 c =(float4)TEX0(DensityIn,IN.TCoord0.xy);
+
+  c0=DECODE_DENSITY(c0);
+  c1=DECODE_DENSITY(c1);
+  c2=DECODE_DENSITY(c2);
+  c3=DECODE_DENSITY(c3);
+  c4=DECODE_DENSITY(c4);
+  c5=DECODE_DENSITY(c5);
+  c6=DECODE_DENSITY(c6);
+  c7=DECODE_DENSITY(c7);
+  c8=DECODE_DENSITY(c8);
+  c9=DECODE_DENSITY(c9);
+  c10=DECODE_DENSITY(c10);
+  c11=DECODE_DENSITY(c11);
+  c12=DECODE_DENSITY(c12);
+  c13=DECODE_DENSITY(c13);
+  c14=DECODE_DENSITY(c14);
+  c=DECODE_DENSITY(c);
+
+/*
+  float4 lapl=(ca*i4.z
+  +cb*i5.z
+  +cf*i2.z
+  +cn*i3.z
+  +cl*i0.z
+  +cr*i1.z
+  -6.0*c);
+  float4 clr=c + lapl/6.0;
+  OUT.COL=float4(clr.xyz,1.0);
+*/
+  // absorbtion
+  c.x*=0.999;
+
+  // new value
+  float v=c.x*(1.0-c.z)+
+    ( c0.x*c0.z*i0.z
+      +c1.x*c1.z*i1.z
+      +c2.x*c2.z*i2.z
+      +c3.x*c3.z*i3.z
+      +c4.x*c4.z*i4.z
+      +c5.x*c5.z*i5.z
+      +c6.x*c6.z*i6.z
+      +c7.x*c7.z*i7.z
+      +c8.x*c8.z*i8.z
+      +c9.x*c9.z*i9.z
+      +c10.x*c10.z*i10.z
+      +c11.x*c11.z*i11.z
+      +c12.x*c12.z*i12.z
+      +c13.x*c13.z*i13.z
+      +c14.x*c14.z*i14.z
+      );
+
+  float f=c.z;
+  if (c.x > c.w)
+    f=clamp(c.x*c.x*c.y,c.z,min(1.0-c.w,0.99));
+  if (c.x < c.w*0.1)
+    f=0.0;
+
+  float4 ret=float4(v,c.y,f,c.w);
+  ret=ENCODE_DENSITY(ret);
+
+  OUT.COL=ret;
+
+//  OUT.COL=float4(frac(s),s,r,1.0);
+
+  return OUT;
+}

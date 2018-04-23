@@ -1,0 +1,13 @@
+built/oglwindow.obj: ../../../include/brook/vc6vector.hpp
+built/oglwindow.obj: ../../../include/brook/brtvector.hpp
+built/oglwindow.obj: ../../../include/brook/type_promotion.hpp
+built/oglwindow.obj: ../../../include/brook/kerneldesc.hpp
+built/oglwindow.obj: ./oglfunc.hpp
+built/oglwindow.obj: ./../gpucontext.hpp
+built/oglwindow.obj: ./../../runtime.hpp
+built/oglwindow.obj: ./../../logger.hpp
+built/oglwindow.obj: ./oglwindow.hpp
+built/oglwindow.obj: oglwindow.cpp
+built/oglwindow.obj: ./../../profiler.hpp
+built/oglwindow.obj: ./../gpubase.hpp
+built/oglwindow.obj: ../../../include/brook/brt.hpp

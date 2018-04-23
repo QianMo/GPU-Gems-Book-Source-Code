@@ -1,0 +1,39 @@
+Installation instructions for Red Hat:
+
+1. VideoOrbits-2.204 - installed
+
+2. Download Cg_Linux.rpm from developer.nvidia.com/object/cg_toolkit.html
+
+3. For installing Cg compiler, for Red Hat need to install glibc-common-2.3.2-11.9.i386.rpm from RedHat Linux 9.0 CDs Disk 1. If install as development workstation then no need to install anything, it should work.  
+
+4. Install latest NVIDIA drivers from http://developer.nvidia.com/object/linux_cg_toolkit.html and follow the LinuxSDK.html file.
+
+5. For compiling the CG toolkit samples, may need to edit the Makefile to include the following:
+
+ifeq ($(OS), "Linux")
+  CFLAGS += -DUNIX
+  LFLAGS += -L/usr/X11R6/lib -lglut -lXi -lXmu -lXext -lX11 -lGLU -lGL
+endif
+
+6. Total packages I had to install (some from Internet):
+
+Cg-1.2.1-Linux.rpm
+commoncpp2-1.0.12-0.i686.rpm
+commoncpp2-devel-1.0.12-0.i686.rpm
+glut-3.7-12.i386.rpm
+glut-devel-3.7-12.i386.rpm
+jpeg-mmx-0.1.4-1.i386.rpm
+libdc1394-0.8.1-1cl.i386.rpm
+libdc1394-0.8.1-1cl.src.rpm
+libdc1394-devel-0.8.1-1cl.i386.rpm
+libraw1394-0.9.0-1.i386.rpm
+libraw1394-0.9.0-1.src.rpm
+xnee-1.0.2-1.i386.rpm
+NVIDIA-Linux-x86-1.0-5336-pkg1.run
+
+
+
+
+
+
+

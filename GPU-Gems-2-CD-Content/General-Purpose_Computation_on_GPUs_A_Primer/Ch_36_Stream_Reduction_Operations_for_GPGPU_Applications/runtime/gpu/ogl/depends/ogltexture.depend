@@ -1,0 +1,14 @@
+built/ogltexture.obj: ../../../include/brook/vc6vector.hpp
+built/ogltexture.obj: ./ogltexture.hpp
+built/ogltexture.obj: ../../../include/brook/brtvector.hpp
+built/ogltexture.obj: ./oglcheckgl.hpp
+built/ogltexture.obj: ../../../include/brook/type_promotion.hpp
+built/ogltexture.obj: ../../../include/brook/kerneldesc.hpp
+built/ogltexture.obj: ./oglfunc.hpp
+built/ogltexture.obj: ./../gpucontext.hpp
+built/ogltexture.obj: ./../../runtime.hpp
+built/ogltexture.obj: ./../../logger.hpp
+built/ogltexture.obj: ./../../profiler.hpp
+built/ogltexture.obj: ./../gpubase.hpp
+built/ogltexture.obj: ogltexture.cpp
+built/ogltexture.obj: ../../../include/brook/brt.hpp

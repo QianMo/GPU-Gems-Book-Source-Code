@@ -1,0 +1,248 @@
+<html>
+
+<head>
+<title>OpenVIDIA : Parallel GPU Computer Vision</title>
+<meta name="description" content="The OpenVIDIA project implements some computer vision algorithms on computer graphics hardware, in OpenGL and Cg. The project provides useful example programs which run computer vision algorithms on single or parallel gfx processing units(GPU).">
+<meta name="keywords" content="computer vision, real time, GPU,
+graphics processing unit,  parallel graphics, parallel GPU, parallel,
+general purpose, machine vision augmented reality, mixed reality, software, tools, tool">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" />
+
+<style>
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 13px; color: #000000; }
+a                 { color: #002299 }
+#.pagetitle        { font-size: 28px; font-weight: bold; color: #336699; }
+.pagetitle        { font-size: 24px; font-weight: normal; color: #336699; }
+.dateheader       { font-size: 14px; font-weight: bold; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+<!--
+  <td colspan="6"><span class="pagetitle">$blog_title</span></td>
+-->
+<!--
+  <td bgcolor="#EEEEEE"></td>
+-->
+  <td colspan="5" height=40 bgcolor="#EEEEEE">
+       <h1> <span class="pagetitle"> 
+OpenVIDIA : Parallel GPU Computer Vision</span></h1>
+  </td>
+<!--
+  <td colspan="0" bgcolor = "#EEEEEE" height=40>
+ -->
+  <center>
+  </center>
+<!--
+  </td>
+-->
+    
+
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+<!--
+  <td bgcolor="#DDDDDD"><nobr>&nbsp; &nbsp; </nobr>
+-->
+  
+  <!-- left column -->
+  <td bgcolor="#DDDDDD" width="20%" >
+  <br><b>
+<a href="index.html">Home</a><br><br>
+<a href="screenshots.html">Screenshots</a><br><br>
+<a href="installation.html">Installation<br>Instructions</a><br><br>
+<a href="quickstart.html">Quickstart</a><br><br>
+<a href="programming.html">Programming<br>Example</a><br><br>
+<a href="openvidia-0.07.tar.gz">CD Source Code</a><br><br>
+   <a href="http://sourceforge.net/project/showfiles.php?group_id=98913">Download</a><br><br>
+<a href="papers.html">Papers</a><br></b>
+
+<hr>
+   <b>Project</b> <br>
+   <a href=http://sourceforge.net/projects/sf.net project page</a><br>
+<!--#include virtual="projhtml.cache" -->
+<hr>
+
+   <p>
+   <b>Related Projects</b>
+   <br />
+   <p>
+   <a href="http://comparametric.sf.net">Comparametric Toolkit</a>
+   </p>
+
+   <p>
+   <b>Links</b> 
+     <p>
+   <a href="http://fly.cc.fer.hr/~unreal/theredbook/">Open GL Ref.</a>
+   </p>
+
+   <p>
+   <a href="http://www.linuxhardware.org/nvclock/">GeForce FX Overclocking</a>
+   </p>
+   <p>
+   <a href="http://www.gpgpu.org">GPGPU</a>
+   </p>
+    
+<p>
+   <a href="http://www.eyetap.org"><img src="eyetaplogo.png" border="1" hspace="3" vspace="3" /></a>
+   </p>
+
+   <p>
+  <a href="http://sourceforge.net"><img
+    src="sflogo.php"
+    width="88" height="31" border="0" hspace="3" vspace="3" alt="SourceForge.net Logo"
+    /></a></p>
+
+
+  <p>
+<i>   Page design based on <a href="http://www.blosxom.com">Blosxom</a> (which was
+   used originally before the move to sourceforge).</i></p>
+<p>
+<i>This page best viewed with Dillo, Lynx, w3m, Mozilla-Firefox, Galeon, Epiphany . . .</i></p>
+
+  </td>
+<!--
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td>
+-->
+
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#FFFFFF" width="100%"> 
+<br />
+
+<H2>Installation Instructions:</H2>
+
+<a href=INSTALLATION.TXT>Plain text version of this page</a>
+
+<h3>Basic Installation:</h3>
+  <p>First, compile VideoOrbits-2.204  (from <a href="http://comparametric.sf.net">comparametric.sf.net</a>), 
+  using :  "./configure; make" 
+
+  <p>Assuming you have all the packages listed below, type:
+
+  <p><b>make VO_DIR=[path_of_videoorbits-2.204] CG_DIR=[path_of_SDK]</b>
+  
+  <p>where [path_of_videorbits-2.204] is where videorbits-2.204 (or greater is)
+    and [path_of_SDK] is the Cg SDK path
+
+  <p>example:
+
+    <p><b>make VO_DIR=~/videorbits-2.204 CG_DIR=~/SDK</b>
+
+    <p>by default, the above options are assumed.  So if you download
+    the Cg SDK to your home directory, and untar videorbits-2.204 from
+    your home directory, all you'll have to do is type: '<b>make</b>'
+
+
+    <P>However, you first need to following packages.  Typically, if there's a 
+    compilation error, it is because the following libraries are not present:
+
+<h3>
+What you need</a></h3>
+<p>You might already have the following, if not you'll have to install them
+<ul>
+<li><a href="http://www.nvidia.com/object/linux.html">nvidia drivers</a></li>
+<li>glut</li>
+<li>imlib-dev Imlib development libraries</li>
+<li>libxml-dev
+<li>libdc1394-dev (and 1394 support (raw1394 or video1394))</li>
+<li>jpeg-mmx </li>
+</ul>
+
+<p>You'll likely have to install the following:
+<ul>
+<li><a href="http://comparametric.sf.net">videorbits</a> (version later or equal to 2.204)</li>
+<li><a href="http://developer.nvidia.com/object/cg_toolkit.html">Cg Compiler (cgc)</a></li>
+<li><a href="http://developer.nvidia.com/object/linux_cg_toolkit.html">Cg development kit</a><br>(note: adding #define INITIAL 0 to line 177 of vs1.0_lexer.l seems to help libnvparse.a compile sometimes if you're having that problem)</li>
+<li>xnee and <a href="http://www.gnu.org/software/xnee/">libxnee</a></li>
+<li><a href="http://www.gnu.org/directory/libs/cpp/commoncpp.html">libcommoncpp2-1.0-0c102</a> (available as apt package)</li>
+<li>libcommoncpp2-dev</li>
+</ul>
+<br>
+<hr>
+<br>
+<h3>
+Installation instructions for Red Hat:
+</h3>
+
+<p><i>Contributed by Alvin Chin</i></p>
+
+<ol>
+<li> VideoOrbits-2.204 - installed</li>
+
+<li>Download Cg_Linux.rpm from developer.nvidia.com/object/cg_toolkit.html</li>
+
+<li>For installing Cg compiler, for Red Hat need to install glibc-common-2.3.2-11.9.i386.rpm from RedHat Linux 9.0 CDs Disk 1. If install as development workstation then no need to install anything, it should work.  </li>
+
+<li>Install latest NVIDIA drivers from http://developer.nvidia.com/object/linux_cg_toolkit.html and follow the LinuxSDK.html file.</li>
+
+<li>For compiling the CG toolkit samples, may need to edit the Makefile to include the following:
+<pre>
+ifeq ($(OS), "Linux")
+  CFLAGS += -DUNIX
+  LFLAGS += -L/usr/X11R6/lib -lglut -lXi -lXmu -lXext -lX11 -lGLU -lGL
+endif
+</pre>
+</li>
+
+<li>Total packages I had to install (some from Internet):<br>
+<br>
+Cg-1.2.1-Linux.rpm<br>
+commoncpp2-1.0.12-0.i686.rpm<br>
+commoncpp2-devel-1.0.12-0.i686.rpm<br>
+glut-3.7-12.i386.rpm<br>
+glut-devel-3.7-12.i386.rpm<br>
+jpeg-mmx-0.1.4-1.i386.rpm<br>
+libdc1394-0.8.1-1cl.i386.rpm<br>
+libdc1394-0.8.1-1cl.src.rpm<br>
+libdc1394-devel-0.8.1-1cl.i386.rpm<br>
+libraw1394-0.9.0-1.i386.rpm<br>
+libraw1394-0.9.0-1.src.rpm<br>
+xnee-1.0.2-1.i386.rpm<br>
+NVIDIA-Linux-x86-1.0-5336-pkg1.run<br>
+<br>
+</li>
+</ol>
+
+<h3>Compiling with older libdc1394 libraries</h3>
+If the compile fails on the function dc1394_dma_setup_capture(),
+you either need to get a newer version of libdc1394 (available 
+at <a href=http://sourceforge.net/projects/libdc1394/>
+http://sourceforge.net/projects/libdc1394/
+</a><br>
+<br>
+Or you may instead apply <a href=RH_old1394.diff>this patch </a>
+by typing:
+<pre>
+patch -p0 Dc1394.cc < RH_old1394.diff
+</pre>
+in the directory.
+
+
+<h3>A note on shared memory areas: </h3>
+
+<p>
+  A number of the programs use shared memory areas for communication between
+  graphics cards running in parallel. These memory areas  are sometimes 
+  incorrectly created.  If you have this problem, try 'make glestpchirp2m'
+  then running it first.  It will create the shared memory areas.
+</p>
+
+
+  <p>Feel free to post in the forums, or email  the 'make'
+     output which failed.
+
+</body>
+</html>

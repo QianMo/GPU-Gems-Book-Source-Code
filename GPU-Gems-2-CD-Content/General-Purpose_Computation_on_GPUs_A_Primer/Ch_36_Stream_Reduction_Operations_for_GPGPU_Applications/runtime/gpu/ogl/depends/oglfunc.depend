@@ -1,0 +1,12 @@
+built/oglfunc.obj: ../../../include/brook/vc6vector.hpp
+built/oglfunc.obj: ../../../include/brook/brtvector.hpp
+built/oglfunc.obj: ../../../include/brook/type_promotion.hpp
+built/oglfunc.obj: ../../../include/brook/kerneldesc.hpp
+built/oglfunc.obj: ./../gpucontext.hpp
+built/oglfunc.obj: ./oglfunc.hpp
+built/oglfunc.obj: ./../../runtime.hpp
+built/oglfunc.obj: ./../../logger.hpp
+built/oglfunc.obj: oglfunc.cpp
+built/oglfunc.obj: ./../../profiler.hpp
+built/oglfunc.obj: ./../gpubase.hpp
+built/oglfunc.obj: ../../../include/brook/brt.hpp

@@ -1,0 +1,90 @@
+/*************************************************************************
+// Complex DM Water fragment shader with Cube map and EMBM mixing and per pixel freshel
+******************************************************************************/
+
+fp40 half4 main(
+            uniform half4 c0 ,
+            uniform half4 c1 ,
+            uniform half4 c2 ,
+            uniform half4 c3 ,
+
+            uniform half4 c6 ,
+            uniform half4 c7 ,
+            uniform half4 c8 ,
+            uniform half4 c9 ,
+
+            in half4 Col0              : COLOR0,
+            in half4 Col1              : COLOR1,
+
+            in half2 FogV: TEXCOORD1,
+            in float4 INP : TEXCOORD3,
+            in float4 INP1 : TEXCOORD5,
+            
+            in float3 EyeVec           : TEXCOORD4,
+            in float4 TexGens: TEXCOORD2,
+            in float4 FoamRndPhase: TEXCOORD6,
+
+            uniform sampler2D   NMap,
+            uniform sampler2D   FogMap,
+            uniform samplerCUBE NormCMap,
+            uniform sampler2D   NMap2,
+            uniform samplerCUBE EnvCMap,
+            uniform sampler2D   dXYMap2,// WRefl,
+            uniform sampler2D   FoamMap,
+            uniform sampler2D   RMap,
+            uniform sampler2D   dXYMap,
+            uniform sampler2D   dXYMap1,
+			uniform sampler2D   dXYMap3,
+            uniform samplerCUBE NormCMap2
+            
+           ) : COLOR
+{
+  // Sum (H,Nx,Ny) maps in 0..1
+  half3 N = tex2D(dXYMap, INP.xy).xyz+tex2D(dXYMap1, INP1.xy).xyz*half3((1.0/3.1), 1.0, 1.0);
+  
+  // Add micro bump
+  float4  tt = INP1.xyyy*13.1; tt.zw = -8;
+  N += tex2Dbias(dXYMap, tt).xyz*half3((1.0/13.1/0.4), 1.0, 1.0)*0.4; 
+  float FoamNx = N.x;
+  
+  half3 Eye = normalize(EyeVec.xyz);
+  
+  N.xy = -(N.yz*2-2.4);//*(1-R2);  
+  N.z = INP.z;  N = normalize(N); // N -  final normal
+  
+  // Calc  reflection vector
+  half   dotEye_N = dot(Eye, N);
+  half3 reflectVec = 2*N*dotEye_N - Eye/**dot(N,N)*/;
+
+  #if 1 // Hack to eleminate backside artifacts
+	half R = saturate((-reflectVec.z+0.05)*10);
+	N = normalize(lerp(half3(0,0,1), N, R));
+	dotEye_N = dot(Eye, N);
+	reflectVec = 2*N*dotEye_N - Eye;
+  #endif
+  
+
+  half4 PlaneRefl = 0; // Sorry - Reflection of landscape not is implemented now
+  
+  half3 reflectColor = texCUBE(EnvCMap, reflectVec.xzy*float3(1,1,-1)).xyz;
+  // Add sun road splashes
+  reflectColor*=1+saturate(reflectColor.x - 0.97)*200.0h;
+
+  half3 diffuseL = saturate(dot(N, normalize(c2.xyz)));
+  half3 diffuse = (diffuseL+c0.w)*c0.xyz;
+  half Freshel = pow((1-max(-dotEye_N, c3.b)), 5)*c3.g + c3.r;
+
+  half3 WaterColor = reflectColor*Freshel+diffuse;
+  
+  if (FoamNx > 0.7) {// Foam caps
+    half Foam = FoamNx*c9.x+c9.y;//*INP.w;
+    Foam=saturate(Foam*(tex2D(FoamMap, TexGens.xy*23h).w*(tex2D(FoamMap, TexGens.xy*397h).w*0.5h+0.75h)/*-0.85*/)/**5*/);
+    WaterColor = lerp(WaterColor,(diffuseL*0.4+0.5), Foam);
+  }
+
+  half4 Out; Out.xyz = WaterColor;  
+  Out.w = 1;
+ 
+  return Out;
+}
+

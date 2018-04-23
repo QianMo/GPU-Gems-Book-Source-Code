@@ -1,0 +1,39 @@
+Off the cuff
+------------
+
+   * Emit #line directives in the emitted cpp file.
+   	- Hard unless done in every single statement.
+
+   * Fix (boost) priority of 'indexof'
+
+   * Command line / env override of paths to cgc / fxc?
+
+Medium
+------
+
+   * Type verification for kernel calls (not passing float streams as float2
+     streams, etc.)
+
+   * Typedef support (e.g. "typedef float stream<10>").
+
+   * Struct support (where all fields are floatN) to kernels.
+   
+Long
+----
+
+   * Refactor the grammar for expressions to create toplevel_expr (as all
+     expressions except constructors) and then expr (to include
+     constructors) rather than continually special casing them.
+
+   * Allow kernels to call other kernels (as whole stream operations, not
+     combinatorial explosion).
+
+   * Stream allocation
+
+   * Multiple outputs
+
+   * Optimizations within a given kernel
+
+   * Optimizations across kernels (merging?)
+
+   * Interpolant/constant streams

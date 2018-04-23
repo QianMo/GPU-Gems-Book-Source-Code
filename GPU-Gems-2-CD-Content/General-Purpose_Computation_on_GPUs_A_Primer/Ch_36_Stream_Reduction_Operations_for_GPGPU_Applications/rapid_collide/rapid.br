@@ -1,0 +1,707 @@
+#include <stdio.h>
+//all matrices stored in row major order
+//[Rotationx.x Rotationx.y Rotationx.z] [Vec.x]
+//[Rotationy.x Rotationy.y Rotationy.z] [Vec.y]
+//[Rotationz.x Rotationz.y Rotationz.z] [Vec.z]
+// Rotation * Vec is
+// float3 (dot(Rotationx,Vec),dot(Rotationy,Vec),dot(Rotationz,Vec));
+typedef struct traverser_t {
+  float4 index;//.xy is index into the aTree  .zw is index into bTree
+  float4 translation; 
+  float4 rotationX;
+  float4 rotationY;
+  //  float3 RotationZ=Translation.w,RotationX.w, RotationY.w yuck!
+}Traverser;
+kernel float3 getRotationZ(Traverser t<>) {
+  float3 ret;
+  float4 rx=t.rotationX;
+  float4 ry=t.rotationY;
+  float4 tr=t.translation;
+  ret.x=rx.w;
+  ret.y=ry.w;
+  ret.z=tr.w;
+  return ret;
+}
+
+typedef struct transposedbbox_t{
+  float4 transp_rotx;
+  float3 transp_roty;
+  // float3 mRotationz  // since Rotationx and Rotationy are orthogonal
+  /// cross(Rotationx,Rotationy);
+  float3 Translation;
+  float4 Radius; // if it's a leaf Radius.w is 1 else Radius.w = 0
+
+  // if leaf, the Children.xy is an index to the Triangle
+  // if node, the Children.xy is an index to left child
+  // assert right.xy is always left + {1,0} this may require gaps in the tree
+  float2 Children;  
+}TransposedBBox;
+
+
+typedef struct bbox_t{
+  float4 Rotationx;
+  float3 Rotationy;
+  // float3 mRotationz  // since Rotationx and Rotationy are orthogonal
+  /// cross(Rotationx,Rotationy);
+  float3 Translation;
+  float4 Radius;// if it's a leaf Radius.w is 1 else Radius.w = 0
+
+  // if leaf, the Children.xy is an index to the Triangle
+  // if node, the Children.xy is an index to left child
+  // assert right.xy is always left + {1,0} this may require gaps in the tree
+  float2 Children;  
+}BBox;
+
+
+typedef struct Tri_t {
+  float3 A;
+  float3 B;
+  float3 C;
+} Tri;
+#ifdef _WIN32
+const     int maxwid=2048;
+#else
+#define maxwide maxwid
+const     int maxwide=1024;
+#undef maxwide
+#endif 
+
+kernel float modTwo(float who) {
+  float tmp = fmod(who,2.0);
+  return (tmp>.5&&tmp<1.5)?1.0:0.0;
+}
+kernel void getMatrixTranspose(float3 rX<>, float3 rY<>, float3 rZ <>,
+                               out float3 oX<>, out float3 oY<>, out float3 oZ<>) {
+   oX=float3(rX.x,
+             rY.x,
+             rZ.x);
+   oY=float3(rX.y,
+             rY.y,
+             rZ.y);
+   oZ=float3(rX.z,
+             rY.z,
+             rZ.z);
+}
+
+kernel void matMult(float3 aX<>, float3 aY<>, float3 aZ<>,
+                    float3 bX<>, float3 bY<>, float3 bZ<>,
+                    out float3 oX<>, out float3 oY<>, out float3 oZ<>) {
+  float3 t_bX,t_bY,t_bZ;
+  getMatrixTranspose(bX,bY,bZ,t_bX,t_bY,t_bZ);
+  oX = float3(dot(aX,t_bX), dot(aX,t_bY), dot(aX,t_bZ));
+  oY = float3(dot(aY,t_bX), dot(aY,t_bY), dot(aY,t_bZ));
+  oZ = float3(dot(aZ,t_bX), dot(aZ,t_bY), dot(aZ,t_bZ));
+
+}
+kernel float3 matVecMult(float3 aX<>, float3 aY<>, float3 aZ<>,
+                         float3 v<>) {
+  float3 temp;
+  return temp=float3(dot(v,aX),
+                     dot(v,aY),
+                     dot(v,aZ));
+}
+kernel void ISECT(float3 VV<>, float3 D, out float2 isect<>) {
+  isect =float2(VV.x + (VV.y-VV.x)*D.x/(D.x-D.y),
+                VV.x + (VV.z-VV.x)*D.x/(D.x-D.z));
+}
+kernel float COMPUTE_INTERVALS (float3 VV<>,
+                                float3 D<>,
+                                float DOD1<>, float DOD2<>,
+                                out float2 isect<>) {
+  float pred;
+  float3 VVord = VV.zxy;
+  float3 Dord = D.zxy;
+  float ret = DOD1>0.0f?0:1.0f;
+  pred = (float)(ret&&DOD2>0.0f);
+  VVord = pred.xxx?VV.yxz:VVord; Dord = pred.xxx?D.yxz:Dord;
+  ret=pred?0:ret;
+  
+  pred=(float) (ret&&(D.y * D.z > 0.0f || D.x != 0.0f));
+  //  VVord = pred.xxx?VV.xyz:VVord.xyz; Dord=  pred.xxx?D.xyz:Dord.xyz;
+
+  VVord = pred?VV:VVord; 
+
+  Dord=  pred?D:Dord;
+
+  ret=pred?0:ret;
+  
+  pred= (float)(ret&&D.y!=0.0f);
+  VVord = pred.xxx?VV.yxz:VVord; Dord = pred.xxx?D.yxz:Dord;
+  ret=pred?0:ret;
+  
+  pred=  (float)(ret&&D.z!=0.0f);
+  VVord = pred.xxx?VV.zxy:VVord; Dord = pred.xxx?D.zxy:Dord;
+  ret=pred?0:ret;
+  ISECT(VVord,Dord,isect);
+  return ret;
+}
+kernel float2 sort2(float2 input) {
+  return (input.x>input.y)?input.yx:input;
+}
+kernel float coplanar_tri_tri(float3 N<>,
+                              float3 V0<>,float3 V1<>,float3 V2<>,
+                              float3 U0<>,float3 U1<>,float3 U2<>) {
+  
+  return 1;
+}
+kernel float3 make_float3 (float a, float b, float c) {
+  float3 temp={a,b,c};
+  return temp;
+}
+
+
+
+
+kernel float tri_contact(float3 V0<>, float3 V1<>, float3 V2<>,
+                         float3 U0<>, float3 U1<>, float3 U2<>) {
+
+  float3 E1,E2;
+  float3 N1,N2;
+  float d1,d2;
+  float3 du;
+  float3 dv;
+  float3 D;
+  float2 isect1;
+  float2 isect2;
+  float du0du1;
+  float du0du2;
+  float dv0dv1;
+  float dv0dv2;
+  float3 vp;
+  float3 up;
+  //float EPSILON=.00001;
+  float3 z3ro = {0,0,0};
+  float b,c,max;
+  float ret,coplanar;
+  float b_biggest,c_biggest;
+  E1 = V1-V0;
+  E2 = V2-V0;
+  N1 = cross(E1,E2);
+  d1 = -dot(N1,V0);
+  du = float3(dot(N1,U0)+d1,
+              dot(N1,U1)+d1,
+              dot(N1,U2)+d1);
+  //du=abs(du)>=EPSILON?du:z3ro;
+  du0du1 = du.x *du.y;
+  du0du2 = du.x *du.z;
+  
+  ret= (du0du1<= 0.0f||du0du2<= 0.0f)?1:0;
+  E1 = U1-U0;
+  E2 = U2-U0;
+  N2 = cross(E1,E2);
+  d2 = -dot(N2,U0);
+  dv = float3(dot(N2,V0)+d2,
+              dot(N2,V1)+d2,
+              dot(N2,V2)+d2);
+  //dv = abs(dv)>=EPSILON?dv:z3ro;
+  dv0dv1 = dv.x*dv.y;
+  dv0dv2 = dv.x*dv.z;
+  ret= (ret&&(dv0dv1<= 0.0f || dv0dv2 <=0.0f))?1:0;
+      
+  D = cross(N2,N1);
+  // compute and index to the largest component of D 
+  max = abs  (D .x);
+  vp=float3(V0.x,V1.x,V2.x);
+  up=float3(U0.x,U1.x,U2.x);
+  b = abs  (D .y);
+  c = abs  (D .z);
+  b_biggest = (b>max&&!(c>b))?1:0;
+  c_biggest = (c>max)?1:0;
+  vp = (c_biggest) ? make_float3(V0.z,V1.z,V2.z) : vp;
+  vp = (b_biggest) ? make_float3(V0.y,V1.y,V2.y) : vp;
+  up = (c_biggest) ? make_float3(U0.z,U1.z,U2.z) : up;
+  up = (b_biggest)? make_float3(U0.y,U1.y,U2.y) : up;
+  max = c_biggest?c:max;
+  max = b_biggest? b:max;
+ 
+  // this is the simplified projection onto L
+  // compute interval for triangle 1 
+  coplanar= (COMPUTE_INTERVALS (vp,dv,dv0dv1,dv0dv2,isect1)
+             ||COMPUTE_INTERVALS (up,du,du0du1,du0du2,isect2))?1:0;
+  ret= (ret&&coplanar)?coplanar_tri_tri (N1, V0,V1,V2, U0,U1,U2):ret;
+
+  isect1 = sort2 (isect1);
+  isect2 = sort2 (isect2);
+    
+  ret= (ret&&!coplanar)
+     ?
+     ((!(isect1 .y < isect2 .x || isect2 .y < isect1 .x))
+      ?1
+      :0)
+     :ret;    
+  
+  return ret;
+}
+
+
+kernel float TrianglesHaveContact (float3 mRx,
+                                   float3 mRy,
+                                   float3 mRz,
+                                   float3 mT,
+                                   Tri t1<>, 
+                                   Tri t2<>) {
+  float3 i1 = matVecMult(mRx,mRy,mRz,t1.A)+mT;
+  float3 i2 = matVecMult(mRx,mRy,mRz,t1.B)+mT;
+  float3 i3 = matVecMult(mRx,mRy,mRz,t1.C)+mT;
+  return tri_contact(i1,i2,i3,t2.A,t2.B,t2.C);
+
+}
+kernel float obb_disjoint (float3 Bx,
+                           float3 By,
+                           float3 Bz,
+                           float3 T,
+                           float3 a<>,
+                           float3 b<>) {
+  float t, s;
+  float r;
+  float3 Bfx;
+  float3 Bfy;
+  float3 Bfz;
+  const float reps = 1e-6;
+
+  Bfx = abs(Bx)+reps;
+  Bfy = abs(By)+reps;
+  Bfz = abs(Bz)+reps;
+
+  // one-sided tests make polyhedra disjoint
+  r = 1;
+
+
+  t = abs (T.x);
+
+  r = r&& (t <= (a.x + dot(b,Bfx)));
+
+
+  s = T.x * Bx.x + T.y * By.x + T.z * Bz.x;
+  t = abs (s);
+
+  r =r&& (t <= (b.x + a.x * Bfx.x + a.y * Bfy.x + a.z * Bfz.x));
+
+
+  t = abs (T.y);
+
+  r = r&&(t <= (a.y + dot(b,Bfy)));
+
+
+  t = abs (T.z);
+
+  r =r&& (t <= (a.z + dot(b,Bfz)));
+
+
+  s = T.x * Bx.y + T.y * By.y + T.z * Bz.y;
+  t = abs (s);
+
+  r =r&& (t <= (b.y + a.x * Bfx.y + a.y * Bfy.y + a.z * Bfz.y));
+
+
+  s = T.x * Bx.z + T.y * By.z + T.z * Bz.z;
+  t = abs (s);
+
+  r =r&& (t <= (b.z + a.x * Bfx.z + a.y * Bfy.z + a.z * Bfz.z));
+
+
+  s = T.z * By.x - T.y * Bz.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.x + a.z * Bfy.x + b.y * Bfx.z + b.z * Bfx.y));
+
+
+  s = T.z * By.y - T.y * Bz.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.y + a.z * Bfy.y + b.x * Bfx.z + b.z * Bfx.x));
+
+
+  s = T.z * By.z - T.y * Bz.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.y * Bfz.z + a.z * Bfy.z + b.x * Bfx.y + b.y * Bfx.x));
+
+
+  s = T.x * Bz.x - T.z * Bx.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.x + a.z * Bfx.x + b.y * Bfy.z + b.z * Bfy.y));
+
+
+  s = T.x * Bz.y - T.z * Bx.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.y + a.z * Bfx.y + b.x * Bfy.z + b.z * Bfy.x));
+
+
+  s = T.x * Bz.z - T.z * Bx.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfz.z + a.z * Bfx.z + b.x * Bfy.y + b.y * Bfy.x));
+
+
+  s = T.y * Bx.x - T.x * By.x;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.x + a.y * Bfx.x + b.y * Bfz.z + b.z * Bfz.y));
+
+
+  s = T.y * Bx.y - T.x * By.y;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.y + a.y * Bfx.y + b.x * Bfz.z + b.z * Bfz.x));
+
+
+  s = T.y * Bx.z - T.x * By.z;
+  t = abs (s);
+
+  r =r&& (t <= (a.x * Bfy.z + a.y * Bfx.z + b.x * Bfz.y + b.y * Bfz.x));
+
+  return r?0:1;
+}
+kernel void CheckTriangleCollide(float3 mRx,
+                                 float3 mRy,
+                                 float3 mRz,
+                                 float3 mT,
+                                 float4 collisions<>,
+                                 Tri t1List[][],
+                                 Tri t2List[][],
+                                 vout [1] float4 hits<>) {
+  float isASentinel = (collisions.x>=0&&collisions.x<16384)?0:1;
+  float4 sentinelHolder = {1,0,1,0};
+  float4 triIndex = isASentinel?sentinelHolder:collisions;
+  Tri t1 = t1List[triIndex.xy];
+  Tri t2 = t2List[triIndex.zw];
+  if ((isASentinel==0)&&TrianglesHaveContact(mRx,mRy,mRz,mT,
+                                             t1,t2)) {
+    hits= collisions;
+    push(hits);
+  }
+}
+kernel void CheckTriangleCollideNoCompact(float3 mRx,
+                                          float3 mRy,
+                                          float3 mRz,
+                                          float3 mT,
+                                          float4 collisions<>,
+                                          Tri t1List[][],
+                                          Tri t2List[][],
+                                          out float4 hits<>) {
+  float isASentinel = (collisions.x>=0&&collisions.x<16384)?0:1;
+  float4 sentinelHolder = {1,0,1,0};
+  float4 triIndex = isASentinel?sentinelHolder:collisions;
+  Tri t1 = t1List[triIndex.xy];
+  Tri t2 = t2List[triIndex.zw];
+  if ((isASentinel==0)&&TrianglesHaveContact(mRx,mRy,mRz,mT,
+                                             t1,t2)) {
+    hits = collisions;
+  }else {
+    hits = sentinelHolder;
+  }
+}
+kernel float GetBBSize (float3 Radius ) {
+  return Radius.x;
+}
+kernel void Collide (Traverser currentNode<>,
+                     TransposedBBox b1Tree[][], 
+                     BBox b2Tree[][], 
+                     vout [1]float4 nextNode<>,//xy is parent yz is first of two childs
+                                               //additionally if it's <0 then it's -b-1
+                     vout [1]float4 collisions<>//index into triangle list
+                     ) {
+  //push nextNode if currentNode has collision
+  TransposedBBox b1=b1Tree[currentNode.index.xy];
+  BBox b2=b2Tree[currentNode.index.zw];
+  if (!obb_disjoint(currentNode.rotationX.xyz,
+                    currentNode.rotationY.xyz,
+                    getRotationZ(currentNode),
+                    currentNode.translation.xyz,
+                    b1.Radius.xyz,
+                    b2.Radius.xyz)) {
+    if (b1.Radius.w!=0 && b2.Radius.w!=0) {
+      // it's a leaf node yo
+      // check ye olde triangles
+      collisions.xy = b1.Children;
+      collisions.zw = b2.Children;
+      push(collisions);
+    }else {
+      nextNode.xy = (indexof currentNode).xy;
+      if (b2.Radius.w!=0 
+          || (b1.Radius.w==0 && (GetBBSize(b1.Radius.xyz)
+                                 >
+                                 GetBBSize(b2.Radius.xyz)))) {
+        nextNode.zw = b1.Children;       
+      }else {
+        nextNode.zw = -b2.Children-1;
+      }
+      push(nextNode);
+    }
+  }
+}
+
+
+kernel void CollideNoCompact (Traverser currentNode<>,
+                              TransposedBBox b1Tree[][], 
+                              BBox b2Tree[][], 
+                              out float4 nextNode<>,//xy is parent yz is first of two childs
+                              //additionally if it's <0 then it's -b-1
+                              out float4 collisions<>//index into triangle list
+                              ) {
+  //push nextNode if currentNode has collision
+  TransposedBBox b1=b1Tree[currentNode.index.xy];
+  BBox b2=b2Tree[currentNode.index.zw];
+  float4 sentinel={1,0,1,0};
+  if (!obb_disjoint(currentNode.rotationX.xyz,
+                    currentNode.rotationY.xyz,
+                    getRotationZ(currentNode),
+                    currentNode.translation.xyz,
+                    b1.Radius.xyz,
+                    b2.Radius.xyz)) {
+    if (b1.Radius.w!=0 && b2.Radius.w!=0) {
+      // it's a leaf node yo
+      // check ye olde triangles
+      collisions.xy = b1.Children;
+      collisions.zw = b2.Children;
+      nextNode=sentinel;
+    }else {
+      nextNode.xy = (indexof currentNode).xy;
+      if (b2.Radius.w!=0 
+          || (b1.Radius.w==0 && (GetBBSize(b1.Radius.xyz)
+                                 >
+                                 GetBBSize(b2.Radius.xyz)))) {
+        nextNode.zw = b1.Children;       
+      }else {
+        nextNode.zw = -b2.Children-1;
+      }
+      collisions=sentinel;
+    }
+  }
+}
+
+
+kernel void updateCurrentNode(float stretchX,
+                              float4 curNodeIndices<>,
+                              TransposedBBox aTree[][],
+                              BBox bTree[][],
+                              Traverser nodes[][],
+                              out Traverser nextNode<>) {
+  float isASentinel = (curNodeIndices.x>=0&&curNodeIndices.x<16384)?0:1;
+  float4 sentinelHolder = {1,0,1,0};
+  float4 prevIndex = isASentinel?sentinelHolder:curNodeIndices;
+  float2 leftOrRightChild = {isASentinel?0:modTwo(stretchX
+                                                  ?
+                                                  (indexof nextNode).x:(indexof nextNode).y),
+                             0};
+  Traverser lastNode = nodes[prevIndex.xy];
+  float2 aTreeIndex = (prevIndex.z>=0)
+                        ?prevIndex.zw+leftOrRightChild
+                        :lastNode.index.xy;
+  float2 bTreeIndex = (prevIndex.z>=0)
+                         ?lastNode.index.zw
+                         :-prevIndex.zw-1+leftOrRightChild;
+  //  float3 lastNodeRotationz = cross(lastNode.Rotationx.xyz,
+  //                            lastNode.Rotationy)*lastNode.Rotationx.w;
+  if (prevIndex.z>=0) {
+    TransposedBBox a =aTree[aTreeIndex];
+    /*
+    float3 rot_transpX;
+    float3 rot_transpY;
+    float3 rot_transpZ;
+    float3 aRotationz = cross(a.Rotationx.xyz,a.Rotationy)*a.Rotationx.w;
+    getMatrixTranspose (a.Rotationx.xyz,
+                        a.Rotationy,
+                        aRotationz,
+                        rot_transpX,rot_transpY,rot_transpZ);    
+    */
+    float3 atransp_rotz = cross(a.transp_rotx.xyz,a.transp_roty)*a.transp_rotx.w;
+    float3 outRotX,outRotY,outRotZ,trans;
+    matMult(//rot_transpX,rot_transpY,rot_transpZ,
+            a.transp_rotx.xyz,a.transp_roty,atransp_rotz,
+            lastNode.rotationX.xyz,lastNode.rotationY.xyz,getRotationZ(lastNode),
+            outRotX,outRotY,outRotZ);
+    nextNode.rotationX=float4(outRotX.x,outRotX.y,outRotX.z,outRotZ.x);
+    nextNode.rotationY=float4(outRotY.x,outRotY.y,outRotY.z,outRotZ.y);
+    trans=matVecMult(//rot_transpX,rot_transpY,rot_transpZ,
+                     a.transp_rotx.xyz,a.transp_roty,atransp_rotz,
+                     lastNode.translation.xyz-a.Translation.xyz);
+    nextNode.translation=float4(trans.x,trans.y,trans.z,outRotZ.z);    
+  }else {
+    BBox b =bTree[bTreeIndex];
+    float3 bRotationz = cross(b.Rotationx.xyz,b.Rotationy)*b.Rotationx.w;
+    float3 outRotX,outRotY,outRotZ,trans;
+    matMult(lastNode.rotationX.xyz,
+            lastNode.rotationY.xyz,
+            getRotationZ(lastNode),
+            b.Rotationx.xyz,
+            b.Rotationy,
+            bRotationz,
+            outRotX,
+            outRotY,
+            outRotZ);            
+    nextNode.rotationX=float4(outRotX.x,outRotX.y,outRotX.z,outRotZ.x);
+    nextNode.rotationY=float4(outRotY.x,outRotY.y,outRotY.z,outRotZ.y);
+    trans=lastNode.translation.xyz+matVecMult(lastNode.rotationX.xyz,
+                                          lastNode.rotationY.xyz,
+                                          getRotationZ(lastNode),
+                                          b.Translation);
+    nextNode.translation=float4(trans.x,trans.y,trans.z,outRotZ.z);    
+  }
+  nextNode.index=float4 (aTreeIndex.x,aTreeIndex.y,bTreeIndex.x,bTreeIndex.y);
+
+}
+
+
+void copyTriangle(unsigned int howMany, float t1A<>,float t1B<>, float t1C<>, Tri * tri) {
+  unsigned int i;
+  float3 * temp;
+  temp = (float3*)malloc(sizeof(float3)*howMany);
+  for(i=0;i<howMany;++i) {
+    temp[i] = tri[i].A;
+  }
+  streamRead(t1A,temp);
+  for(i=0;i<howMany;++i) {
+    temp[i] = tri[i].B;
+  }
+  streamRead(t1B,temp);
+  for(i=0;i<howMany;++i) {
+    temp[i] = tri[i].C;
+  }
+  streamRead(t1C,temp);
+  free(temp);
+}
+void TransposeBBoxes (unsigned int howmany, BBox * bb) {
+  unsigned int i;
+  for (i=0;i<howmany;++i) {
+    float4 x = bb[i].Rotationx;
+    float3 y = bb[i].Rotationy;
+    float3 z;
+    z = float3(x.w*(x.y*y.z-x.z*y.y),
+               x.w*(x.z*y.x-x.x*y.z),
+               x.w*(x.x*y.y-x.y*y.x));
+    
+    bb[i].Rotationx = float4(x.x,y.x,z.x,x.w);
+    bb[i].Rotationy = float3(x.y,y.y,z.y);
+    //bb[i].Rotationx = float3(x.z,y.z,z.z);
+    
+  }
+}
+void Broken() {
+      printf ("Breaking\n");
+}
+
+extern int checkPassCorrectness(Traverser *, int, int);
+//doCollide returns the number of intersections, stored in the intersections struct between
+// the a and b models that have a trans difference between them
+unsigned int doCollide (unsigned int widt1, unsigned int heit1, Tri * t1,
+                        unsigned int bboxwidt1, unsigned int bboxheit1, BBox * bboxest1,
+                        unsigned int widt2, unsigned int heit2, Tri * t2,
+                        unsigned int bboxwidt2, unsigned int bboxheit2, BBox * bboxest2,
+                        float3 rX,float3 rY, float3 rZ,
+                        float3 trans,
+                        float3 csRapidColliderrX,
+                        float3 csRapidColliderrY,
+                        float3 csRapidColliderrZ,
+                        float3 csRapidColliderT,
+                        float4 ** intersections) {
+  unsigned int num_intersections=0;
+  unsigned int temp;
+  int xsize,ysize,pass=0;
+  float stretchX;
+  unsigned int alloc_intersections=16;
+  TransposedBBox m1<bboxwidt1,bboxheit1>;
+  BBox m2<bboxwidt2,bboxheit2>;
+  /*  float3 t1A <widt1,heit1>;
+  float3 t1B <widt1,heit1>;
+  float3 t1C <widt1,heit1>;
+  float3 t2A <widt2,heit2>;
+  float3 t2B <widt2,heit2>;
+  float3 t2C <widt2,heit2>;*/
+  Tri t1List<widt1,heit1>;
+  Tri t2List<widt2,heit2>;
+  float4 hits<1,1>;
+  float4 nextNode<1,1>;
+  Traverser baseTraverser;
+  Traverser trav<1,1>;
+  baseTraverser.index=float4(0,0,0,0);
+  baseTraverser.rotationX=float4(rX.x,rX.y,rX.z,rZ.x);
+  baseTraverser.rotationY=float4(rY.x,rY.y,rY.z,rZ.y);
+  baseTraverser.translation=float4(trans.x,trans.y,trans.z,rZ.z);
+  streamRead(trav,&baseTraverser);
+  *intersections=(float4*)malloc(alloc_intersections*sizeof(float4));
+  /*copyTriangle(widt1*heit1,t1A,t1B,t1C,t1);
+    copyTriangle(widt2*heit2,t2A,t2B,t2C,t2);*/
+  streamRead(t1List,t1);
+  streamRead(t2List,t2);
+  streamRead(m2,bboxest2);
+  TransposeBBoxes(bboxwidt1*bboxheit1,bboxest1);
+  streamRead(m1,bboxest1);
+  
+  do {
+     Collide(trav,m1,m2,nextNode,hits);
+     xsize = (int)streamSize(nextNode).x;
+     ysize = (int)streamSize(nextNode).y;     
+     
+     stretchX= (ysize*2>maxwid)?1.0:0.0;
+     if (stretchX) xsize*=2; else ysize*=2;
+     if (xsize&&ysize) {
+        Traverser temp<ysize,xsize>;
+        streamSwap(temp,trav);
+        updateCurrentNode(stretchX,
+                          nextNode,
+                          m1,
+                          m2,
+                          temp,
+                          trav);
+     }
+     temp = (int)streamSize(hits).x*(int)streamSize(hits).y;
+     if (xsize*ysize){
+       Traverser * temptrav;
+       temptrav = (Traverser *)malloc(sizeof(Traverser)*xsize*ysize);
+       streamWrite(trav,temptrav);
+       pass++;
+       checkPassCorrectness(temptrav,xsize*ysize,pass);
+       free(temptrav);
+     }
+     printf("Pass %d Num Tri Checks %d num nodes %d %d\n",pass,temp,xsize,ysize);
+
+     if (temp) {
+       
+       CheckTriangleCollide(csRapidColliderrX,csRapidColliderrY,csRapidColliderrZ,csRapidColliderT,
+                            hits,
+                            t1List,
+                            t2List,
+                            nextNode);
+       streamSwap(hits,nextNode);
+       temp = (int)streamSize(hits).x*(int)streamSize(hits).y;
+       if (temp) {
+         unsigned int i;
+         while (num_intersections+temp>alloc_intersections) {
+           alloc_intersections*=2;
+           *intersections= (float4*)realloc(*intersections,alloc_intersections*sizeof(float4));
+         }
+         streamWrite(hits,*intersections+num_intersections);
+         for (i=0;i<temp;++i) {
+           float4 f4 = *(*intersections+num_intersections+i);
+           if (!(f4.x>=0&&f4.x<streamSize(t1List).x))
+             break;
+           if (!(f4.y>=0&&f4.y<streamSize(t1List).y))
+             break;
+         }
+         num_intersections+=i;
+         printf ("Detected %d hits\n",i);
+       }
+     }
+  }while(xsize&&ysize);
+  return num_intersections;
+}
+
+kernel void SimpleCheckTriangleCollide(float3 mRx,
+                                       float3 mRy,
+                                       float3 mRz,
+                                       float3 mT,
+                                       float4 collisions<>,
+                                       Tri t1List[][],
+                                       Tri t2List[][],
+                                       out float4 hits<>) {
+  Tri t1 = t1List[collisions.xy];
+  Tri t2 = t2List[collisions.zw];
+  float4 neg1=-1;
+  hits= TrianglesHaveContact(mRx,mRy,mRz,mT,
+                             t1,t2)?collisions:neg1;
+}
+

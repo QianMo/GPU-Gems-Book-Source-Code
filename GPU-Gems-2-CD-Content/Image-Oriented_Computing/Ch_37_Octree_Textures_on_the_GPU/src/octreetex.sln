@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 7.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liboctreegpu", "liboctreegpu\liboctreegpu.vcproj", "{41B55285-6CA8-4D40-A4EB-B1AC20CD2627}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "paint", "paint\paint.vcproj", "{C3192636-12CE-4B24-83C5-4600CF7FD229}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simul", "simul\simul.vcproj", "{C3192636-12CE-4B24-83C5-4600CF7FD229}"
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		ConfigName.0 = Debug
+		ConfigName.1 = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.0 = {41B55285-6CA8-4D40-A4EB-B1AC20CD2627}
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.0 = {41B55285-6CA8-4D40-A4EB-B1AC20CD2627}
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{41B55285-6CA8-4D40-A4EB-B1AC20CD2627}.Debug.ActiveCfg = Debug|Win32
+		{41B55285-6CA8-4D40-A4EB-B1AC20CD2627}.Debug.Build.0 = Debug|Win32
+		{41B55285-6CA8-4D40-A4EB-B1AC20CD2627}.Release.ActiveCfg = Release|Win32
+		{41B55285-6CA8-4D40-A4EB-B1AC20CD2627}.Release.Build.0 = Release|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Debug.ActiveCfg = Debug|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Debug.Build.0 = Debug|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Release.ActiveCfg = Release|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Release.Build.0 = Release|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Debug.ActiveCfg = Debug|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Debug.Build.0 = Debug|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Release.ActiveCfg = Release|Win32
+		{C3192636-12CE-4B24-83C5-4600CF7FD229}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
+		Item:1 = readme.txt
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

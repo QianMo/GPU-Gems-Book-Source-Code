@@ -1,0 +1,15 @@
+struct v2f {
+    float4 col:COLOR0;
+ 
+    float4 clipSpace:TEXCOORD4;
+    float4 AABB:TEXCOORD5;
+    float4 polyPlane:TEXCOORD6;
+	float2 Delta:TEXCOORD7;
+};
+
+fragout main(v2f In,uniform sampler2D ColorMap : texunit0) {
+    fragout Out;
+	Out.col = 0.05;
+    return Out;
+}
+

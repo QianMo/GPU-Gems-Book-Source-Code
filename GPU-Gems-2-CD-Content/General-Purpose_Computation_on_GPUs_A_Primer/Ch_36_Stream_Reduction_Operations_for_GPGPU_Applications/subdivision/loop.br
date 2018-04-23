@@ -1,0 +1,1130 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/**   ABB__BBC 
+      /\  /\
+   AB/__\/__\BC
+    /\  B\  /\
+AAB/__\/__\/__\BCC
+   \  A\  /C  /
+    \/__\/__\/
+   AAC  AC  ACC
+**/
+typedef struct STri_t{
+   float4 A; // the last value of A indicates whether the edge AB is small
+   float4 B; // enough to stop subdividing.  B.w also indicates if BC is small
+   float4 C; // enough. C.w indicates if AC is small enough to stop subdividing
+} STri;
+
+//When a triangle is split, the new triangle really only has six unique new
+//values.  These are copied into the final 12 new triangle slots.
+typedef struct SplitTri_t {
+  float4 A;
+  float4 AB;
+  float4 B;
+  float4 BC;
+  float4 C;
+  float4 AC;
+}SplitTri;
+//Stores the neighbors of a given triangle The w component indicates if
+//the line length is short enough for the triangle to be produced.
+//this could be altered to any per-edge qualifier
+// for the intermediate split neighbors the unused 'w' components act as holders
+// for the recomputed neighbor list when a triangle is split
+typedef struct Neighbor_t {
+  float4 AB;// w = AB->B.x
+  float4 BBC;// w = AB->B.y
+  float4 ABB;// w = AB->B.z
+  float4 BC;// w = BC->C.x
+  float4 ACC;// w = BC->C.y
+  float4 BCC;// w = BC->C.z
+  float4 AC;// w = AC->A.x
+  float4 AAB;// w = AC->A.y
+  float4 AAC;// w = AC->A.z
+}Neighbor;
+
+unsigned char onlyCracks=0;
+unsigned char noCracks=0;
+unsigned char debugLoop=0;
+int counterMax = 1024;
+extern float neighboreps;
+int low_texture_ram=0;
+int subdivisiondepth=0;
+#ifdef _WIN32
+const unsigned int maxTexDim=2048;
+const unsigned int maxTexDimLog2=11;
+#else
+#define maxTexDime maxTexDim
+#define maxTexDimeLog2 maxTexDimLog2
+const unsigned int maxTexDime=1024;
+const unsigned int maxTexDimeLog2=10;
+#endif
+void recomputeNeighbors(STri*, Neighbor *, unsigned int);
+void checkNeighbors(STri * tri, Neighbor * in, Neighbor * out, unsigned int);
+void __printf_cpu_inner(float f,float g, float h) {
+  fprintf (stderr,"Val %f %f %f\n",f,g,h);
+}
+void __emer_cpu_inner(float f,float g, float h) {
+  fprintf (stderr,"Emer %f %f %f\n",f,g,h);
+}
+
+//returns a 2 if only b1, 4 if only b2 and 8 if both
+//this acts as sort of a bitwise holder class that should work with 24 bitfloat
+kernel float triCombine(float b1<>, float b2<>) {
+   return (b1&&b2)?8:(b1?2:(b2?4:0));
+}
+
+kernel float uoDistance (float3 a<>, float3 b<>){
+   float3 bigger = a>b?a:b;
+   float3 smaller = (a>b)?b:a;
+   float3 bs = a-b;//bigger-smaller
+   return dot(bs,bs);
+}
+kernel float3 avg (float3 a<>,float3 b<>) {
+   float3 bigger = a>b?a:b;
+   float3 smaller = a>b?b:a;
+   //return .5*(smaller+bigger);
+   return lerp(a,b,.5);
+}
+kernel float4 avg4 (float4 a<>,float4 b<>) {
+   float4 bigger = a>b?a:b;
+   float4 smaller = a>b?b:a;
+   //   return .5*(smaller+bigger);
+   return lerp(a,b,.5);
+}
+//if the model is missing a neighbor then all 3 components will be zero
+//i.e. if a model has 4 or 5 neighbors only
+kernel float isNeighbor(float4 neigh) {
+   return dot(neigh.xyz,neigh.xyz)>0;
+}
+kernel float isNotNeighbor(float4 neigh) {
+  return !(dot(neigh.xyz,neigh.xyz)>0);
+}
+kernel float3 mymax (float3 a, float3 b, float3 c) {
+   return a>b?(a>c?a:c):(b>c?b:c);
+}
+kernel float3 mymin (float3 a, float3 b, float3 c) {
+   return a>b?(b>c?c:b):(a>c?c:a);
+}
+kernel float3 mymed (float3 a, float3 b, float3 c,float3 max, float3 min) {
+   return a!=max&&a!=min?a:(((b!=max&&b!=min)||a==b)?b:c);
+}
+kernel float3 min3(float3 a, float3 b) {
+   return a>b?b:a;
+}
+kernel float3 max3 (float3 ain, float3 bin) {
+   return ain<bin?bin:ain;
+}
+
+kernel float3 swap3(float3 ain<>, float3 bin<>, out float3 bout<>) {
+   float3 ret = min3(ain,bin);
+   bout = max3(ain,bin);
+   return ret;
+}
+
+kernel float3 add6(float3 a<>,float3 b<>, float3 c<>, float3 d<>, float3 e<>, float3 f<>){
+   float3 ad = min3(a,d)+max3(a,d);
+   float3 be = min3(b,e)+max3(b,e);
+   float3 cf = min3(c,f)+max3(c,f);
+  float3 mint = mymin(ad,be,cf);
+  float3 maxt = mymax(ad,be,cf);
+  float3 medt = mymed(ad,be,cf,maxt,mint);
+  medt = mint+medt;
+  //return medt+maxt;
+  return a+b+c+d+e+f;
+}
+kernel void add6test (float3 a<>,float3 b<>, float3 c<>, float3 d<>, float3 e<>, float3 f<>, out float3 ooo<>) {
+   ooo= add6(a,b,c,d,e,f);
+}
+//The function that recomputes whether the given edges are large enough
+//to warrant a split. This could and probably should be done in "image space"
+kernel void smallEnough(STri t<>, Neighbor u<>, 
+                        out STri v<>, 
+                        out Neighbor n<>, 
+                        float epsilon) {
+  v.A.xyz = t.A.xyz;
+  v.A.w = (uoDistance(t.A.xyz,t.B.xyz)>epsilon)?1.0:0.0;
+  v.B.xyz = t.B.xyz;
+  v.B.w = (uoDistance(t.B.xyz,t.C.xyz)>epsilon)?1.0:0.0;
+  v.C.xyz = t.C.xyz;
+  v.C.w = (uoDistance(t.A.xyz,t.C.xyz)>epsilon)?1.0:0.0;
+  n.AB.xyz = u.AB.xyz;
+  //for the neighbors that two vertices share, there are two relevant lenghts,
+  // both of which must be saved in the neighbor .w
+  n.AB.w = triCombine((uoDistance(t.A.xyz,u.AB.xyz)>epsilon)?1.0:0.0,
+                      (uoDistance(t.B.xyz,u.AB.xyz)>epsilon)?1.0:0.0);
+  n.BC.xyz=u.BC.xyz;
+  n.BC.w = triCombine((uoDistance(t.B.xyz,u.BC.xyz)>epsilon)?1.0:0.0,
+                      (uoDistance(t.C.xyz,u.BC.xyz)>epsilon)?1.0:0.0);
+  n.AC.xyz=u.AC.xyz;
+  n.AC.w = triCombine((uoDistance(t.C.xyz,u.AC.xyz)>epsilon)?1.0:0.0,
+                      (uoDistance(t.A.xyz,u.AC.xyz)>epsilon)?1.0:0.0);
+  n.AAC.xyz=u.AAC.xyz;
+  n.AAC.w = (isNotNeighbor(u.AAC)|| //if missing neighbor, should not stop split
+             uoDistance(t.A.xyz,u.AAC.xyz)>epsilon)?1.0:0;
+  n.AAB.xyz=u.AAB.xyz;
+  n.AAB.w = (isNotNeighbor(u.AAB)|| //future split should not stop upon missing neigh
+             uoDistance(t.A.xyz,u.AAB.xyz)>epsilon)?1.0:0;
+  n.ABB.xyz=u.ABB.xyz;
+  n.ABB.w = (isNotNeighbor(u.ABB)|| //if missing neighbor, should not stop split
+             uoDistance(t.B.xyz,u.ABB.xyz)>epsilon)?1.0:0;
+  n.BBC.xyz=u.BBC.xyz;
+  n.BBC.w = (isNotNeighbor(u.BBC)|| //if missing neighbor, should not stop split
+             uoDistance(t.B.xyz,u.BBC.xyz)>epsilon)?1.0:0;
+  n.BCC.xyz=u.BCC.xyz;
+  n.BCC.w = (isNotNeighbor(u.BCC)|| //if missing neighbor, should not stop split
+             uoDistance(t.C.xyz,u.BCC.xyz)>epsilon)?1.0:0;
+  n.ACC.xyz=u.ACC.xyz;
+  n.ACC.w = (isNotNeighbor(u.ACC)|| //if missing neighbor, should not stop split
+             uoDistance(t.C.xyz,u.ACC.xyz)>epsilon)?1.0:0;
+}
+kernel void produceTriP(STri t<>, vout [1]float2 shouldProduce<>, vout[1] float2 shouldNotProduce<>){
+   if (t.A.w!=0.0f
+       ||t.B.w!=0.0f
+       ||t.C.w!=0.0f) { // if either of the 3 vertices are still mobile, continue to split
+     shouldProduce = (indexof t).xy;
+     push(shouldProduce);
+   }else { //all the vertices are pinned by edges (either neighbor or triangle) that are too short
+     shouldNotProduce = (indexof t).xy;
+     push(shouldNotProduce);
+   }
+}
+
+kernel Neighbor computeNeighbors(STri t<>, 
+                             Neighbor u<>, 
+                             float noAdaptive) {
+  Neighbor v;
+  float eAAB=isNeighbor(u.AAB);
+  float eAAC=isNeighbor(u.AAC);
+  float eABB=isNeighbor(u.ABB);
+  float eBBC=isNeighbor(u.BBC);
+  float eBCC=isNeighbor(u.BCC);
+  float eACC=isNeighbor(u.ACC);
+  float3 AB_B, AC_A, BC_C;
+  float3 zero3=0;
+  AB_B=avg(t.B.xyz,u.AB.xyz);
+  if(1)if(noAdaptive||u.AB.w==4||u.AB.w==8)
+     AB_B=lerp(AB_B,
+               avg(t.A.xyz,eABB?u.ABB.xyz:eBBC?u.BBC.xyz:u.BC.xyz),
+               .25);
+  AC_A=avg(t.A.xyz,u.AC.xyz);
+  if(1)if(noAdaptive||u.AC.w==4||u.AC.w==8)
+     AC_A=lerp(AC_A,
+               avg(t.C.xyz,eAAC?u.AAC.xyz:eAAB?u.AAB.xyz:u.AB.xyz),
+               .25);
+  BC_C=avg(t.C.xyz,u.BC.xyz);
+  if(1)if(noAdaptive||u.BC.w==4||u.BC.w==8)
+     BC_C=lerp(BC_C,
+               avg(t.B.xyz,eBCC?u.BCC.xyz:eACC?u.ACC.xyz:u.AC.xyz),
+               .25);
+
+  v.AB.xyz = avg(t.A.xyz,u.AB.xyz);
+  if(1)if(noAdaptive||u.AB.w==2||u.AB.w==8)
+     v.AB.xyz = lerp(v.AB.xyz,
+                     avg(t.B.xyz,eAAB?u.AAB.xyz:eAAC?u.AAC.xyz:u.AC.xyz),
+                     .25);
+  v.AB.w = AB_B.x;
+  v.BBC.xyz = eBBC?avg(t.B.xyz,u.BBC.xyz):zero3;
+  if(1)if(eBBC&&(noAdaptive||u.BBC.w))
+     v.BBC.xyz = lerp(v.BBC.xyz,
+                      avg(eABB?u.ABB.xyz:u.AB.xyz,u.BC.xyz),
+                      .25);
+  v.BBC.w = AB_B.y;
+  v.ABB.xyz = eABB?avg(t.B.xyz,u.ABB.xyz):zero3;
+  if(1)if(eABB&&(noAdaptive||u.ABB.w))
+     v.ABB.xyz = lerp(v.ABB.xyz,
+                      avg(u.AB.xyz,eBBC?u.BBC.xyz:u.BC.xyz),
+                      .25);
+  v.ABB.w = AB_B.z;
+  v.AC.xyz = avg(t.C.xyz,u.AC.xyz);
+  if(1)if(noAdaptive||u.AC.w==2||u.AC.w==8)
+     v.AC.xyz = lerp(v.AC.xyz,
+                     avg(t.A.xyz,eACC?u.ACC.xyz:eBCC?u.BCC.xyz:u.BC.xyz),
+                     .25);
+  v.AC.w = AC_A.x;
+  v.AAB.xyz = eAAB?avg(t.A.xyz,u.AAB.xyz):zero3;
+  if(1)if(eAAB&&(noAdaptive||u.AAB.w))
+     v.AAB.xyz = lerp(v.AAB.xyz,
+                      avg(eAAC?u.AAC.xyz:u.AC.xyz,u.AB.xyz),
+                      .25);
+  v.AAB.w = AC_A.y;
+  v.AAC.xyz = eAAC?avg(t.A.xyz,u.AAC.xyz):zero3;
+  if(1)if(eAAC&&(noAdaptive||u.AAC.w))
+     v.AAC.xyz = lerp(v.AAC.xyz,
+                      avg(eAAB?u.AAB.xyz:u.AB.xyz,u.AC.xyz),
+                      .25);
+  v.AAC.w = AC_A.z;
+  v.BC.xyz = avg(t.B.xyz,u.BC.xyz);
+  if(1)if(noAdaptive||u.BC.w==2||u.BC.w==8)
+     v.BC.xyz = lerp(v.BC.xyz,
+                     avg(t.C.xyz,eBBC?u.BBC.xyz:eABB?u.ABB.xyz:u.AB.xyz),
+                     .25);
+  v.BC.w = BC_C.x;
+  v.ACC.xyz = eACC?avg(t.C.xyz,u.ACC.xyz):zero3;
+  if(1)if(eACC&&(noAdaptive||u.ACC.w))
+     v.ACC.xyz = lerp(v.ACC.xyz,
+                      avg(u.AC.xyz,eBCC?u.BCC.xyz:u.AB.xyz),
+                      .25);
+  v.ACC.w = BC_C.y;
+  v.BCC.xyz = eBCC?avg(t.C.xyz,u.BCC.xyz):zero3;
+  if(1)if(eBCC&&(noAdaptive||u.BCC.w))
+     v.BCC.xyz = lerp(v.BCC.xyz,
+                      avg(u.BC.xyz,eACC?u.ACC.xyz:u.AC.xyz),
+                      .25);
+  v.BCC.w = BC_C.z;  
+  return v;
+}
+
+kernel void computeNeighborsNoAdaptive(STri tgather<>, 
+                                       Neighbor ugather<>, 
+                                       out Neighbor v<>) {
+  v=computeNeighbors(tgather,ugather,1);
+}
+kernel void computeNeighborsAdaptive(STri tgather[][], 
+                             Neighbor ugather[][], 
+                             float2 i<>, 
+                             out Neighbor v<>) {
+  float2 zero2=0;
+  float2 ind = (i>=0&&i<8192)?i:zero2;
+  Neighbor u = ugather[ind];
+  STri t = tgather[ind];
+  v=computeNeighbors(t,u,0);
+}
+
+//Splay the triangles into a vertex list of float3's.
+//these are the final triangles
+kernel void copyFinalTriangles (STri tri<>,
+                                 out float3 triList<>) {
+  float whichVertex=round(fmod((indexof triList).x,3));
+  triList = tri.A.xyz;
+  if (whichVertex>.5&&whichVertex<1.5)
+    triList=tri.B.xyz;
+  else if (whichVertex>=1.5&&whichVertex<2.5)
+    triList=tri.C.xyz;
+}
+//Same as copy final triangles but with a dependent texture lookup
+kernel void writeFinalTriangles (STri triangles[][],
+                                 float2 indices<>,
+                                 out float3 triList<>) {
+  float2 zero2=0;
+  float2 ind = (indices>=0&&indices<8192)?indices:zero2;
+  copyFinalTriangles(triangles[ind],triList);
+}
+//Same as copy final triangles but with a dependent texture lookup
+kernel void gatherTriangles (STri triangles[][],
+                             float2 indices<>,
+                             out STri triList<>) {
+  float2 zero2=0;
+  float2 ind = (indices>=0&&indices<8192)?indices:zero2;
+  triList=triangles[ind];
+}
+
+//since we don't have proper float4 constructors, we need to manufacture one
+kernel float4 addN(float3 inxyz, float inw) {
+   float4 x = float4(inxyz.x,
+                     inxyz.y,
+                     inxyz.z,
+                     inw);
+   return x;
+} 
+//nothing happens
+kernel float4 identity(float4 a, float b){return a;}
+//you fail to obtain anything
+kernel float3 ident3(float3 a, float b) {return a;}
+
+
+kernel void repairTJunctions(STri triangles[][],
+                             float3 where<>,
+                             out float3  tris<>) {
+  float2 zero2=0;
+  float2 index = (where.xy>=0&&where.xy<65536)?where.xy:zero2;
+  STri tri = triangles[index.xy];
+  float mod3 = round(fmod((indexof tris).x,3.0f));
+  float3 AC = avg (tri.A.xyz,tri.C.xyz);
+  float3 AB = avg (tri.A.xyz,tri.B.xyz);
+  float3 BC = avg (tri.B.xyz,tri.C.xyz);  
+  if (mod3>2.5||mod3<.5) {
+    if (where.z==0) {
+      tris=tri.A.xyz;
+    }else if (where.z==1) {
+      tris=tri.B.xyz;
+    }else {
+      tris=tri.C.xyz;
+    }
+  }else if (mod3<1.5) {
+    if (where.z==0) {
+      tris=tri.B.xyz;
+    }else if (where.z==1) {
+      tris=tri.C.xyz;
+    }else {
+      tris=tri.A.xyz;
+    }    
+  }else {
+    if (where.z==0) {
+      tris=AB;
+    }else if (where.z==1) {
+      tris=BC;
+    }else {
+      tris=AC;
+    }    
+  }
+  
+  
+}
+kernel void identifyTJunctions(STri triangles[][],
+                             Neighbor neighbors[][],
+                             float2 i<>,
+                             vout[1] float3 cracksA<>,
+                             vout[1] float3 cracksB<>) {
+  float2 zero2=0;
+  float2 index = (i>=0&&i<65536)?i:zero2;
+  STri tri=triangles[index];
+  Neighbor oldneighbors=neighbors[index];
+  float generous=0;
+  if(i.x>=0&&i.x<65536/*&&(tri.A.w!=0||tri.B.w!=0||tri.C.w!=0)*/) {
+    if ((generous||oldneighbors.AB.w==0)&&tri.A.w==0) {
+      //that triangle is rastered as is, we better push out a repair triangle
+      cracksA=float3(i.x,i.y,0);
+      push(cracksA);
+      if ((generous||oldneighbors.BC.w==0)&&tri.B.w==0) {
+        //that triangle is rastered as is, we better push out a repair triangle
+        cracksB=float3(i.x,i.y,1);
+        push(cracksB);
+      }
+      if ((generous||oldneighbors.AC.w==0)&&tri.C.w==0) {
+        //that triangle is rastered as is, we better push out a repair triangle
+        cracksB=float3(i.x,i.y,2);
+        push(cracksB);
+      }
+    }else
+    if ((generous||oldneighbors.BC.w==0)&&tri.B.w==0) {
+     //that triangle is rastered as is, we better push out a repair triangle
+      cracksA=float3(i.x,i.y,1);
+      push(cracksA);
+      if ((generous||oldneighbors.AC.w==0)&&tri.C.w==0) {
+        //that triangle is rastered as is, we better push out a repair triangle
+        cracksB=float3(i.x,i.y,2);
+        push(cracksB);
+      }
+    }else
+    if ((generous||oldneighbors.AC.w==0)&&tri.C.w==0) {
+      //that triangle is rastered as is, we better push out a repair triangle
+      cracksA=float3(i.x,i.y,2);
+      push(cracksA);
+    }
+  }
+}
+
+kernel SplitTri splitTriangles (STri tri<>, Neighbor oldneighbors<>, float noAdaptive<>) {
+  SplitTri splittri;
+  float eAAB=isNeighbor(oldneighbors.AAB);
+  float eAAC=isNeighbor(oldneighbors.AAC);
+  float eABB=isNeighbor(oldneighbors.ABB);
+  float eBBC=isNeighbor(oldneighbors.BBC);
+  float eBCC=isNeighbor(oldneighbors.BCC);
+  float eACC=isNeighbor(oldneighbors.ACC);
+  float3 fiveandhalf=5.5;
+  float3 fourandhalf=4.5;
+  float3 weights={.625,.579533905371,0.515625};
+  float3 ABCneighbors = {4.0f+eAAC+eAAB,4.0f+eBBC+eABB,4.0f+eBCC+eACC};
+  float3 abcn =ABCneighbors>fiveandhalf?weights.xxx:(ABCneighbors>fourandhalf?weights.yyy:weights.zzz);
+  //float an = .375+(.375+sqr(.25*cos(2*3.1415926536/Aneighbors)));
+  //float bn = //.375+(.375+sqr(.25*cos(2*3.1415926536/Bneighbors)));
+  //float cn = //.375+(.375+sqr(.25*cos(2*3.1415926536/Cneighbors)));
+  float an = abcn.x;
+  float bn = abcn.y;
+  float cn = abcn.z;
+  float3 abcnon = (1-abcn)/ABCneighbors;
+  float anon = abcnon.x;
+  float bnon = abcnon.y;
+  float cnon = abcnon.z;
+  splittri.AC = avg4 (tri.A,tri.C);
+  if(1)if(noAdaptive||tri.C.w)
+    splittri.AC = addN(lerp(splittri.AC.xyz,
+                            avg (tri.B.xyz,oldneighbors.AC.xyz),
+                            .25),
+                       1);
+  splittri.AB = avg4 (tri.A,tri.B);
+  if(1)if(noAdaptive||tri.A.w)
+    splittri.AB = addN(lerp(splittri.AB.xyz,
+                                avg(tri.C.xyz,oldneighbors.AB.xyz),
+                                .25),
+                           1);
+  splittri.BC = avg4 (tri.B,tri.C);
+  if(1)if(noAdaptive||tri.B.w)
+    splittri.BC = addN(lerp(splittri.BC.xyz,
+                                avg(tri.A.xyz,oldneighbors.BC.xyz),
+                                .25),
+                           1);
+  splittri.A = tri.A;
+  if(1)if(noAdaptive||(tri.A.w&&
+                       tri.C.w&&
+                       (oldneighbors.AC.w==4||oldneighbors.AC.w==8)&&
+                       (oldneighbors.AB.w==2||oldneighbors.AB.w==8)&&
+                       oldneighbors.AAB.w&&
+                       oldneighbors.AAC.w))       
+     splittri.A.xyz = tri.A.xyz*an
+        +anon*add6(oldneighbors.AB.xyz,
+                   tri.B.xyz,
+                   tri.C.xyz,
+                   oldneighbors.AC.xyz,
+                   oldneighbors.AAC.xyz,
+                   oldneighbors.AAB.xyz);
+  splittri.B = tri.B;
+  if(1)if(noAdaptive||(tri.A.w&&
+                       tri.B.w&&
+                       (oldneighbors.BC.w==2||oldneighbors.BC.w==8)&&
+                       (oldneighbors.AB.w==4||oldneighbors.AB.w==8)&&
+                       oldneighbors.ABB.w&&
+                       oldneighbors.BBC.w))        
+    splittri.B.xyz= tri.B.xyz*bn
+       +bnon*add6(oldneighbors.ABB.xyz,
+                  oldneighbors.BBC.xyz,
+                  oldneighbors.BC.xyz,
+                  tri.C.xyz,
+                  tri.A.xyz,
+                  oldneighbors.AB.xyz);
+
+  splittri.C = tri.C;
+  if(1)if(noAdaptive||(tri.C.w&&
+                       tri.B.w&&
+                       (oldneighbors.BC.w==4||oldneighbors.BC.w==8)&&
+                       (oldneighbors.AC.w==2||oldneighbors.AC.w==8)&&
+                       oldneighbors.ACC.w&&
+                       oldneighbors.BCC.w))
+     splittri.C.xyz = tri.C.xyz*cn
+        +cnon*add6(tri.B.xyz,
+                   oldneighbors.BC.xyz,
+                   oldneighbors.BCC.xyz,
+                   oldneighbors.ACC.xyz,
+                   oldneighbors.AC.xyz,
+                   tri.A.xyz);
+  return splittri;
+}
+
+
+//this function takes as input an index that tells which triangle must be split
+//the output is 6 new vertices that make up the 4 new triangles and 12 neighbors 
+// (stored in 9 float4s)
+kernel void splitTrianglesAdaptive (STri triangles[][], 
+                                    Neighbor neighbors[][],
+                                    float2 i<>,
+                                    out SplitTri splittri<>) {
+  float2 zero2=0;
+  float2 index = (i>=0&&i<65536)?i:zero2;
+  STri tri=triangles[index];
+  Neighbor oldneighbors=neighbors[index];
+  splittri=splitTriangles(tri,oldneighbors,0);
+}
+
+kernel void splitTrianglesNoAdaptive (STri triangles<>, 
+                                      Neighbor neighbors<>,
+                                      out SplitTri splittri<>) {
+  splittri=splitTriangles(triangles,neighbors,1);
+}
+
+/*
+void __printf_cpu_inner(float f) {
+  printf("%.2f ",f);
+  }*/
+void __printnew_cpu_inner() {
+  printf ("\n");
+}
+
+kernel float whichMod4 (float2 index, float stretchX) {
+  float num;
+  num= (stretchX*index.x+((float)(stretchX!=1))*index.y);
+  num = fmod(num,4.0f);
+  return num>3.5?0:num;
+}
+//moves the 6 split values into 4 individual triangles (with a result of 12 vertices)
+//moves the 12 split neighbors into 4 individual neighbor lists
+//uses fmod with x or y to determine which direction should matter wrt fmod.
+kernel void linearReorgSplitTriangles (SplitTri splittri<>,
+                                       Neighbor newnei<>,
+                                       out STri tri<>,
+                                       out Neighbor neighbor<>,
+                                       float stretchX) {
+  //  float sindex = stretchX?(indexof tri).x:(indexof tri).y;
+  //  float unclampedwhich = round(fmod(sindex,4));
+  //  float which = whichMod4(unclampedwhich>3.5?0:unclampedwhich;
+  float which = whichMod4((indexof tri).xy,stretchX);
+  float4 ac = splittri.AC;
+  float4 ab = splittri.AB;
+  float4 bc = splittri.BC;
+  float4 a = splittri.A;
+  float4 b = splittri.B;
+  float4 c = splittri.C;
+  float4 BC_C= {newnei.BC.w,
+                newnei.ACC.w,
+                newnei.BCC.w,1};
+  float4 AC_A = {newnei.AC.w,
+                 newnei.AAB.w,
+                 newnei.AAC.w,1};
+  float4 AB_B = {newnei.AB.w,
+                 newnei.BBC.w,
+                 newnei.ABB.w,1};
+  
+  if (which<.5) {
+    tri.A=identity(a,1);
+    tri.B=identity(ab,1);
+    tri.C=identity(ac,1);
+
+    neighbor.BCC = c;
+    neighbor.BC = bc;
+    neighbor.BBC= b;
+    neighbor.ABB= AB_B;
+    neighbor.AB = newnei.AB;
+    neighbor.AAB =  newnei.AAB;
+    neighbor.AAC =  newnei.AAC;
+    neighbor.AC = AC_A;
+    neighbor.ACC = newnei.AC;
+  }else if (which <1.5) {
+    tri.A= identity(ab,1);
+    tri.B=identity(b,1);
+    tri.C=identity(bc,1);
+
+    neighbor.BCC = BC_C;
+    neighbor.BC = newnei.BC;//b0rken
+    neighbor.BBC=newnei.BBC;
+    neighbor.ABB=newnei.ABB;
+    neighbor.AB = AB_B;
+    neighbor.AAB = newnei.AB;
+    neighbor.AAC = a;
+    neighbor.AC = ac;
+    neighbor.ACC = c;
+  }else if (which<2.5) {
+    
+    tri.A=identity(ac,1);
+    tri.B=identity(bc,1);
+    tri.C=identity(c,1);
+
+    neighbor.BCC=newnei.BCC;
+    neighbor.BC=BC_C;
+    neighbor.BBC = newnei.BC;//b0rken!?
+    neighbor.ABB = b;
+    neighbor.AB = ab;
+    neighbor.AAB = a;
+    neighbor.AAC = AC_A;
+    neighbor.AC = newnei.AC;
+    neighbor.ACC = newnei.ACC;
+  }else {
+    tri.A=identity(bc,1);
+    tri.B=identity(ac,1);
+    tri.C=identity(ab,1);
+
+    neighbor.BCC = newnei.AB;
+    neighbor.BC = a;
+    neighbor.BBC= AC_A;
+    neighbor.ABB= newnei.AC;
+    neighbor.AB = c;
+    neighbor.AAB = BC_C;
+    neighbor.AAC = newnei.BC;//b0rken
+    neighbor.AC = b;
+    neighbor.ACC = AB_B;
+  }
+}
+kernel void adaptiveReorgSplitTriangles (SplitTri splittri<>,
+                                       Neighbor newnei<>,
+                                       out STri tri<>,
+                                       out Neighbor neighbor<>,
+                                       float epsilon,
+                                       float stretchX) {
+  linearReorgSplitTriangles(splittri,newnei,tri,neighbor,stretchX);
+  smallEnough(tri,neighbor,tri,neighbor,epsilon);  
+}
+
+
+struct VertexArray4{
+  float4 * v;
+  unsigned int size;
+  unsigned int alloc;
+};
+void initVertexArray4(struct VertexArray4 *v) {
+  v->v=0;v->size=0;v->alloc=0;
+}
+void destroyVertexArray4(struct VertexArray4 *v) {
+  if (v->v) free(v->v);
+}
+void expandVertexArray4(struct VertexArray4 * v,
+                       unsigned int more) {
+  v->size+=more;
+  while(v->size>v->alloc) {
+    if (v->alloc==0)
+      v->alloc=16;
+    v->alloc*=2;
+    v->v = (float4*)realloc(v->v,v->alloc*sizeof(float4));
+  }
+}                   
+void pushBackVertexArray4(struct VertexArray4 * v,
+                         float4 f) {
+  if (++v->size>v->alloc) {
+    if (v->alloc==0)
+      v->alloc=16;
+    v->alloc*=2;
+    v->v = (float4*)realloc(v->v,v->alloc*sizeof(float4));
+  }
+  v->v[v->size-1]=f;
+}                   
+
+//simple growable array, similar to std::vector (I hate C parsers)
+struct VertexArray{
+  float3 * v;
+  unsigned int size;
+  unsigned int alloc;
+};
+void initVertexArray(struct VertexArray *v) {
+  v->v=0;v->size=0;v->alloc=0;
+}
+void destroyVertexArray(struct VertexArray *v) {
+  if (v->v) free(v->v);
+}
+void expandVertexArray(struct VertexArray * v,
+                       unsigned int more) {
+  v->size+=more;
+  while(v->size>v->alloc) {
+    if (v->alloc==0)
+      v->alloc=16;
+    v->alloc*=2;
+    v->v = (float3*)realloc(v->v,v->alloc*sizeof(float3));
+  }
+}                   
+void pushBackVertexArray(struct VertexArray * v,
+                         float3 f) {
+  if (++v->size>v->alloc) {
+    if (v->alloc==0)
+      v->alloc=16;
+    v->alloc*=2;
+    v->v = (float3*)realloc(v->v,v->alloc*sizeof(float3));
+  }
+  v->v[v->size-1]=f;
+}                   
+static int toi(float f) {return (int)f;}
+
+
+void subdivide (Neighbor (*neighbors)<>,
+                STri (*triangles)<>,
+                struct VertexArray *output,
+                struct VertexArray4 *output4,
+                int counter,
+                char out4) {
+  unsigned int streamY=toi(streamSize(*triangles).y);
+  unsigned int streamX=toi(streamSize(*triangles).x);
+  float stretchX = streamY*4>maxTexDim?(streamY*2>maxTexDim?1.0f:2.0f):0.0f;      
+  int xfactor=stretchX==2.0f?2:(stretchX==1.0f?4:1);
+  int yfactor=stretchX==2.0f?2:(stretchX==1.0f?1:4);
+  subdivisiondepth++;
+  if (counter>=counterMax) {
+    if (out4) {
+      int sizey = output4->size;
+      expandVertexArray4(output4,
+                         3*toi(streamSize(*triangles).y)*toi(streamSize(*triangles).x));
+      streamWrite(*triangles,output4->v+sizey);
+    }else {
+      int sizey = output->size;
+      float3 outputTri<toi(streamSize(*triangles).y),
+        toi(streamSize(*triangles).x*3)>;
+      copyFinalTriangles(*triangles,outputTri);
+      expandVertexArray(output,
+                      3*toi(streamSize(*triangles).y)*toi(streamSize(*triangles).x));
+      streamWrite(outputTri,output->v+sizey);
+    }
+  }else {
+    //allocate shared neighbor structs that hold the extra generated floats
+    Neighbor sharedNeighbors<streamY,streamX>;
+    SplitTri sharedTriangles <streamY,streamX>;
+    //these new neighbor structs are 4x as big as the old ones
+    //input is thus stretched through them based on the fmod
+
+    Neighbor newNeighbors<(streamY*yfactor),
+      (streamX*xfactor)>;
+    STri newTriangles<(streamY*yfactor),
+      (streamX*xfactor)>;
+    fprintf (stderr,"stretching %f to %d %d\n",stretchX,streamX*xfactor,streamY*yfactor);
+
+    //computes the 12 shared neighbor values
+    computeNeighborsNoAdaptive(*triangles,*neighbors,sharedNeighbors);
+    //computes the 6 new triangle vertex values
+    splitTrianglesNoAdaptive(*triangles,*neighbors,sharedTriangles);
+    // combines the 12 neighbors and 6 vertices to produce 4 individual 
+    // sets of triangles
+    // with the new triangles getting stretched in the x or y direction depending
+    // on stretchX
+    linearReorgSplitTriangles(sharedTriangles,
+                              sharedNeighbors,
+                              newTriangles,
+                              newNeighbors,
+                              stretchX);
+    streamSwap(*triangles,newTriangles);
+    streamSwap(*neighbors,newNeighbors);
+    if (debugLoop) {
+      STri * tri;
+      Neighbor * neigh;
+      Neighbor * checknei;
+      unsigned int totalsize;
+      totalsize = ((unsigned int)streamSize(*triangles).x)*(unsigned int)streamSize(*triangles).y;
+      tri = (STri*)malloc (sizeof(STri)*totalsize);
+      neigh = (Neighbor*)malloc (sizeof(Neighbor)*totalsize);
+      checknei = (Neighbor*)malloc (sizeof(Neighbor)*totalsize);
+      streamWrite(*neighbors,neigh);
+      streamWrite(*triangles,tri);
+      recomputeNeighbors(tri,checknei,totalsize);
+      checkNeighbors(tri,neigh,checknei,totalsize);
+      free (tri);
+      free (neigh);
+      free(checknei);
+    }
+    if (counter<counterMax) {
+      //if we can afford the ram, we recursively call this function
+      // to evaluate other triangles
+      subdivide(neighbors,triangles,output,output4,counter+1,out4);
+    } 
+  }
+}
+
+
+//the main controller function...takes in neighbors and triangles
+//Note smallEnough must have been run on the input for this to work
+//small enough is run from main or from within linearReorgSplitTriangles
+void subdivideAdaptive (Neighbor (*neighbors)<>,
+                        STri (*triangles)<>,
+                        struct VertexArray *output,
+                        struct VertexArray4 *output4,
+                        float epsilon,
+                        int counter, char out4) {
+  float3 tJunctionsRepairA<0,0>;
+  float3 tJunctionsRepairB<0,0>;
+  unsigned int streamY=toi(streamSize(*triangles).y);
+  unsigned int streamX=toi(streamSize(*triangles).x);
+  unsigned char snpSize=0;
+  subdivisiondepth++;
+  {
+    float2 shouldProduce<streamY,0>;
+    float2 shouldNotProduce<streamY,0>;
+    //see whether triangles should be split
+    produceTriP(*triangles,shouldProduce,shouldNotProduce);
+    assert((int)streamX==toi(streamSize(shouldProduce).x));
+    {
+      int wosizex=3*toi(streamSize(shouldNotProduce).x);
+      int wosizey=toi(streamSize(shouldNotProduce).y);
+      int tsizex=toi(streamSize(shouldProduce).x);
+      int tsizey=toi(streamSize(shouldProduce).y);
+      float3 outputTri<(out4?0:wosizey),(out4?0:wosizex)>;
+      STri outputTri4<(out4?wosizey:0),(out4?toi(streamSize(shouldNotProduce).x):0)>;
+      if (tsizey&&tsizex) {
+        float3 tJunctionsA<tsizey,0>;
+        float3 tJunctionsB<tsizey,0>;
+        identifyTJunctions(*triangles,*neighbors,shouldProduce,tJunctionsA,tJunctionsB);
+        if (streamSize(tJunctionsA).x&&streamSize(tJunctionsA).y) {
+          int tsizex = toi(streamSize(tJunctionsA).x)*3;
+          int tsizey = toi(streamSize(tJunctionsA).y);
+          float3 outputTri<tsizey,tsizex>;
+          streamSwap(outputTri,tJunctionsRepairA);
+          repairTJunctions(*triangles,tJunctionsA,tJunctionsRepairA);
+        }
+        if (streamSize(tJunctionsB).x&&streamSize(tJunctionsB).y) {
+          int tsizex = toi(streamSize(tJunctionsB).x)*3;
+          int tsizey = toi(streamSize(tJunctionsB).y);
+          float3 outputTri<tsizey,tsizex>;
+          streamSwap(outputTri,tJunctionsRepairB);
+          repairTJunctions(*triangles,tJunctionsB,tJunctionsRepairB);
+        }
+      }
+      if (wosizex&&wosizey) {
+        if (out4) {
+          gatherTriangles(*triangles,shouldNotProduce,outputTri4);          
+        }else {
+          writeFinalTriangles(*triangles,shouldNotProduce,outputTri);      
+        }
+      }
+
+      streamY=toi(streamSize(shouldProduce).y);
+      //if some should be split and produced then go here
+      if (streamY&&streamX) {
+        float stretchX = streamY*4>maxTexDim?(streamY*2>maxTexDim?1.0f:2.0f):0.0f;      
+        int xfactor=stretchX==2.0f?2:(stretchX==1.0f?4:1);
+        int yfactor=stretchX==2.0f?2:(stretchX==1.0f?1:4);
+        //allocate shared neighbor structs that hold the extra generated floats
+        Neighbor sharedNeighbors<streamY,streamX>;
+        SplitTri sharedTriangles <streamY,streamX>;
+        //these new neighbor structs are 4x as big as the old ones
+        //input is thus stretched through them based on the fmod
+        Neighbor newNeighbors<(streamY*yfactor),
+          (streamX*xfactor)>;
+        STri newTriangles<(streamY*yfactor),
+          (streamX*xfactor)>;
+        //computes the 12 shared neighbor values
+        fprintf (stderr,"stretching %f to %d %d\n",stretchX,streamX*xfactor,streamY*yfactor);
+        computeNeighborsAdaptive(*triangles,*neighbors,shouldProduce,sharedNeighbors);
+        //computes the 6 new triangle vertex values
+        splitTrianglesAdaptive(*triangles,*neighbors,shouldProduce,sharedTriangles);
+        // combines the 12 neighbors and 6 vertices to produce 4 individual 
+        // sets of triangles
+        // with the new triangles getting stretched in the x or y direction depending
+        // on stretchX
+        adaptiveReorgSplitTriangles(sharedTriangles,
+                                    sharedNeighbors,
+                                    newTriangles,
+                                    newNeighbors,
+                                    epsilon,
+                                    stretchX);
+        streamSwap(*triangles,newTriangles);
+        streamSwap(*neighbors,newNeighbors);
+        if (debugLoop) {
+          STri * tri;
+          Neighbor * neigh;
+          Neighbor * checknei;
+          unsigned int totalsize;
+          totalsize = ((unsigned int)streamSize(*triangles).x)*(unsigned int)streamSize(*triangles).y;
+          tri = (STri*)malloc (sizeof(STri)*totalsize);
+          neigh = (Neighbor*)malloc (sizeof(Neighbor)*totalsize);
+          checknei = (Neighbor*)malloc (sizeof(Neighbor)*totalsize);
+          streamWrite(*neighbors,neigh);
+          streamWrite(*triangles,tri);
+          recomputeNeighbors(tri,checknei,totalsize);
+          checkNeighbors(tri,neigh,checknei,totalsize);
+          free (tri);
+          free (neigh);
+          free(checknei);
+        }
+      }
+      // if we have some triangles that are set to be produced
+      if (streamSize(shouldNotProduce).y){
+        snpSize=1;
+        // write them out to a vertex array
+        if ((!low_texture_ram)&&
+            streamSize(shouldProduce).y&&
+            streamSize(shouldProduce).x&&
+            counter<counterMax) {
+          //if we can afford the ram, we recursively call this function
+          // to evaluate other triangles
+          subdivideAdaptive(neighbors,triangles,output,output4,epsilon,counter+1,out4);
+        } 
+        //now we writeback from the card to local memory since we dont have
+        // render to vertex array yet
+        if (!onlyCracks){
+          if (out4) {
+            wosizey = output4->size;
+            expandVertexArray4(output4,(unsigned int)(streamSize(outputTri4).x*3*
+                                                      streamSize(outputTri4).y));
+            streamWrite(outputTri4,output4->v+wosizey);               
+          }else {
+            wosizey = output->size;
+
+            expandVertexArray(output,(unsigned int)(streamSize(outputTri).x*
+                                                    streamSize(outputTri).y));
+            streamWrite(outputTri,output->v+wosizey);   
+          }
+        }
+        if (streamSize(tJunctionsRepairA).x&&streamSize(tJunctionsRepairA).y&&!noCracks) {
+          wosizey = output->size;
+          expandVertexArray(output,(unsigned int)(streamSize(tJunctionsRepairA).x*
+                                                  streamSize(tJunctionsRepairA).y));
+          streamWrite(tJunctionsRepairA,output->v+wosizey);             
+        }
+        if (streamSize(tJunctionsRepairB).x&&streamSize(tJunctionsRepairB).y&&!noCracks) {
+          wosizey = output->size;
+          expandVertexArray(output,(unsigned int)(streamSize(tJunctionsRepairB).x*
+                                                  streamSize(tJunctionsRepairB).y));
+          streamWrite(tJunctionsRepairB,output->v+wosizey);             
+        }
+      }
+    }
+    if (counter>=counterMax) {
+      if (out4) {
+        int sizey = output4->size;      
+        expandVertexArray4(output4,
+                           3*toi(streamSize(*triangles).y)*toi(streamSize(*triangles).x));
+        streamWrite(*triangles,output4->v+sizey);
+      }else {
+        int sizey = output->size;      
+        float3 outputTri<toi(streamSize(*triangles).y),
+                       toi(streamSize(*triangles).x*3)>;
+        copyFinalTriangles(*triangles,outputTri);
+        if (!onlyCracks){
+          expandVertexArray(output,
+                            3*toi(streamSize(*triangles).y)*toi(streamSize(*triangles).x));
+          streamWrite(outputTri,output->v+sizey);
+        }
+      }
+      if (streamSize(tJunctionsRepairA).x&&streamSize(tJunctionsRepairA).y&&!noCracks) {
+        int sizey = output->size;
+        expandVertexArray(output,(unsigned int)(streamSize(tJunctionsRepairA).x*
+                                                streamSize(tJunctionsRepairA).y));
+        streamWrite(tJunctionsRepairA,output->v+sizey);             
+      }
+      if (streamSize(tJunctionsRepairB).x&&streamSize(tJunctionsRepairB).y&&!noCracks) {
+        int sizey = output->size;
+        expandVertexArray(output,(unsigned int)(streamSize(tJunctionsRepairB).x*
+                                                streamSize(tJunctionsRepairB).y));
+        streamWrite(tJunctionsRepairB,output->v+sizey);             
+      }
+    }
+    
+  }
+  // if we really dont have that kind of ram we will already have written out
+  // vertices out to host ram, thus preserving memory. Only recurse if we have 
+  // size in shouldSplit arrays :-)
+  if ((low_texture_ram||snpSize==0)&&streamY&&streamX&&counter<counterMax) {
+     subdivideAdaptive(neighbors,triangles,output,output4,epsilon,counter+1,out4);
+  } 
+  // prevents all writing at the end
+}
+
+extern unsigned int  loadModelData(const char * filename, 
+                                   STri **tris, 
+                                   Neighbor **nei);
+
+STri *  createTriangles (unsigned int howMany) {
+  STri * ret;  
+  ret=(STri*)malloc(sizeof(STri)*howMany);
+  memset(ret,0,sizeof(STri)*howMany);
+  return ret;
+}
+Neighbor *  createNeighbors (STri * tri, unsigned int howMany) {
+  Neighbor * ret;  
+  ret=(Neighbor*)malloc(sizeof(Neighbor)*howMany);
+  memset(ret,0,sizeof(Neighbor)*howMany);
+  return ret;
+}
+void bestHeiWid(unsigned int totalSize,
+                unsigned int *hei,
+                unsigned int *wid) {
+   unsigned int slop=totalSize*2;
+   unsigned int maxy = 0;
+   unsigned int best = maxTexDimLog2;
+   unsigned int i;
+   for (i=0;i<maxTexDimLog2+1;++i) {
+      unsigned int x= (1<<i);
+      unsigned int y = totalSize/x+(totalSize%x==0?0:1);
+      unsigned int tslop;
+      if (x>maxTexDim||y>maxTexDim)
+         continue;
+      tslop = x*y - totalSize;
+      if (tslop<0)
+         continue;
+      if ((tslop<slop&&y>maxy)||
+          (y>maxy&&tslop<2*y/3)) {
+         *hei=y;
+         *wid=x;
+         maxy = y;
+         slop = tslop;
+         best = i;
+      }
+   }
+}
+unsigned int bestHeight(unsigned int totalSize){
+   unsigned int hei=0,wid=0;
+   bestHeiWid(totalSize,&hei,&wid);
+   return hei;
+}
+unsigned int bestWidth(unsigned int totalSize){
+   unsigned int hei=0,wid=0;
+   bestHeiWid(totalSize,&hei,&wid);
+   return wid;
+}
+extern void computeFunctionCallPattern(float epsilon,
+                                       int argc, char ** argv, int numTri,STri*triangles,Neighbor *neigh);
+unsigned int loadModelData(char* file,STri **triangles,Neighbor **neighbors);
+int main (int argc, char**argv) {
+  unsigned int i = 0;
+  unsigned int vcount=0;
+  float epsilon=1;
+  STri *triangledata = 0;
+  Neighbor *neighbordata = 0;
+  unsigned int numTriangles;
+  char adaptive=1;
+  char out4=1;
+  neighboreps=epsilon/1024.0f;
+  for (i=0;i<(unsigned int)argc;++i) {
+    char match=0;
+    int j;
+    if (strcmp(argv[i],"-debug")==0) {
+      match=1;
+      debugLoop=1;
+    }
+    if (strncmp(argv[i],"-epsilon",8)==0) {
+      epsilon = (float)atof(argv[i]+8);
+      match=1;
+    }
+    if (strncmp(argv[i],"-counter",8)==0) {
+      counterMax = (int)atoi(argv[i]+8);
+      match=1;
+    }
+    if (strncmp(argv[i],"-cracks",8)==0) {
+      noCracks=1;
+      match=1;
+    }
+    if (strncmp(argv[i],"-onlycracks",8)==0) {
+      onlyCracks=1;
+      match=1;
+    }
+    if (strncmp(argv[i],"-noadaptive",8)==0) {
+      adaptive=0;
+      match=1;
+    }
+    if (strcmp(argv[i],"-out3")==0) {
+      out4=0;
+      match=1;
+    }
+    if (strncmp(argv[i],"-eps",4)==0&&!match) {
+      epsilon = (float)atof(argv[i]+4);
+      match=1;
+    }
+    if (match) {
+      for (j=i+1;j<argc;++j) argv[j-1]=argv[j];
+      argc--;
+      i--;
+    }
+  }
+  epsilon*=epsilon;
+  numTriangles = 
+    loadModelData(argc>1?argv[1]:"puma.ply",&triangledata,&neighbordata);
+  {
+  Neighbor neighbors<bestHeight(numTriangles),bestWidth(numTriangles)>;
+  STri triangles<bestHeight(numTriangles),bestWidth(numTriangles)>;
+  struct VertexArray v;
+  struct VertexArray4 v4;
+  streamRead(triangles,triangledata);
+  streamRead(neighbors,neighbordata);
+  initVertexArray(&v);
+  initVertexArray4(&v4);
+  
+  // initialize neighbors and triangles
+  smallEnough(triangles,neighbors,triangles,neighbors,epsilon);
+  if ( 0 ) {
+       for(i=0; i<numTriangles; i++){
+	    int j;
+	    fprintf(stderr, "#\n");
+	    for(j=0; j<9; j++){
+		 float4 *temp;
+		 temp = ((float4 *)(&neighbordata[i]))+j;
+	    fprintf(stderr, "%f, %f, %f, %f\n", temp->x, temp->y, temp->z, temp->w);
+	    }
+       }
+  }
+  if ( adaptive )
+       subdivideAdaptive(&neighbors,&triangles,&v,&v4,epsilon,0,out4); 
+  else
+  {
+    subdivide(&neighbors,&triangles,&v,&v4,0,out4);
+  }
+ 
+  printf("%d\n", v.size+v4.size);
+  for(i=0; i<v.size; i++){
+    printf("%3.3f, %3.3f, %3.3f\n", v.v[i].x, v.v[i].y, v.v[i].z);
+  }
+  for(i=0; i<v4.size; i++){
+    printf("%3.3f, %3.3f, %3.3f\n", v4.v[i].x, v4.v[i].y, v4.v[i].z);
+  }
+  vcount=numTriangles;
+  for (i=0;i<(unsigned int)subdivisiondepth;++i) {
+    vcount*=4;
+  }
+  fprintf (stderr,"Num Rounds %d Adaptive Num Triangles %d Num Triangles %d\n",subdivisiondepth,v.size/3,vcount);
+  return 0;
+  }
+}
+
+
+

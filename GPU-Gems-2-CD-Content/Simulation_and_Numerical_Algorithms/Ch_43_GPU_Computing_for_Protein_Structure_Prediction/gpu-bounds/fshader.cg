@@ -1,0 +1,43 @@
+////////////////////////////////////////////////////////////////////
+//
+// programmer: Paulius Micikevicius (paulius@drake.armstrong.edu)
+//
+////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////
+// single-channel packed-texture-coordinates functions
+
+
+fragout_float upper_packed(	float4 tex0coord : TEXCOORD0,
+								float2 tex1coord : TEXCOORD1, 
+								uniform samplerRECT texture0)
+{
+	fragout_float OUT;
+
+	float ij=texRECT(texture0, tex0coord.xy).x;
+	float ik=texRECT(texture0, tex0coord.zw).x;
+	float kj=texRECT(texture0, tex1coord.xy).x;
+	
+	OUT.col=min(ij, ik+kj);
+
+	return OUT;
+}
+
+fragout_float lower_packed(	float4 tex0coord : TEXCOORD0,
+									float2 tex1coord : TEXCOORD1, 
+									uniform samplerRECT texture0)
+{
+	fragout_float OUT;
+
+	float lower_ij=texRECT(texture0, tex0coord.xy).x;
+	float upper_ik=texRECT(texture0, tex0coord.wz).x;
+	float lower_ik=texRECT(texture0, tex0coord.zw).x;
+	float upper_kj=texRECT(texture0, tex1coord.yx).x;	
+	float lower_kj=texRECT(texture0, tex1coord).x;
+
+	float temp=max(lower_ik-upper_kj, lower_kj-upper_ik);
+	OUT.col=max(lower_ij, temp);
+
+	return OUT;
+}

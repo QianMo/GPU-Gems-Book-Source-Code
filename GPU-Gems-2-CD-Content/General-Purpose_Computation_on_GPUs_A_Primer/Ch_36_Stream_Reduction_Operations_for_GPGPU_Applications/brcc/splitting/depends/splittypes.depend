@@ -1,0 +1,2 @@
+built/splittypes.obj: splittypes.cpp
+built/splittypes.obj: ./splittypes.h

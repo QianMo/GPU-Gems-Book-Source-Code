@@ -1,0 +1,16 @@
+built/dx9runtime.obj: ../../../include/brook/vc6vector.hpp
+built/dx9runtime.obj: ../../../include/brook/brtvector.hpp
+built/dx9runtime.obj: dx9runtime.cpp
+built/dx9runtime.obj: ./dx9texture.hpp
+built/dx9runtime.obj: ./dx9base.hpp
+built/dx9runtime.obj: ../../../include/brook/type_promotion.hpp
+built/dx9runtime.obj: ../../../include/brook/kerneldesc.hpp
+built/dx9runtime.obj: ./../gpucontext.hpp
+built/dx9runtime.obj: ./../gpuruntime.hpp
+built/dx9runtime.obj: ./../../runtime.hpp
+built/dx9runtime.obj: ./../../logger.hpp
+built/dx9runtime.obj: ./dx9window.hpp
+built/dx9runtime.obj: ./../../profiler.hpp
+built/dx9runtime.obj: ./../gpubase.hpp
+built/dx9runtime.obj: ./dx9runtime.hpp
+built/dx9runtime.obj: ../../../include/brook/brt.hpp

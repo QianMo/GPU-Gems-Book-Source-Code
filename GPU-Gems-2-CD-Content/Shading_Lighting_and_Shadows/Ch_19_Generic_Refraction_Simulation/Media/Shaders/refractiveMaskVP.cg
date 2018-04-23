@@ -1,0 +1,29 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : refractiveMaskVP.cg
+//  Desc : refractive mesh mask vertex program
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define inputs from application
+struct VpIn
+{
+    float4 Pos      : POSITION;
+    float2 TexCoord0     : TEXCOORD0;      
+};
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPos    : POSITION;    
+};
+
+// vertex program
+VpOut main(VpIn IN, uniform float4x4 ModelViewProj, uniform float4 vTranslation)
+{
+    VpOut OUT;    
+    
+    float4 vPos=IN.Pos; 
+    OUT.HPos = mul(ModelViewProj, vPos);
+    
+    return OUT;
+}

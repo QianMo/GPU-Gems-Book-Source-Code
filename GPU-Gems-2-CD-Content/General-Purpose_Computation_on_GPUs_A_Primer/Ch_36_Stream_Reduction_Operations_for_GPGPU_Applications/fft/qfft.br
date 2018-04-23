@@ -1,0 +1,521 @@
+#include <stdio.h>
+#include "wfft.h"
+#include "main.h"
+
+#include "ppm.h"
+char do_backwards=0;
+int debug_fft=0;
+int split_bit_reverse=0;
+int do_untangle=0;
+int USAGE=0;
+/*
+static void __printf_cpu_inner (float a, float b, float c, float d) {
+  printf ("%f %f == %f %f\n",a,b,c,d);
+}
+static void __print_cpu_inner (float a, float b, float c, float d) {
+  printf ("%f %f -> %f %f\n",a,b,c,d);
+}
+*/
+
+kernel float2 mult_complex1(float2 a <>, float2 b <>)
+{
+  float2 negpos = {-1,1};
+  return a.xx*b.xy+negpos*a.yy*b.yx;
+    //  c.x = a.x*b.x - a.y*b.y;
+    //  c.y = a.x*b.y + a.y*b.x;
+}
+
+kernel float4 mult_complex2(float4 a <>, float2 b <>)
+{
+  float4 negpos={-1,1,-1,1};
+  return a.xxzz*b.xyxy +negpos*a.yyww*b.yxyx;
+  //  c.xz = a.xz*b.xx - a.yw*b.yy;
+  //  c.yw = a.xz*b.yy + a.yw*b.xx;
+
+}
+#define DOTIMES 1
+kernel float4 DoDFTHorizontalInner (float2 r<>, 
+                                  float2 t<>, 
+                                  float2 W <>) {
+  float4 ret;
+  float2 tw=mult_complex1(t,W);
+  ret.xy = r+tw;
+  ret.zw = r-tw;
+  return ret;
+}
+
+kernel void
+DFTX (float4 sr<>, 
+      float4 si<>,
+      float2 W<>,
+      out float4 s_prime<>, 
+      iter float2 s_index<>) {
+  float2 temp= round(fmod(s_index.x,2))==1;
+  float4 r,t;
+  r = sr; t = si;
+  s_prime=DoDFTHorizontalInner (temp.xx?r.zw:r.xy,temp.xx?t.zw:t.xy,W);
+} 
+
+kernel float4 rDoDFTHorizontalInner (float2 r<>, 
+                                  float2 t<>, 
+                                  float2 W <>) {
+  float4 ret;
+  ret.xy = r+t ;
+  ret.zw = mult_complex1 ((r-t), W);
+  return ret;
+}
+
+kernel void
+rDFTX (float4 sr<>, 
+      float4 si<>,
+      float2 W<>,
+      out float4 s_prime<>, 
+      iter float2 s_index<>) {
+  float2 temp= round(fmod(s_index.x,2))==1;
+  float4 r,t;
+  r = sr; t = si;
+  s_prime=rDoDFTHorizontalInner (temp.xx?r.zw:r.xy,temp.xx?t.zw:t.xy,W);
+} 
+
+
+kernel void
+DFTY (float4 sr<>, 
+      float4 si<>,
+      float2 W<>,
+      out float4 s_prime<>, 
+      iter float2 s_index<>) {
+   float4 r =  sr; 
+   float4 t = si;
+   float4 tw= mult_complex2(t,W);
+   s_prime=r+((round(fmod(s_index.y,2))!=1)?tw:-tw);
+} 
+kernel void
+rDFTY (float4 sr<>, 
+      float4 si<>,
+      float2 W<>,
+      out float4 s_prime<>, 
+      iter float2 s_index<>) {
+   float4 r =  sr; 
+   float4 t = si;
+   s_prime=mult_complex2(r-t,W);
+  
+   if (round(fmod(s_index.y,2))!=1) {
+       //overwrite s_prime
+       s_prime=r+t;
+   }
+} 
+
+kernel void optBitReverseY (out float4 s_out<>,
+			 float4 indicesXo2YXp1o2Xm2[],
+			 float4 s[][]) {
+   
+   float4 indexY = indicesXo2YXp1o2Xm2[(indexof s_out).y];
+   float2 outindex = {(indexof s_out).x,indexY.y};
+   s_out = s[outindex];
+}
+kernel void bitReverseXo2 (out float4 s_out<>,
+			   float4 indicesXo2YXp1o2Xm2[],
+			   float4 s[][], float halfM, float halfMpp) {
+   float2 s_out_index=indexof s_out.xy;
+   float4 indexX = indicesXo2YXp1o2Xm2[(indexof s_out).x];
+   float2 outindex = {indexX.x,(indexof s_out).y};
+   float4 s_temp = s[outindex];
+   float dubya=(s_out_index.x<=halfMpp)?1:0;
+   s_out.xy = (dubya.xx&&s_out_index.xx>=.5)?s_temp.zw:s_temp.xy;
+   outindex.x = indexX.z;//get the index + 1 (adds half the stream)
+   s_temp = s[outindex];
+   s_out.zw = (dubya.xx&&round(s_out_index.xx)!=halfM)?s_temp.zw:s_temp.xy;
+}
+kernel void bitReverseXo2Y (out float4 s_out<>,
+                          float4 indicesXo2YXp1o2Xm2[], 
+                          float4 s[][], float halfM, float halfMpp) {
+   float2 s_out_index=indexof s_out.xy;
+   float4 indexX = indicesXo2YXp1o2Xm2[s_out_index.x];
+   float4 indexY = indicesXo2YXp1o2Xm2[s_out_index.y];
+   float2 outindex = {indexX.x,indexY.y};
+   float4 s_temp = s[outindex];
+   float dubya=(s_out_index.x<=halfMpp)?1:0;
+   s_out.xy = (dubya.xx&&s_out_index.xx>=.5)?s_temp.zw:s_temp.xy;
+   outindex.x = indexX.z;//get the index + 1 (adds half the stream)
+   s_temp = s[outindex];
+   s_out.zw = (dubya.xx&&round(s_out_index.xx)!=halfM)?s_temp.zw:s_temp.xy;
+}
+
+// Utilities and the BitReverse() procedure
+// To compute 2**x
+static int TwoPowerX(int nNumber) {
+  // Achieve the multiplication by left-shifting 
+  return (1<<nNumber);
+}
+
+
+// Procedure to reverse the bits. 
+// Example: 
+// INPUTS:  nNumberToReverse = 110; nNumberOfBits = 3;
+// OUTPUT:  nReversedNumber  = 011
+// CAUTION: Make sure that you pass atleast the minimum number of bits to represent the 
+//          number. For reversing 6 you need atleast 3 bits, if only 2 bits is passed then
+//          we get junk results.
+
+static int BitReverse(int nNumberToReverse, int nNumberOfBits) {
+  int nBitIndex;
+  int nReversedNumber = 0;
+  for (nBitIndex = nNumberOfBits-1; nBitIndex >= 0; --nBitIndex) {
+    if ((1 == nNumberToReverse >> nBitIndex)) {         
+      nReversedNumber  += TwoPowerX(nNumberOfBits-1-nBitIndex);    
+      nNumberToReverse -= TwoPowerX(nBitIndex);                      
+    }
+  }
+  return(nReversedNumber);
+}
+
+float4 * bitReversedIndices (int logN, int logM) {
+  int i,N = (1<< logN),M = (1<<logM);
+  int maxNM = N>(M/2)?N:(M/2);
+  float4 * s_array;
+  s_array = (float4*)calloc(maxNM,sizeof(float4));
+  for (i=0;i<maxNM;++i) {
+    s_array[i].x=(float)(i==0?0:BitReverse(M-(i*2),logM)/2);
+    s_array[i].y=(float)(i==0?0:BitReverse(N-i,logN));//BitReverse(i==0?0:N-i,logN));
+    s_array[i].z=(float)(BitReverse(M-(i*2+1),logM)/2);//(BitReverse(M-(i*2+1),logM)/2);
+    s_array[i].w=(float)BitReverse(i,logN);//for real values
+    
+  }
+  return s_array;
+}
+
+/*
+kernel void UntangleFrag(float4 input[][], out float4 output<>, float2 NNo2) {
+    float4 H1 = input[indexof(output)];
+    float2 outputindex = {(indexof output).x,NNo2.x-(indexof output).y};
+    float4 HN = input[outputindex];
+    float4 F,G;
+    float4 HPLUS = .5*(H1+HN);
+    float4 HMINUS = .5*(H1-HN);
+    F.xz = HPLUS.xz;
+    F.yw = HMINUS.yw; 
+    G.xz = -HMINUS.xz;
+    G.yw = HPLUS.yw;
+    if ((indexof output).y>NNo2.y)
+        output = G;
+    else
+        output = F;
+}
+
+kernel void DoubleFrag(float4 input[][], out float4 output<>, float2 NNo2,
+	iter float2 where<>) {
+    float4 H1 = input[where];
+    float2 outputindex = {where.x,where.y+NNo2.y};
+    float4 HN = input[outputindex];
+    float4 F,G;
+    float4 HPLUS = .5*(H1+HN);
+    float4 HMINUS = .5*(H1-HN);
+    F.xz = HPLUS.xz;
+    F.yw = HMINUS.yw; 
+    G.xz = -HMINUS.xz;
+    G.yw = HPLUS.yw;
+    if ((indexof output).y>NNo2.y)
+        output = G;
+    else
+        output = F;
+}
+*/
+#define FFT_HORIZONTAL 0
+#define FFT_VERTICAL 1
+#define FFT_2D 2
+float tof(int i) {return (float)i;}
+void FftwTransform2d(float2 *data, unsigned long N, unsigned long M,
+                     int isign, char cast);
+
+
+ kernel void setZero(float4 indata<>, 
+                    out float4 outdata<>, 
+                    iter float2 normalized<>,
+                    iter float2 negtopos<>,
+                    float2 clampsize,
+                    float scale,
+                    float blurfactor,
+                    float one) {
+  // float4 i=indexof(indata);
+  // float4 zero = {0.0,0.0,0.0,0.0};
+  //	float zeroit= (abs(negtopos.x)>.95||abs(negtopos.y)>.95)&&(i.x>0&&i.y>0);
+  //outdata = zeroit.xxxx?zero:indata/scale;
+  outdata=indata*(exp (-blurfactor*(2-one*dot(negtopos,negtopos))))/scale;
+  
+}
+kernel void setOne(float4 indata<>, 
+                    out float4 outdata<>, 
+                    iter float2 normalized<>,
+                    iter float2 negtopos<>,
+                    float2 clampsize,
+                    float scale) {
+  // float4 i=indexof(indata);
+  // float4 zero = {0.0,0.0,0.0,0.0};
+  //	float zeroit= (abs(negtopos.x)>.95||abs(negtopos.y)>.95)&&(i.x>0&&i.y>0);
+  //outdata = zeroit.xxxx?zero:indata/scale;
+  outdata=indata*exp (-dot(negtopos,negtopos));
+}
+void generatePlan(float4 bitreversal<>,
+                  int logN,
+                  int logM) {
+   float4 * rawindices=bitReversedIndices(logN,logM);
+   streamRead(bitreversal,rawindices);
+   free(rawindices);
+}
+void computeFFT2d(float4 (*input)<>,
+                  float4 (*output)<>,
+                  int logN,
+                  int logM,
+                  int N,
+                  int M,
+                  float4 indicesXo2YXp1o2Xm2<>) {
+  /* OBSOLETE ITERATORS that needed odd -.3 bias
+   iter float2 iter1 <N,(M/2)> =iter(float2(-.3,0),float2(tof(M/4)-.3,tof(N)));
+   iter float2 iter2 <N,(M/2)> =iter(float2(tof(M/4)-.3,0),float2(tof(M/2)-.3,tof(N)));
+   iter float2 iter3 <N,(M/2)> =iter(float2(0,-.3),float2(tof(M/2),tof(N/2)-.3));
+   iter float2 iter4 <N,(M/2)> =iter(float2(0,tof(N/2)-.3),float2(tof(M/2),tof(N)-.3));
+  */
+   iter float2 s_iter <N,(M/2)> =iter(float2(0,0),float2(tof(M/2),tof(N)));
+   int nPass,nBits,nPassCounter;
+   
+   if (debug_fft) {
+      printf("FFT *Input:\n");
+      streamPrint(*input);
+   }
+   if (1==N*M) streamSwap(*output,*input);
+   else {
+         nPass=nBits=logN;
+         for(nPassCounter=0;nPassCounter<nPass;++nPassCounter) {
+             do_backwards
+                 ?rDFTY(input->domain(int2(0,0),int2(M/2,N/2)),input->domain(int2(0,N/2),int2(M/2,N)),getW(nPassCounter,logN,0,true),*output,s_iter)
+                 :DFTY(input->domain(int2(0,0),int2(M/2,N/2)),input->domain(int2(0,N/2),int2(M/2,N)),getW(nPassCounter,logN,0,false),*output,s_iter);
+            if (debug_fft==2) {
+               printf ("\nY STAGE %d\n",nPassCounter);
+               streamPrint(*output);
+            }
+
+            streamSwap(*input,*output);
+         }
+	 if (split_bit_reverse) {
+	   optBitReverseY(*output,indicesXo2YXp1o2Xm2,*input);      
+           streamSwap(*input,*output);
+	 }
+         nPass=nBits=logM;
+         for (nPassCounter=0;nPassCounter<nPass;++nPassCounter) {
+             do_backwards
+                 ?rDFTX(input->domain(int2(0,0),int2(M/4,N)),input->domain(int2(M/4,0),int2(M/2,N)),getW(nPassCounter,logM,1,true),*output,s_iter)
+                 :DFTX(input->domain(int2(0,0),int2(M/4,N)),input->domain(int2(M/4,0),int2(M/2,N)),getW(nPassCounter,logM,1,false),*output,s_iter);
+            if (debug_fft==2) {
+               printf ("\nX STAGE %d\n",nPassCounter);
+               streamPrint(*output);
+            }
+            streamSwap(*input,*output);
+         }
+	 if (split_bit_reverse) {
+	   bitReverseXo2(*output,indicesXo2YXp1o2Xm2,*input,(float)(M/4),(float)(M/4)+0.51f);
+	 }
+   }
+   if (!split_bit_reverse) {//now do it separately
+     bitReverseXo2Y(*output,indicesXo2YXp1o2Xm2,*input,(float)(M/4),(float)(M/4)+0.51f);      
+     if (debug_fft==2) {
+       printf ("\nBit Reversal\n");
+       streamPrint(*output);
+     }            
+   }
+
+}
+void blur (float4 freqSpace<>,
+           int N, int M) {
+           iter float2 negtopos <N,(M/2)> = iter (float2(-1,-1),float2(1,1));
+           iter float2 normalized <N,(M/2)> = iter (float2(0,0),float2(1,1));
+           float2 clampsize;
+           clampsize.x = (float)(M/4);
+           clampsize.y = (float)(N/2);
+           setZero(freqSpace,freqSpace,normalized,negtopos,clampsize,(float)(M*N),7.2,1);
+}
+void edgeDetect (float4 freqSpace<>,
+           int N, int M) {
+           iter float2 negtopos <N,(M/2)> = iter (float2(-1,-1),float2(1,1));
+           iter float2 normalized <N,(M/2)> = iter (float2(0,0),float2(1,1));
+           float2 clampsize;
+           clampsize.x = (float)(M/4);
+           clampsize.y = (float)(N/2);
+           setOne(freqSpace,freqSpace,normalized,negtopos,clampsize,(float)(M*N));
+}
+kernel void scale2d (float4 input<>, out float4 output<>, float scale) {
+  output=input/scale;
+}
+void blur2d(float2 *input,
+            float2 *output,
+            int logN,
+            int logM,
+            int N,
+            int M, 
+            char edgedetect){
+   float4 s<N,(M/2)>;
+   float4 s_out<N,(M/2)>;
+   float4 bitreversal<(M/2>N?M/2:N)>;
+   streamRead(s,input);   
+   generatePlan(bitreversal,logN,logM);
+   computeFFT2d(&s,&s_out,logN,logM,N,M,bitreversal);
+   {//perform the blur
+     if (edgedetect==0)
+         blur(s_out,N,M);
+     else if (edgedetect==2) 
+         scale2d(s_out,s_out,(float)(N*M));
+     else
+         edgeDetect(s_out,N,M);
+     streamSwap(s,s_out);
+   }
+   computeFFT2d(&s,&s_out,logN,logM,N,M,bitreversal);
+   if (output)
+      streamWrite(s_out,output); 
+   if (debug_fft) {
+        printf("\nStream Output\n");
+        streamPrint(s_out);
+   }
+   
+
+
+}
+
+
+void doOptFFT(int logN, int logM, float2 * data, char edgedetect) {
+   int N = (1<<logN);
+   int M = (1<<logM);
+   start = GetTimeMillis();
+   blur2d(data,data,logM,logN,M,N,edgedetect); 
+
+   stop = GetTimeMillis();
+   //FftwTransform2d(data,N,M,1,1);
+}
+
+float clamp (float x) {
+	return x>1?1:x<0?0:x;
+}
+unsigned char float2char(float x) {
+	return (char)(clamp(x)*255);
+}
+int maino (int argc, char **argv) {
+  int numdat=(argc-1)/2;
+  float4 *data = (float4*)malloc(sizeof(float)*numdat*4);
+  int i,logm,logn,N=numdat,M=2;
+  float4 s<N,(M/2)>;
+  float4 s_out<N,(M/2)>;
+  float4 bitreversal<(M/2>N?M/2:N)>;
+  for (i=1;i<argc;i+=2) {
+    data[(i-1)/2].x=(float)atof(argv[i]);
+    data[(i-1)/2].y=(float)atof(argv[i+1]);
+    data[(i-1)/2].z=(float)atof(argv[i]);
+    data[(i-1)/2].w=(float)atof(argv[i+1]);
+  }
+  /*
+  printf("input: ");
+  for (i=0;i<numdat;++i) {
+    printf ("(%.2f, %.2f)",data[i].x,data[i].y);
+    }*/
+  for (i=1,logn=0;i<1;i*=2,++logn);
+  for (i=1,logm=0;i<numdat;i*=2,++logn);
+  streamRead(s,data);   
+  generatePlan(bitreversal,logn,logm);
+  computeFFT2d(&s,&s_out,logn,logm,N,M,bitreversal);
+  streamWrite(s_out,data);
+  printf ("\n outpt: ");
+  for (i=0;i<numdat;++i) {
+    printf ("%.2f %.2f] ",data[i].x,data[i].y);
+  }
+  free(data);
+  return 0;
+}
+int main (int argc, char ** argv) {
+	unsigned char *imgdata;
+	unsigned int width, height, len;
+	int channels=3;
+        int channelcount=0;
+	unsigned int logn, logm;
+	unsigned int i;
+	float2 *data;
+        int oldargc=argc;
+        char doEdge=0;
+        char doNothing=0;
+        char *argv_bak[]={argv[0],"franklin.ppm","out.ppm"};
+        for (i=0;i<(unsigned int)argc;++i) {
+            char match=0;
+            int j;
+            if (strcmp(argv[i],"-edge")==0) {
+                doEdge=1;
+                match=1;
+            }
+            if (strcmp(argv[i],"-nothing")==0) {
+                doNothing=1;
+                match=1;
+            }
+            if (strcmp(argv[i],"-reverse")==0) {
+                do_backwards=1;
+                match=1;
+            }
+            if (strcmp(argv[i],"-backwards")==0) {
+                do_backwards=1;
+                match=1;
+            }
+            if (match) {
+                for (j=i+1;j<argc;++j) argv[j-1]=argv[j];
+                argc--;
+                i--;
+            }
+        }
+        if (argc>1) {
+          if (!strcmp(argv[1],"-h")||!strcmp(argv[1],"--help")||!strcmp(argv[1],"-V")||!strcmp(argv[1],"-v")||!strcmp(argv[1],"--verbose")) {
+            int i=2;
+            for (;i<argc;++i) {
+              argv[i-1]=argv[i];
+            }
+            argc--;
+            USAGE=1;
+          }
+        }
+	if (argc<3) {
+          if (USAGE) {
+            fprintf(stderr,"Usage: %s <input_file> <output_file> [do edge det]\nDefaulting to fft franklin.ppm out.ppm\n",
+                 argc>=1?argv[0]:"qfft");
+          }
+          argv=argv_bak;
+          argc=3;
+		//turn 1; // 1 is argument error
+	}
+	if (0==readPPM(argv[1],&imgdata,&width,&height)) {
+		return 2; // 2 is read error
+	}
+
+	len=width*height;
+	data = (float2 *) malloc (sizeof(float2)*len);
+        for (channelcount=0;channelcount<channels;++channelcount) {
+           for (i=0;i<len;i++) {
+              data[i].x = ((float)imgdata[i*channels+channelcount])/255;
+              data[i].y = 0;
+           }
+           for (i=1, logn=0; i<height; i*=2, ++logn) {}
+           for (i=1, logm=0; i<width; i*=2, ++logm) {}
+           doOptFFT(logm,logn,data, doEdge?1:(doNothing?2:0)); 
+        
+           for (i=0;i<len;i++) {
+              imgdata[i*channels+channelcount] 
+                 = float2char(((data[i].x)));//  /width)/height));
+           }
+        }
+	free(data);
+        if (USAGE)
+          fprintf (stderr,"writing... %s\n",argv[2]);
+	if (!writePPM(argv[2],imgdata,width,height)) {
+          if (oldargc<3&&diff (argv[2],"fft.ppm")) {
+            printf ("%s differs from fft.ppm\n",argv[2]);
+          }else if (oldargc<3){
+            printf ("pass");
+          }
+          free(imgdata);
+	}else {
+          free(imgdata);
+          return 3;
+        }
+	return 0;
+}

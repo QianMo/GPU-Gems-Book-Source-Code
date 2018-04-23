@@ -1,0 +1,42 @@
+#include "../../src/simul/config.h"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float3 TCoord0      : TEXCOORD0;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+	      uniform SAMPLER UpdDensity,
+	      uniform SAMPLER UpdCenters,
+	      uniform float3  UpdCoords,
+	      uniform float   UpdValue,
+	      uniform float   UpdRadius
+	      )
+{
+  PixelOut OUT;
+
+  float4 d =(float4)TEX0(UpdDensity,IN.TCoord0.xy);
+  d=DECODE_DENSITY(d);
+  float3 c =(float3)TEX0(UpdCenters,IN.TCoord0.xy);
+
+  float v;
+  float dist=UpdRadius - length(c - UpdCoords);
+  float dist_norm=clamp(dist/UpdRadius,0.0,1.0);
+  if (dist > 0.0)
+    v=lerp(d.x,UpdValue,dist_norm);
+  else
+    v=d.x;
+
+  float4 ret=float4(max(v,0.0),d.yzw);
+  OUT.COL = ENCODE_DENSITY(ret);
+
+  return OUT;
+}

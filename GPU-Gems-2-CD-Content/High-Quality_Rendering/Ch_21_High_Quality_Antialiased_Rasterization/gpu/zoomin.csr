@@ -1,0 +1,27 @@
+static const int zoomin_width = 20;
+static const int zoomin_height = 20;
+static const int zoomin_hotx = 9;
+static const int zoomin_hoty = 9;
+static unsigned char zoomin_data[] =
+"                    "
+"       OOO          "
+"     OOXXXOO        "
+"    OXXXOXXXO       "
+"   OXXOOOOOXXO      "
+"  OXXOOOOOOOXXO     "
+"  OXXOOOXOOOXXO     "
+" OXXOOOOXOOOOXXO    "
+" OXXOOXXXXXOOXXO    "
+" OXXOOOOXOOOOXXO    "
+"  OXXOOOXOOOXXO     "
+"  OXXOOOOOOOXXO     "
+"   OXXOOOOOXXOO     "
+"    OXXXOXXXXXXO    "
+"     OOXXXOOXXXXO   "
+"       OOO  OXXXXO  "
+"             OXXXXO "
+"              OXXXXO"
+"               OXXXO"
+"                OOO ";
+
+

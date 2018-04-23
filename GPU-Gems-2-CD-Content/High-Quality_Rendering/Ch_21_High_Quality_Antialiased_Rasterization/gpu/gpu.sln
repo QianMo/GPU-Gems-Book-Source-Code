@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpu", "gpu.vcproj", "{9FC47917-3E24-42B3-8ECD-88D6F9F6F124}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vecmat", "..\vecmat\vecmat.vcproj", "{85FF43D3-2A82-41DD-A56C-25BD4E83868B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{9FC47917-3E24-42B3-8ECD-88D6F9F6F124}.Debug.ActiveCfg = Debug|Win32
+		{9FC47917-3E24-42B3-8ECD-88D6F9F6F124}.Debug.Build.0 = Debug|Win32
+		{9FC47917-3E24-42B3-8ECD-88D6F9F6F124}.Release.ActiveCfg = Release|Win32
+		{9FC47917-3E24-42B3-8ECD-88D6F9F6F124}.Release.Build.0 = Release|Win32
+		{85FF43D3-2A82-41DD-A56C-25BD4E83868B}.Debug.ActiveCfg = Debug|Win32
+		{85FF43D3-2A82-41DD-A56C-25BD4E83868B}.Debug.Build.0 = Debug|Win32
+		{85FF43D3-2A82-41DD-A56C-25BD4E83868B}.Release.ActiveCfg = Release|Win32
+		{85FF43D3-2A82-41DD-A56C-25BD4E83868B}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

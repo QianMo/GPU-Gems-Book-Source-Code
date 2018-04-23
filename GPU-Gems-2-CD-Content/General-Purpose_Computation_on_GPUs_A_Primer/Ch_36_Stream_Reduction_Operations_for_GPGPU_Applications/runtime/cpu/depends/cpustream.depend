@@ -1,0 +1,9 @@
+built/cpustream.obj: ../../include/brook/brtarray.hpp
+built/cpustream.obj: ../../include/brook/vc6vector.hpp
+built/cpustream.obj: cpustream.cpp
+built/cpustream.obj: ../../include/brook/brtvector.hpp
+built/cpustream.obj: ../../include/brook/kerneldesc.hpp
+built/cpustream.obj: ./cpu.hpp
+built/cpustream.obj: ../../include/brook/brt.hpp
+built/cpustream.obj: ../../include/brook/type_promotion.hpp
+built/cpustream.obj: ./../runtime.hpp

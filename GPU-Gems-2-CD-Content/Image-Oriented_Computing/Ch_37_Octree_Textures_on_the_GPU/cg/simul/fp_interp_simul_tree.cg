@@ -1,0 +1,129 @@
+#include "../liboctreegpu/fp_tree_lookup.cg"
+#include "../../src/simul/config.h"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float4 Color0       : COLOR0;
+  float3 TCoord0      : TEXCOORD0;
+  float3 T            : TEXCOORD1;
+  float3 B            : TEXCOORD2;
+  float3 N            : TEXCOORD3;
+  float3 I            : TEXCOORD4;
+  float3 L            : TEXCOORD5;
+  float3 NObj         : TEXCOORD6;
+  float4 Snake        : TEXCOORD7;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+	      uniform sampler3D   RefTex,
+	      uniform float3      reftex_cell_size,
+	      uniform float       boxres,
+	      uniform float3      level_cell_size,
+	      uniform SAMPLER     Density
+	      )
+{
+  PixelOut OUT;
+
+  float3 interp=frac(IN.TCoord0/level_cell_size);
+
+  // ==============
+  // n3-tree lookup
+  float3 v100=float3(level_cell_size.x,0,0);
+  float3 v010=float3(0,level_cell_size.y,0);
+  float3 v001=float3(0,0,level_cell_size.z);
+  float3 v011=float3(0,level_cell_size.y,level_cell_size.z);
+  float3 v110=float3(level_cell_size.x,level_cell_size.y,0);
+  float3 v101=float3(level_cell_size.x,0,level_cell_size.z);
+
+  float4 i0 = tree_lookup_non_empty(RefTex,
+				    reftex_cell_size,boxres,
+				    IN.TCoord0);
+  float4 i1 = tree_lookup_non_empty(RefTex,
+				    reftex_cell_size,boxres,
+				    IN.TCoord0+v100);
+  float4 c0 = (float4)TEX0(Density,i0.xy);
+  float4 c1 = (float4)TEX0(Density,i1.xy);
+  c0=DECODE_DENSITY(c0);
+  c1=DECODE_DENSITY(c1);
+  float4 cA=lerp(c0,c1,interp.x);
+
+  i0 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+v010);
+
+  i1 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+v110);
+  c0 = (float4)TEX0(Density,i0.xy);
+  c1 = (float4)TEX0(Density,i1.xy);
+  c0=DECODE_DENSITY(c0);
+  c1=DECODE_DENSITY(c1);
+  float4 cB=lerp(c0,c1,interp.x);
+  float4 cF0=lerp(cA,cB,interp.y);
+
+  i0 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+v001);
+  i1 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+v101);
+  c0 = (float4)TEX0(Density,i0.xy);
+  c1 = (float4)TEX0(Density,i1.xy);
+  c0=DECODE_DENSITY(c0);
+  c1=DECODE_DENSITY(c1);
+  cA =lerp(c0,c1,interp.x);
+
+  i0 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+v011);
+  i1 = tree_lookup_non_empty(RefTex,
+			     reftex_cell_size,boxres,
+			     IN.TCoord0+level_cell_size);
+  c0 = (float4)TEX0(Density,i0.xy);
+  c1 = (float4)TEX0(Density,i1.xy);
+  c0=DECODE_DENSITY(c0);
+  c1=DECODE_DENSITY(c1);
+  cB=lerp(c0,c1,interp.x);
+  float4 cF1=lerp(cA,cB,interp.y);
+
+//    float4 cF1=cF0;
+
+  float4 c=lerp(cF0,cF1,interp.z);
+
+  // ==============
+  // final color
+
+  float diff=max(0.0,dot(IN.L,normalize(IN.N)));
+  OUT.COL=(0.2+0.8*float4(c.x,c.x*10.0,c.x*100.0,1.0))*diff;
+/* 
+   float v=c.x;
+
+   float dcdx=0.0;
+   float dcdy=0.0;
+  
+   dcdx=ddx(v*10.0);
+   dcdy=ddy(v*10.0);
+   float4 color;
+   if (v > 1.0/256.0)
+   color=float4(0.0,0.0,v,1.0);
+   else
+   color=float4(1.0,1.0,1.0,0.0);
+   float3 n=normalize(IN.N+float3(-dcdx,-dcdy,0.0));
+  
+   float diff=max(0.0,dot(IN.L,n));
+   float3 refl=reflect(-normalize(IN.I),n);
+   float spec=pow(max(0.0,dot(IN.L,refl)),30.0);
+  
+   // done
+   OUT.COL=(0.4+0.6*color)*diff+spec*color.w;
+*/
+  return OUT;
+}

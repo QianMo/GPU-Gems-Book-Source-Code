@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFT", "FFT.vcproj", "{3B1A8999-D739-4D93-B92F-E49D351BDCF1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7F979F92-F98F-4EAB-9A13-7FB05E87E024} = {7F979F92-F98F-4EAB-9A13-7FB05E87E024}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PBuffer", "..\PBuffer\PBuffer.vcproj", "{7F979F92-F98F-4EAB-9A13-7FB05E87E024}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{3B1A8999-D739-4D93-B92F-E49D351BDCF1}.Debug.ActiveCfg = Debug|Win32
+		{3B1A8999-D739-4D93-B92F-E49D351BDCF1}.Debug.Build.0 = Debug|Win32
+		{3B1A8999-D739-4D93-B92F-E49D351BDCF1}.Release.ActiveCfg = Release|Win32
+		{3B1A8999-D739-4D93-B92F-E49D351BDCF1}.Release.Build.0 = Release|Win32
+		{7F979F92-F98F-4EAB-9A13-7FB05E87E024}.Debug.ActiveCfg = Debug|Win32
+		{7F979F92-F98F-4EAB-9A13-7FB05E87E024}.Debug.Build.0 = Debug|Win32
+		{7F979F92-F98F-4EAB-9A13-7FB05E87E024}.Release.ActiveCfg = Release|Win32
+		{7F979F92-F98F-4EAB-9A13-7FB05E87E024}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

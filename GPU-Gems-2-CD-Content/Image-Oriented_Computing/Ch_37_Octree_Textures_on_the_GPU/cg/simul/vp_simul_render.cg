@@ -1,0 +1,43 @@
+
+// geometric input (sent by application)
+struct appin
+{
+  float4 Position     : POSITION;
+  float3 N            : NORMAL;
+  float3 TCoord0      : TEXCOORD0;
+};
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float4 Color0       : COLOR0;
+  float3 TCoord0      : TEXCOORD0;
+  float3 N            : TEXCOORD1;
+  float3 I            : TEXCOORD2;
+  float3 L            : TEXCOORD3;
+  float2 Tex          : TEXCOORD4;
+  float4 W            : WPOS;
+};
+
+V2FI main(appin IN,
+	  uniform float4x4 ViewProj,
+	  uniform float4x4 ITView,
+	  uniform float4x4 View
+  )
+{
+  V2FI OUT;
+  
+  float4 pos       = mul(ViewProj,IN.Position);
+  
+  OUT.HPosition    = pos;
+  OUT.Color0       = float4(IN.TCoord0,1.0);
+  OUT.TCoord0      = IN.TCoord0;
+
+  OUT.N            = mul(ITView,float4(IN.N,0.0)).xyz;
+  OUT.I            = - mul(View,IN.Position).xyz;
+  OUT.L            = normalize(float3(0.0,0.0,1.0));  
+  OUT.Tex          = IN.Position.yz;
+
+  return OUT;
+}

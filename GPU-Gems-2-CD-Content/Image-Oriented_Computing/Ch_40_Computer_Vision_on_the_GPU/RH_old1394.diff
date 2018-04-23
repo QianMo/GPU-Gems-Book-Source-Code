@@ -1,0 +1,6 @@
+174,175c174,175
+< 			       1, //dropframes
+< 			       "/dev/video1394", //videodevice
+---
+> 			       //1, //dropframes
+> 			       //"/dev/video1394", //videodevice

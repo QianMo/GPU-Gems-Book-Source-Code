@@ -1,0 +1,15 @@
+built/nvcontext.obj: ../../../include/brook/vc6vector.hpp
+built/nvcontext.obj: ./nvcontext.hpp
+built/nvcontext.obj: ./ogltexture.hpp
+built/nvcontext.obj: ../../../include/brook/brtvector.hpp
+built/nvcontext.obj: ../../../include/brook/type_promotion.hpp
+built/nvcontext.obj: ../../../include/brook/kerneldesc.hpp
+built/nvcontext.obj: ./oglcontext.hpp
+built/nvcontext.obj: ./../gpucontext.hpp
+built/nvcontext.obj: ./oglfunc.hpp
+built/nvcontext.obj: ./../../runtime.hpp
+built/nvcontext.obj: ./../../logger.hpp
+built/nvcontext.obj: ./../../profiler.hpp
+built/nvcontext.obj: nvcontext.cpp
+built/nvcontext.obj: ./../gpubase.hpp
+built/nvcontext.obj: ../../../include/brook/brt.hpp

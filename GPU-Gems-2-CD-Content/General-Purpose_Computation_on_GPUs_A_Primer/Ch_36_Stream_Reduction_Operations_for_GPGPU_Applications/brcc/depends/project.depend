@@ -1,0 +1,17 @@
+built/project.obj: ./identify.h
+built/project.obj: ./decl.h
+built/project.obj: ./config.h
+built/project.obj: ./token.h
+built/project.obj: ./stemnt.h
+built/project.obj: ./brtgather.h
+built/project.obj: ./dup.h
+built/project.obj: ./parseenv.h
+built/project.obj: ./callback.h
+built/project.obj: ./location.h
+built/project.obj: ./express.h
+built/project.obj: ./main.h
+built/project.obj: ./context.h
+built/project.obj: ./symbol.h
+built/project.obj: ./project.h
+built/project.obj: project.cpp
+built/project.obj: ./utype.h

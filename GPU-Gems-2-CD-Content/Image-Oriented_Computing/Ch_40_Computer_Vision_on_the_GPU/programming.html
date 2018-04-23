@@ -1,0 +1,217 @@
+<html>
+
+<head>
+<title>OpenVIDIA : Parallel GPU Computer Vision</title>
+<meta name="description" content="The OpenVIDIA project implements some computer vision algorithms on computer graphics hardware, in OpenGL and Cg. The project provides useful example programs which run computer vision algorithms on single or parallel gfx processing units(GPU).">
+<meta name="keywords" content="computer vision, real time, GPU,
+graphics processing unit, openvidia, parallel graphics, parallel GPU, parallel,
+general purpose, machine vision augmented reality, mixed reality, software, tools, tool">
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="$url/index.rss" />
+
+<style>
+body,td           { font-family: Verdana,Geneva,Arial,Sans-serif; 
+                    font-size: 13px; color: #000000; }
+a                 { color: #002299 }
+#.pagetitle        { font-size: 28px; font-weight: bold; color: #336699; }
+.pagetitle        { font-size: 24px; font-weight: normal; color: #336699; }
+.dateheader       { font-size: 14px; font-weight: bold; color: #336699; }
+</style>
+
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+ <tr>
+  <!-- main title -->
+<!--
+  <td colspan="6"><span class="pagetitle">$blog_title</span></td>
+-->
+<!--
+  <td bgcolor="#EEEEEE"></td>
+-->
+  <td colspan="5" height=40 bgcolor="#EEEEEE">
+       <h1> <span class="pagetitle"> 
+OpenVIDIA : Parallel GPU Computer Vision</span></h1>
+  </td>
+<!--
+  <td colspan="0" bgcolor = "#EEEEEE" height=40>
+ -->
+  <center>
+  </center>
+<!--
+  </td>
+-->
+    
+
+ </tr>
+
+ <tr>
+  <td colspan="6" bgcolor="#000000" height="1" ></td>
+ </tr>
+ 
+ <tr valign="top">
+<!--
+  <td bgcolor="#DDDDDD"><nobr>&nbsp; &nbsp; </nobr>
+-->
+  
+  <!-- left column -->
+  <td bgcolor="#DDDDDD" width="20%" >
+  <br><b>
+<a href="index.html">Home</a><br><br>
+<a href="screenshots.html">Screenshots</a><br><br>
+<a href="installation.html">Installation<br>Instructions</a><br><br>
+<a href="quickstart.html">Quickstart</a><br><br>
+<a href="programming.html">Programming<br>Example</a><br><br>
+<a href="openvidia-0.07.tar.gz">CD Source Code</a><br><br>
+   <a href="http://sourceforge.net/project/showfiles.php?group_id=98913">Download</a><br><br>
+<a href="papers.html">Papers</a><br></b>
+
+<hr>
+   <b>Project</b> <br>
+   <a href=http://sourceforge.net/projects/openvidia>sf.net project page</a><br>
+<!--#include virtual="projhtml.cache" -->
+<hr>
+
+   <p>
+   <b>Related Projects</b>
+   <br />
+   <p>
+   <a href="http://comparametric.sf.net">Comparametric Toolkit</a>
+   </p>
+
+   <p>
+   <b>Links</b> 
+     <p>
+   <a href="http://fly.cc.fer.hr/~unreal/theredbook/">Open GL Ref.</a>
+   </p>
+
+   <p>
+   <a href="http://www.linuxhardware.org/nvclock/">GeForce FX Overclocking</a>
+   </p>
+   <p>
+   <a href="http://www.gpgpu.org">GPGPU</a>
+   </p>
+    
+<p>
+   <a href="http://www.eyetap.org"><img src="eyetaplogo.png" border="1" hspace="3" vspace="3" /></a>
+   </p>
+
+   <p>
+  <a href="http://sourceforge.net"><img
+    src="sflogo.php"
+    width="88" height="31" border="0" hspace="3" vspace="3" alt="SourceForge.net Logo"
+    /></a></p>
+
+
+  <p>
+<i>   Page design based on <a href="http://www.blosxom.com">Blosxom</a> (which was
+   used originally before the move to sourceforge).</i></p>
+<p>
+<i>This page best viewed with Dillo, Lynx, w3m, Mozilla-Firefox, Galeon, Epiphany . . .</i></p>
+
+  </td>
+<!--
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td>
+-->
+
+  <td bgcolor="#FFFFFF"><nobr>&nbsp; &nbsp; </nobr></td> 
+
+  <!-- main blog entry column -->
+  <td bgcolor="#FFFFFF" width="100%"> 
+<br />
+
+<h2>Programming Example: Fragpipe</h2>
+<p>
+This is a brief tutorial on how to use the OpenVIDIA package to make
+your own GPU based programs.
+</p>
+<p>
+Included in the package is a program called <tt>fragpipe</tt> 
+(see <tt>fragpipe.cc</tt> source file).  Fragpipe 
+demonstrates how to use Fragment Shading programs to implement a 
+series of image filters.   The image below shows this process, where each filter "F" is a fragment program, producing an output texture (the images around the 
+diagram).  Depending on the filter, the Fragment Program could be considered the impulse response for "F" (i.e. the filter kernel). Conceptually, fragpipe implements a pipeline of fragment programs, hence the name.
+</p>
+<br>
+<img src=fragpipe.png>
+<h4>Loading the filters</h4>
+<p>
+Take a look at the <tt>main()</tt> of the <tt>fragpipe.cc</tt> file. 
+In it, he following code creates the filter objects:
+<pre>
+  filter1 = new GenericFilter(320,240, d->getContext(), d->getProfile(),
+                              "FPsamples/FP-ibot-undistort.cg");
+  filter2 = new GenericFilter(320,240, d->getContext(), d->getProfile(),
+                              "FPsamples/FP-rgb2hsv.cg");
+</pre>
+So, filter1 encapsulates the program for radial undistortion, and filter2 is a
+colourspace conversion.  A programmer can change the name of the file loaded to
+their own fragment program.  Currently, however, care must be taken to ensure
+the parameter names match those used in the current Fragment Programs.
+</p>
+
+<h4>Applying the filters</h4>
+<p>
+Once loaded, the filters are applied to incoming images/video in the 
+<tt>render_redirect</tt> function:
+<pre>
+  //cascade the filters
+  d->applyFilter(filter1, 0,1);
+  d->applyFilter(filter2, 1,2);
+</pre>
+The <tt>ApplyFilter</tt> function applies the filter, and takes the following
+arguments:
+<ul>
+<li>first argument: filter object 
+<li>second argument: source buffer
+<li>third argument: target buffer
+</ul>
+The original image is initially in buffer 0.  in the above, filter1 places
+its results in buffer 1, and filter2 then processes buffer 1 and places 
+the result in buffer 2.    The buffers can be examined by running the program,
+and pressing the '1' or '2' key to see buffers 1 or 2 (and so on).
+
+<h4>Summing Operations</h4>
+Additionally, a summation type operation is provided by the MomentFilter object.
+It is created as:
+<pre>
+  momentFilter = new MomentFilter(320,240, d->getContext(), d->getProfile() );
+</pre>
+It is applied similar to GenericFilter, but takes a 4th argument, a 
+4 element floating point array which is used to return the sum of the 
+the four channels (RGBA) of the image.
+<pre>
+  d->applySumFilter(momentFilter, 3, 4, result );
+</pre>
+</p>
+Currently, it loads the <tt>FP-moment.cg</tt> program.  This program determines
+what will be in the RGBA channels at each image location when the summation is taken.   For instance, if
+you wanted to know how many pixels have a green value greater than 0.5, you
+could edit <tt>FP-moment.cg</tt> to place a '1' the first channel (red) of the
+output if the input green channel is greater than 0.5, and put a '0' there if
+not.  Then, after applying ther filter, the <tt>result</tt> array will have its
+<tt>result[0]</tt> to be the number of pixels with green value greater than
+0.5.
+<h4>Additional Notes</h4>
+<p>
+Separating your operations into different filters allows you to view their
+results in real-time, which is useful for debugging. However, each filter stage
+requires copying the result to the video-memory and then reading it again in
+the next pass.  While this doesn't pass data across the AGP/PCI bus, it does
+make the GPU spend time writing/reading data instead of number crunching.  So
+once you have a set of filters that works, its best to try and optimize the
+whole fragment pipe by trying to combine them into a single fragment program.
+</p>
+<p>
+Try and use the summation filter whenever you're interested in a summation
+result, since it minimizes the amount of data which needs to be sent across the
+AGP/PCI bus.
+</p>
+<p>
+Use wisely placed <tt>select(0,0,0,timeout)</tt> statements (with appropriate
+timeouts, to avoid busy waiting) to reduce the CPU load without sacrificing performance.
+</p>
+</body>
+</html>

@@ -1,0 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : utilsFP.cg
+//  Desc : generic utilities for fragment programs
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// This assumes NdotL comes clamped
+half Fresnel(half NdotL, half fresnelBias, half fresnelPow)
+{
+  half facing = (1.0 - NdotL);
+  return  max(fresnelBias + (1.0-fresnelBias)*pow(facing, fresnelPow), 0.0);
+}

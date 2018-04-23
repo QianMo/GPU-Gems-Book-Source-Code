@@ -1,0 +1,8 @@
+// shadeSurface.cg
+
+uniform float4 lightDirection : lightDirection;
+
+float4 main(float4 color : TEX0) : COL
+{
+    return color;
+}

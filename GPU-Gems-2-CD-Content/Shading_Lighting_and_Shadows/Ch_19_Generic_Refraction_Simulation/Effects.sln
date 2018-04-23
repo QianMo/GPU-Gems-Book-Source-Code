@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common\Common.vcproj", "{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Media\Shaders\Shaders.vcproj", "{BE320306-01D9-4532-971E-AC68C258BDA2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RefractionSimulation", "RefractionSimulation\RefractionSimulation.vcproj", "{8773892E-3133-4F08-A3F7-3A9815E94061}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF} = {0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WaterDemo", "WaterDemo\WaterDemo.vcproj", "{8773892E-3133-4F08-A3F7-3A9815E94061}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF} = {0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}.Debug.ActiveCfg = Release|Win32
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}.Debug.Build.0 = Release|Win32
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}.Release.ActiveCfg = Release|Win32
+		{0BBB3280-DEF4-41B9-A86D-9A0613F32FCF}.Release.Build.0 = Release|Win32
+		{BE320306-01D9-4532-971E-AC68C258BDA2}.Debug.ActiveCfg = Release|Win32
+		{BE320306-01D9-4532-971E-AC68C258BDA2}.Debug.Build.0 = Release|Win32
+		{BE320306-01D9-4532-971E-AC68C258BDA2}.Release.ActiveCfg = Release|Win32
+		{BE320306-01D9-4532-971E-AC68C258BDA2}.Release.Build.0 = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Debug.ActiveCfg = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Debug.Build.0 = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Release.ActiveCfg = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Release.Build.0 = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Debug.ActiveCfg = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Debug.Build.0 = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Release.ActiveCfg = Release|Win32
+		{8773892E-3133-4F08-A3F7-3A9815E94061}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

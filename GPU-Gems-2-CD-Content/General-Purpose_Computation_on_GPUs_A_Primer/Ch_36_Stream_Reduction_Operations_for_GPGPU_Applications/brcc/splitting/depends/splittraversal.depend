@@ -1,0 +1,17 @@
+built/splittraversal.obj: ./../dup.h
+built/splittraversal.obj: ./splitnode.h
+built/splittraversal.obj: ./splitnodeset.h
+built/splittraversal.obj: ./../identify.h
+built/splittraversal.obj: ./splittypes.h
+built/splittraversal.obj: ./splitcompiler.h
+built/splittraversal.obj: ./../callback.h
+built/splittraversal.obj: ./splitconfiguration.h
+built/splittraversal.obj: ./../express.h
+built/splittraversal.obj: splittraversal.cpp
+built/splittraversal.obj: ./../stemnt.h
+built/splittraversal.obj: ./../decl.h
+built/splittraversal.obj: ./../config.h
+built/splittraversal.obj: ./../utype.h
+built/splittraversal.obj: ./../location.h
+built/splittraversal.obj: ./splittraversal.h
+built/splittraversal.obj: ./../symbol.h

@@ -1,0 +1,14 @@
+built/symbol.obj: ./location.h
+built/symbol.obj: ./callback.h
+built/symbol.obj: ./express.h
+built/symbol.obj: ./identify.h
+built/symbol.obj: symbol.cpp
+built/symbol.obj: ./context.h
+built/symbol.obj: ./decl.h
+built/symbol.obj: ./config.h
+built/symbol.obj: ./stemnt.h
+built/symbol.obj: ./dup.h
+built/symbol.obj: ./symbol.h
+built/symbol.obj: ./project.h
+built/symbol.obj: ./parseenv.h
+built/symbol.obj: ./utype.h

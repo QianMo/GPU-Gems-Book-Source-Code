@@ -1,0 +1,2 @@
+built/profiler.obj: profiler.cpp
+built/profiler.obj: ./profiler.hpp

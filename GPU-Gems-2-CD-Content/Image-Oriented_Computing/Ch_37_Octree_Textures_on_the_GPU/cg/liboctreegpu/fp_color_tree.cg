@@ -1,0 +1,36 @@
+#include "fp_tree_lookup.cg"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float3 TCoord0      : TEXCOORD0;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+	      uniform sampler3D   RefTex,
+	      uniform float3      reftex_cell_size,
+	      uniform float       boxres
+	      )
+{
+  PixelOut OUT;
+
+  // ==============
+  // n3-tree lookup
+
+  float4 color;
+  color = tree_lookup(RefTex,reftex_cell_size,boxres,
+		      IN.TCoord0);
+
+  // done    
+  OUT.COL=color;
+
+  return OUT;
+
+}

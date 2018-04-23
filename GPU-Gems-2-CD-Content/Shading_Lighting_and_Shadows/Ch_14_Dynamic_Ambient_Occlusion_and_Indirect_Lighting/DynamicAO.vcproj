@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="DynamicAO"
+	ProjectGUID="{F014E044-F1E0-47A4-8654-84D100CF172F}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib subd.lib"
+				OutputFile="$(OutDir)/DynamicAO.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="\3D\DynamicAO"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/DynamicAO.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				RuntimeLibrary="4"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib subd.lib"
+				OutputFile="$(OutDir)/DynamicAO.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="\3D\DynamicAO"
+				GenerateDebugInformation="TRUE"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\DynamicAO.cpp">
+			</File>
+			<File
+				RelativePath=".\shader.cpp">
+			</File>
+			<File
+				RelativePath=".\SurfaceElement.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\SurfaceElement.h">
+			</File>
+			<File
+				RelativePath=".\vmath.h">
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\DynamicAO.rc">
+		</File>
+		<File
+			RelativePath=".\occlusion.cg">
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="cgc -profile fp40 $(InputPath)  -DPASS=1 -o  Debug\occlusion.fp
+cgc -profile fp40 $(InputPath)  -DPASS=1 -o occlusion.fp
+cgc -profile fp40 $(InputPath)  -DPASS=2 -o  Debug\occlusion2.fp
+cgc -profile fp40 $(InputPath)  -DPASS=2 -o occlusion2.fp
+"
+					Outputs="occlusion.fp; Debug\occlusion.fp"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="cgc -profile fp40 $(InputPath)  -DPASS=1 -o Release\occlusion.fp
+cgc -profile fp40 $(InputPath)  -DPASS=1 -o occlusion.fp
+cgc -profile fp40 $(InputPath)  -DPASS=2 -o Release\occlusion2.fp
+cgc -profile fp40 $(InputPath)  -DPASS=2 -o occlusion2.fp
+"
+					Outputs="occlusion.fp; Release\occlusion.fp"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\surface.cg">
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="cgc -profile fp30 $(InputPath)  -o  Debug\surface.fp
+cgc -profile fp30 $(InputPath)  -o surface.fp
+"
+					Outputs="Debug\surface.fp"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="cgc -profile fp30 $(InputPath)  -o Release\surface.fp
+cgc -profile fp30 $(InputPath)  -o surface.fp
+"
+					Outputs="Release\surface.fp"/>
+			</FileConfiguration>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

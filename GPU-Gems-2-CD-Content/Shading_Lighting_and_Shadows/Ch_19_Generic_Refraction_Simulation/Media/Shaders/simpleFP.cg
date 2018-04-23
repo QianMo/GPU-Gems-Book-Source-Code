@@ -1,0 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  Proj : GPU GEMS 2 DEMOS
+//  File : simpleFP.cg
+//  Desc : simple fragment program, for debugging
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// define outputs from vertex shader
+struct VpOut
+{
+    float4 HPosition    : POSITION;    
+    float4 TexCoord0    : TEXCOORD0;
+};
+
+fragout main(VpOut IN, uniform sampler2D tex0)
+{
+    fragout OUT;
+    OUT.col=tex2D(tex0, IN.TexCoord0.xy);    
+    return OUT;
+}

@@ -1,0 +1,9 @@
+built/cpuiter.obj: ../../include/brook/brtarray.hpp
+built/cpuiter.obj: ../../include/brook/vc6vector.hpp
+built/cpuiter.obj: cpuiter.cpp
+built/cpuiter.obj: ../../include/brook/brtvector.hpp
+built/cpuiter.obj: ../../include/brook/kerneldesc.hpp
+built/cpuiter.obj: ./cpu.hpp
+built/cpuiter.obj: ../../include/brook/brt.hpp
+built/cpuiter.obj: ../../include/brook/type_promotion.hpp
+built/cpuiter.obj: ./../runtime.hpp

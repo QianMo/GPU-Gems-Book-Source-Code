@@ -1,0 +1,74 @@
+// DX9 Pixel Shader by NVIDIA Cg compiler
+	ps_2_0
+// cgc version 1.2.1001, build date Mar 17 2004  10:32:28
+// command line args: -profile ps_2_0
+//vendor NVIDIA Corporation
+//version 1.0.02
+//profile ps_2_0
+//program main
+//semantic main.tex0
+//semantic main.tex1
+//semantic main.tex2
+//semantic main.tex3
+//semantic main.vTexelSize
+//var sampler2D tex0 :  : texunit 0 : 1 : 1
+//var sampler2D tex1 :  : texunit 1 : 2 : 1
+//var sampler2D tex2 :  : texunit 2 : 3 : 1
+//var sampler2D tex3 :  : texunit 3 : 4 : 1
+//var float4 vTexelSize :  : c[0] : 5 : 1
+//var float4 IN.Tex0 : $vin.TEXCOORD0 : TEX0 : 0 : 1
+//var float4 IN.Tex1 : $vin.TEXCOORD1 : TEX1 : 0 : 1
+//var float4 IN.Eye : $vin.TEXCOORD2 : TEX2 : 0 : 1
+//var half4 main.col : $vout.COL : COL : -1 : 1
+//var float main.depth : $vout.DEPR : DEPR : -1 : 1
+	dcl_2d	s0
+	dcl_2d	s1
+	dcl_2d	s2
+	dcl_2d	s3
+	def	c1,	0.19995117, 0.19995117, 1, 0.89990234
+	def	c2,	0.10009766, 0, 2, 0.60009766
+	def	c3,	0.39990234, 5, 0.5, 0
+	dcl	t0.xy
+	dcl	t1
+	dcl	t2.xyz
+texld   r0, t0, s1
+texld   r1, t0, s0
+mov_pp  r2.x, c2.x
+mad_pp_sat r1.xyz, r1, c1.w, r2.x
+mov_pp  r2.z, c1.z
+mov_pp  r1.w, c3.x
+mov     r3.z, c1.z
+mad     r3.xyz, c2.z, r0, -r3.z
+mul_pp  r3.xyz, r3, c1
+dp3_pp  r0.x, r3, r3
+rsq_pp  r0.x, r0.x
+mul_pp  r3.xyz, r0.x, r3
+dp3     r0.x, t2, t2
+rsq     r0.x, r0.x
+mul     r0.xyz, r0.x, t2
+dp3_pp  r0.w, r3, r0
+mul_pp  r2.w, c2.z, r0.w
+mad_pp  r0.xy, r2.w, r3, -r0
+add_pp  r0.w, c1.z, -r0.w
+pow_pp  r2.w, r0.w, c3.y
+mad_pp  r1.w, c2.w, r2.w, r1.w
+add_pp  r0.xy, r0, c1.z
+mul_pp  r0.xy, r0, c3.z
+max_pp  r0.w, r1.w, c2.y
+texld   r4, r0, s3
+mul_pp  r0.xyz, r4, r0.w
+add_pp  r0.w, c1.z, -r0.w
+rcp     r1.w, t1.w
+mad     r4.xy, t1, r1.w, c0
+add_pp  r3.xy, r3, r4
+texld   r3, r3, s2
+texld   r4, r4, s2
+add_pp  r1.w, c2.y, -r3.w
+cmp_pp  r1.w, r1.w, c2.y, r2.z
+cmp_pp  r2.xyz, -r1.w, r3, r4
+mul_pp  r2.xyz, r1, r2
+mad_pp  r0.xyz, r2, r0.w, r0
+mov_pp  r0.w, c1.z
+mov_pp  oC0, r0
+// 39 instructions, 5 R-regs.
+// End of program

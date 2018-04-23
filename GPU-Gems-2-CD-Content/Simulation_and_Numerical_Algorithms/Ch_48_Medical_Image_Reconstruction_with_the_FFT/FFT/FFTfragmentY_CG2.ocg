@@ -1,0 +1,54 @@
+!!ARBfp1.0
+OPTION NV_fragment_program2;
+OPTION ATI_draw_buffers;
+# cgc version 1.3.0001, build date Aug  4 2004 10:01:10
+# command line args: -q -profile fp40 -entry FragmentProgram NumTemps=32 NumInstructionSlots=8196 NumTexInstructionSlots=8196 NumMathInstructionSlots=8196 MaxTexIndirections=8196 MaxDrawBuffers=4
+#vendor NVIDIA Corporation
+#version 1.0.02
+#profile fp40
+#program FragmentProgram
+#semantic FragmentProgram.Real1
+#semantic FragmentProgram.Imag1
+#semantic FragmentProgram.Real2
+#semantic FragmentProgram.Imag2
+#var float4 TexCoordRect0 : $vin.TEX0 : TEX0 : 0 : 1
+#var float4 TexCoordRect1 : $vin.TEX1 : TEX1 : 1 : 1
+#var float4 sColor0 : $vout.COL : COL : 2 : 1
+#var float4 sColor1 : $vout.COL1 : COL1 : 3 : 1
+#var float4 sColor2 : $vout.COL2 : COL2 : 4 : 1
+#var float4 sColor3 : $vout.COL3 : COL3 : 5 : 1
+#var samplerRECT Real1 :  : texunit 0 : 6 : 1
+#var samplerRECT Imag1 :  : texunit 1 : 7 : 1
+#var samplerRECT Real2 :  : texunit 2 : 8 : 1
+#var samplerRECT Imag2 :  : texunit 3 : 9 : 1
+PARAM c[1] = { program.local[0] };
+TEMP R0;
+TEMP R1;
+TEMP R2;
+TEMP RC;
+TEMP HC;
+SINR  R0.w, fragment.texcoord[1].x;
+COSR  R0.y, fragment.texcoord[1].x;
+TEX   R1.x, fragment.texcoord[0].xwzw, texture[1], RECT;
+MULR  R0.z, R0.w, R1.x;
+MULR  R1.y, R0, R1.x;
+TEX   R2.x, fragment.texcoord[0].xwzw, texture[3], RECT;
+MULR  R1.w, R0.y, R2.x;
+MULR  R1.z, R0.w, R2.x;
+TEX   R1.x, fragment.texcoord[0].xwzw, texture[2], RECT;
+MADR  R1.w, R0, R1.x, R1;
+TEX   R2.x, fragment.texcoord[0].xzzw, texture[3], RECT;
+ADDR  result.color[3].x, R2, R1.w;
+MADR  R2.w, R0.y, R1.x, -R1.z;
+TEX   R1.x, fragment.texcoord[0].xwzw, texture[0], RECT;
+MADR  R1.w, R0, R1.x, R1.y;
+TEX   R0.x, fragment.texcoord[0].xzzw, texture[2], RECT;
+ADDR  result.color[2].x, R0, R2.w;
+MADR  R0.w, R0.y, R1.x, -R0.z;
+TEX   R0.x, fragment.texcoord[0].xzzw, texture[1], RECT;
+ADDR  result.color[1].x, R0, R1.w;
+TEX   R0.x, fragment.texcoord[0].xzzw, texture[0], RECT;
+ADDR  result.color.x, R0, R0.w;
+END
+# 22 instructions, 3 R-regs, 0 H-regs
+

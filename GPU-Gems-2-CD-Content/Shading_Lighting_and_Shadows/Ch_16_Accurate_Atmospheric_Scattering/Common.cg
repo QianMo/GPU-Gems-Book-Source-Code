@@ -1,0 +1,62 @@
+//
+// Common.cg
+// Author: Sean O'Neil
+// Copyright (c) 2004 Sean O'Neil
+//
+
+// The output of this vertex shader
+struct vertout
+{
+	float4 pos : POSITION;		// Transformed vertex position
+	float4 c0 : COLOR0;			// The Rayleigh color
+	float4 c1 : COLOR1;			// The Mie color
+	float3 t0 : TEXCOORD0;
+};
+
+
+// The number of sample points taken along the ray
+const int nSamples = 2;
+const float fSamples = (float)nSamples;
+
+// The scale depth (the altitude at which the average atmospheric density is found)
+const float fScaleDepth = 0.25;
+const float fInvScaleDepth = 1.0 / fScaleDepth;
+
+
+// The scale equation calculated by Vernier's Graphical Analysis
+float scale(float fCos)
+{
+	float x = 1.0 - fCos;
+	return fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
+}
+
+// Calculates the Mie phase function
+float getMiePhase(float fCos, float fCos2, float g, float g2)
+{
+	return 1.5 * ((1.0 - g2) / (2.0 + g2)) * (1.0 + fCos2) / pow(1.0 + g2 - 2.0*g*fCos, 1.5);
+}
+
+// Calculates the Rayleigh phase function
+float getRayleighPhase(float fCos2)
+{
+	//return 1.0;
+	return 0.75 + 0.75*fCos2;
+}
+
+// Returns the near intersection point of a line and a sphere
+float getNearIntersection(float3 v3Pos, float3 v3Ray, float fDistance2, float fRadius2)
+{
+	float B = 2.0 * dot(v3Pos, v3Ray);
+	float C = fDistance2 - fRadius2;
+	float fDet = max(0.0, B*B - 4.0 * C);
+	return 0.5 * (-B - sqrt(fDet));
+}
+
+// Returns the far intersection point of a line and a sphere
+float getFarIntersection(float3 v3Pos, float3 v3Ray, float fDistance2, float fRadius2)
+{
+	float B = 2.0 * dot(v3Pos, v3Ray);
+	float C = fDistance2 - fRadius2;
+	float fDet = max(0.0, B*B - 4.0 * C);
+	return 0.5 * (-B + sqrt(fDet));
+}

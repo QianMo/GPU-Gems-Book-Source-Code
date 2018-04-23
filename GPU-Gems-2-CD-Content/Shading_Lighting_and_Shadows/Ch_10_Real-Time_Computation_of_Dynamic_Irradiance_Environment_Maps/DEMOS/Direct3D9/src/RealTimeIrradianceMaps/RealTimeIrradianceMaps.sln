@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RealTimeIrradianceMaps", "RealTimeIrradianceMaps.vcproj", "{EE314F0E-1C91-40A1-B272-28AC39614EA7}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug Multithreaded DLL = Debug Multithreaded DLL
+		Release Multithreaded DLL = Release Multithreaded DLL
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{EE314F0E-1C91-40A1-B272-28AC39614EA7}.Debug Multithreaded DLL.ActiveCfg = Debug Multithreaded DLL|Win32
+		{EE314F0E-1C91-40A1-B272-28AC39614EA7}.Debug Multithreaded DLL.Build.0 = Debug Multithreaded DLL|Win32
+		{EE314F0E-1C91-40A1-B272-28AC39614EA7}.Release Multithreaded DLL.ActiveCfg = Release Multithreaded DLL|Win32
+		{EE314F0E-1C91-40A1-B272-28AC39614EA7}.Release Multithreaded DLL.Build.0 = Release Multithreaded DLL|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

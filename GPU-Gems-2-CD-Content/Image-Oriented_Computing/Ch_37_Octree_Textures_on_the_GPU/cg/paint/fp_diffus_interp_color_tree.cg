@@ -1,0 +1,105 @@
+#include "../liboctreegpu/fp_tree_lookup.cg"
+
+// vertex program output
+struct V2FI
+{
+  float4 HPosition    : POSITION;
+  float4 Color0       : COLOR0;
+  float3 TCoord0      : TEXCOORD0;
+  float3 T            : TEXCOORD1;
+  float3 B            : TEXCOORD2;
+  float3 N            : TEXCOORD3;
+  float3 I            : TEXCOORD4;
+  float3 L            : TEXCOORD5;
+  float3 NObj         : TEXCOORD6;
+  float4 Snake        : TEXCOORD7;
+};
+
+// fragment program output
+struct PixelOut 
+{
+  float4 COL : COLOR;
+};
+
+PixelOut main(V2FI IN,
+	      uniform sampler3D   RefTex,
+	      uniform float3      reftex_cell_size,
+	      uniform float       boxres,
+	      uniform float3      level_cell_size
+	      )
+{
+  PixelOut OUT;
+
+  float3 interp=frac(IN.TCoord0/level_cell_size);
+
+  // ==============
+  // n3-tree lookup
+  float3 v100=float3(level_cell_size.x,0,0);
+  float3 v010=float3(0,level_cell_size.y,0);
+  float3 v001=float3(0,0,level_cell_size.z);
+  float3 v011=float3(0,level_cell_size.y,level_cell_size.z);
+  float3 v110=float3(level_cell_size.x,level_cell_size.y,0);
+  float3 v101=float3(level_cell_size.x,0,level_cell_size.z);
+
+  float4 c000 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0);
+
+  float4 c100 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v100);
+
+  float4 c010 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v010);
+  
+  float4 c110 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v110);
+ 
+  float4 c001 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v001);
+
+  float4 c101 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v101);
+  
+  float4 c011 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+v011);
+
+  float4 c111 = tree_lookup_non_empty(RefTex,
+				      reftex_cell_size,boxres,
+				      IN.TCoord0+level_cell_size);
+
+  float w000 = (1.0-interp.x)*(1.0-interp.y)*(1.0-interp.z);
+  float w100 = interp.x      *(1.0-interp.y)*(1.0-interp.z);
+
+  float w010 = (1.0-interp.x)*interp.y      *(1.0-interp.z);
+  float w110 = interp.x      *interp.y      *(1.0-interp.z);
+ 
+  float w001 = (1.0-interp.x)*(1.0-interp.y)*interp.z;
+  float w101 = interp.x      *(1.0-interp.y)*interp.z;
+   
+  float w011 = (1.0-interp.x)*interp.y      *interp.z;
+  float w111 = interp.x      *interp.y      *interp.z;
+
+  float4 color=
+    (c000*w000 
+     + c100*w100
+     + c010*w010
+     + c110*w110
+     + c001*w001
+     + c101*w101
+     + c011*w011
+     + c111*w111
+      );
+
+  float diff=0.2+0.8*max(0.0,dot(IN.L,normalize(IN.N)));
+
+  // done
+  OUT.COL=color*diff;
+
+  return OUT;
+}

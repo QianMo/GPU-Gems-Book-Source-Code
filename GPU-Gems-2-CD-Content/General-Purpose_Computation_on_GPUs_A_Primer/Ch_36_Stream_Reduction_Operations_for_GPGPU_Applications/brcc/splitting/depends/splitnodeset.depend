@@ -1,0 +1,17 @@
+built/splitnodeset.obj: ./../dup.h
+built/splitnodeset.obj: ./splitnode.h
+built/splitnodeset.obj: ./splitnodeset.h
+built/splitnodeset.obj: ./../identify.h
+built/splitnodeset.obj: ./splittypes.h
+built/splitnodeset.obj: ./splitcompiler.h
+built/splitnodeset.obj: ./../callback.h
+built/splitnodeset.obj: ./splitconfiguration.h
+built/splitnodeset.obj: ./../express.h
+built/splitnodeset.obj: splitnodeset.cpp
+built/splitnodeset.obj: ./../stemnt.h
+built/splitnodeset.obj: ./../decl.h
+built/splitnodeset.obj: ./../config.h
+built/splitnodeset.obj: ./../utype.h
+built/splitnodeset.obj: ./../location.h
+built/splitnodeset.obj: ./splittraversal.h
+built/splitnodeset.obj: ./../symbol.h
