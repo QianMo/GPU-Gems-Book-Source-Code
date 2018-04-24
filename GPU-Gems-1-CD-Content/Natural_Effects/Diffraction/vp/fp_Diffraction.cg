@@ -1,0 +1,7 @@
+// Simple Fragment Program that does nothing
+void fp_Diffraction (
+	in  float4 color	: COLOR0,
+	out float4 colorO	: COLOR0 )
+{
+	colorO = color;
+}

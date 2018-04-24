@@ -1,0 +1,63 @@
+// Diffraction Shader Vertex Program
+//
+// Author : Jos Stam (jstam@alias.com)
+//
+// For more details see the GPU Gems article
+
+float3 blend3 ( float3 x )
+{
+	float3 y = 1-x*x;
+	y = max(y,float3(0,0,0));
+	return ( y );
+}
+
+void vp_Diffraction (
+	in float4 position		: POSITION,
+	in float3 normal		: NORMAL,
+	in float3 tangent		: TEXCOORD0,
+
+	out float4 positionO	: POSITION,
+	out float4 colorO		: COLOR0,
+
+	uniform float4x4 ModelViewProjectionMatrix,
+	uniform float4x4 ModelViewMatrix,
+	uniform float4x4 ModelViewMatrixIT,
+
+	uniform float roughX,
+	uniform float spacingX,
+
+	uniform float4 hiliteColor,
+	uniform float3 lightPosition,
+	uniform float3 eyePosition	
+)
+{
+	float3 P = mul ( ModelViewMatrix, position ).xyz;
+	float3 L = normalize(lightPosition-P);
+	float3 V = normalize(eyePosition-P);
+	float3 H = L+V;
+	float3 N = mul ( (float3x3)ModelViewMatrixIT, normal );
+	float3 T = mul ( (float3x3)ModelViewMatrixIT, tangent );
+	float vx = dot(T,H);
+	float vz = dot(N,H);
+	float e = vx*roughX/vz;
+	float c = exp(-e*e);
+	float4 anis = hiliteColor * c.xxxx;
+	anis.w = 1;
+
+	vx = vx*spacingX;
+	if ( vx < 0 ) vx = -vx;
+
+	float vx0;
+
+	float4 cdiff = float4(0,0,0,1);
+
+	for ( int i=1 ; i<7 ; i++ )
+	{
+		vx0 = 2*vx/i-1;
+		cdiff.xyz += blend3(float3(4*(vx0-0.75),4*(vx0-0.5),4*(vx0-0.25)));
+	}
+
+	positionO = mul ( ModelViewProjectionMatrix, position );
+
+	colorO = 0.8*cdiff + anis;
+}
