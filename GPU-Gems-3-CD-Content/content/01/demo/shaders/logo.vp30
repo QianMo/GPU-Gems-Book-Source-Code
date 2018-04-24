@@ -1,0 +1,28 @@
+//#include "nvdemo_lib.vp30"
+
+struct a2vConnector {
+    float3 objCoord : POSITION;
+    float2 tex      : TEXCOORD;
+};
+
+struct v2fConnector {
+  float4 POSITION  : POSITION;
+  float2 tex : TEXCOORD;
+};
+
+cbuffer LogoV_CB {
+  float3 scale = float3(1,1,1);
+  float3 offset = float3(0,0,0);
+}
+
+v2fConnector main(a2vConnector a2v)
+{
+    v2fConnector v2f;
+
+    v2f.POSITION.xy = scale.xy * a2v.objCoord.xy + offset.xy;
+    v2f.POSITION.z  = 0.5;
+    v2f.POSITION.w  = 1;
+    v2f.tex	= a2v.tex.xy;
+
+    return v2f;
+}

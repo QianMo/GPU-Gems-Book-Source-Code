@@ -1,0 +1,399 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbMatrix3.in,v 1.7 2002/12/13 09:32:21 prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  Predefined zero matrix.
+*/
+template <class T>
+const GbMatrix3<T>
+GbMatrix3<T>::ZERO = GbMatrix3<T>(T(0.0),T(0.0),T(0.0),
+				  T(0.0),T(0.0),T(0.0),
+				  T(0.0),T(0.0),T(0.0));
+
+/*!
+  Predefined identity matrix.
+*/
+template <class T>
+const GbMatrix3<T> 
+GbMatrix3<T>::IDENTITY = GbMatrix3<T>(T(1.0),T(0.0),T(0.0),
+				      T(0.0),T(1.0),T(0.0),
+				      T(0.0),T(0.0),T(1.0));
+
+/*!
+  Epsilon value used for tuning numerical stability of some algorithms.
+
+  \sa GbMatrix3::maxCubicRoot GbMatrix3::tridiagonal
+ */
+template <class T>
+const T 
+GbMatrix3<T>::EPSILON = std::numeric_limits<T>::epsilon(); // max. 1e-06
+
+/*!
+  \param s Floating point scaling value
+  \return The scaled matrix
+
+  This method returns a matrix that is self scaled componentwise with the provided factor \a s .
+ */
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator* (const T& s) const
+{
+  T kProd[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol)
+      kProd[k++] = s*entry_[iRow][iCol];
+  }
+  return GbMatrix3<T>(kProd);
+}
+
+/*!
+  \param s Integral scaling value
+  \return The scaled matrix
+
+  This method returns a matrix that is self scaled componentwise with the provided factor \a s .
+ */
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator* (const int& s) const
+{
+  T ss(s);
+  T kProd[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol)
+      kProd[k++] = ss*entry_[iRow][iCol];
+  }
+  return GbMatrix3<T>(kProd);
+}
+
+/*!
+  \param v The 3x1 vector to multiply
+  \return The 3x1 multiplication result
+
+  This method returns a vector that is self multiplied with \a v from the right.
+ */
+template <class T>
+INLINE GbVec3<T> 
+GbMatrix3<T>::operator* (const GbVec3<T>& v) const
+{
+  T kProd[3];
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    kProd[iRow] = entry_[iRow][0]*v[0] + entry_[iRow][1]*v[1] + entry_[iRow][2]*v[2];
+  }
+  return GbVec3<T>(kProd);
+}
+
+/*!
+  \return The inverted matrix
+
+  This method returns a matrix that is self inverted componentwise.
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator- () const
+{
+  T kNeg[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol)
+      kNeg[k++] = -entry_[iRow][iCol];
+  }
+  return GbMatrix3<T>(kNeg);
+}
+
+/*!
+  \param m The matrix to add
+  \return The matrix sum
+
+  This method returns a matrix that is self added to \a m .
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator+ (const GbMatrix3<T>& m) const
+{
+  T kSum[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      kSum[k++] = entry_[iRow][iCol] + m.entry_[iRow][iCol];
+    }
+  }
+  return GbMatrix3<T>(kSum);
+}
+
+/*!
+  \param m The matrix to add
+  \return The matrix sum
+
+  This method modifies self by adding matrix \a m and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix3<T>& 
+GbMatrix3<T>::operator+=( const GbMatrix3<T>& m )
+{
+  entry_[0][0]+= m.entry_[0][0];
+  entry_[0][1]+= m.entry_[0][1];
+  entry_[0][2]+= m.entry_[0][2];
+  entry_[1][0]+= m.entry_[1][0];
+  entry_[1][1]+= m.entry_[1][1];
+  entry_[1][2]+= m.entry_[1][2];
+  entry_[2][0]+= m.entry_[2][0];
+  entry_[2][1]+= m.entry_[2][1];
+  entry_[2][2]+= m.entry_[2][2];
+  return *this;
+}
+
+/*!
+  \param m The matrix to subtract
+  \return The matrix sum
+
+  This method returns a matrix that is \a m subtracted from self.
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator- (const GbMatrix3<T>& m) const
+{
+  T kDiff[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      kDiff[k++] = entry_[iRow][iCol] - m.entry_[iRow][iCol];
+    }
+  }
+  return GbMatrix3<T>(kDiff);
+}
+
+/*!
+  \param m The matrix to subtract
+  \return The matrix sum
+
+  This method modifies self by subtracting matrix \a m and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix3<T>& 
+GbMatrix3<T>::operator-=( const GbMatrix3<T>& m )
+{
+  entry_[0][0]-= m.entry_[0][0];
+  entry_[0][1]-= m.entry_[0][1];
+  entry_[0][2]-= m.entry_[0][2];
+  entry_[1][0]-= m.entry_[1][0];
+  entry_[1][1]-= m.entry_[1][1];
+  entry_[1][2]-= m.entry_[1][2];
+  entry_[2][0]-= m.entry_[2][0];
+  entry_[2][1]-= m.entry_[2][1];
+  entry_[2][2]-= m.entry_[2][2];
+  return *this;
+}
+
+/*!
+  \param m The matrix to multiply self with
+  \return The matrix product
+
+  This method returns a matrix that is self multiplied with \a m from the right.
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::operator* (const GbMatrix3<T>& m) const
+{
+  T kProd[9];
+  int k=0;
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      kProd[k++] = entry_[iRow][0]*m.entry_[0][iCol] +
+	           entry_[iRow][1]*m.entry_[1][iCol] +
+	           entry_[iRow][2]*m.entry_[2][iCol];
+    }
+  }
+  return GbMatrix3<T>(kProd);
+}
+
+/*!
+  \param m The matrix to multiply self with
+  \return The matrix product
+
+  This method modifies self by multiplying it with \a m from the right
+  and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix3<T>& 
+GbMatrix3<T>::operator*=( const GbMatrix3<T>& m )
+{
+  T tmp[3];
+  
+  for (int i= 0; i < 3; ++i) {
+    for (int j= 0; j < 3; ++j)
+      tmp[j] = entry_[i][0] * m.entry_[0][j] + 
+	       entry_[i][1] * m.entry_[1][j] +
+	       entry_[i][2] * m.entry_[2][j];
+
+    entry_[i][0]= tmp[0];
+    entry_[i][1]= tmp[1];
+    entry_[i][2]= tmp[2];
+  }
+  return *this;
+}
+
+/*!
+  \param m The matrix to compare with
+  \return true if matrices are the same
+  
+  This method compares \a m with self componentwise and returns true
+  if all components have the same value.
+*/
+template <class T>
+INLINE GbBool 
+GbMatrix3<T>::operator== (const GbMatrix3<T>& m) const
+{
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      if ( entry_[iRow][iCol] != m.entry_[iRow][iCol] )
+	return false;
+    }
+  }
+
+  return true;
+}
+
+/*!
+  \param m The matrix to compare with
+  \return true if matrices are \e not the same
+
+  This method compares \a m with self componentwise and returns
+  false if all components have the same value.
+*/
+template <class T>
+INLINE GbBool 
+GbMatrix3<T>::operator!= (const GbMatrix3<T>& m) const
+{
+  return !operator==(m);
+}
+
+/*!
+  \param row The index of the component
+  \return A pointer to the storage of the component
+
+  This method returns a pointer to a component of self.
+
+  \internal Note that this method can be used to get a pointer to the
+            matrix rows as well as for getting a pointer to a specific
+            element writing \p m[][] !
+*/
+template <class T>
+INLINE T* 
+GbMatrix3<T>::operator[] (int row) const
+{
+  return (T*)&entry_[row][0];
+}
+
+/*!
+  \param col Index of matrix column
+  \return The column vector
+
+  This method returns a vector with the components of self in column \a col.
+*/
+template <class T>
+INLINE GbVec3<T> 
+GbMatrix3<T>::getColumn (int col) const
+{
+//  assert( 0 <= col && col < 3 );
+  return GbVec3<T>(entry_[0][col],entry_[1][col],entry_[2][col]);
+}
+
+/*!
+  \return The determinant value
+
+  This method computes and returns the determinant of self.
+*/
+template <class T>
+INLINE T
+GbMatrix3<T>::determinant () const
+{
+  T fCofactor00 = entry_[1][1]*entry_[2][2] - entry_[1][2]*entry_[2][1];
+  T fCofactor10 = entry_[1][2]*entry_[2][0] - entry_[1][0]*entry_[2][2];
+  T fCofactor20 = entry_[1][0]*entry_[2][1] - entry_[1][1]*entry_[2][0];
+
+  T fDet = entry_[0][0]*fCofactor00 +
+           entry_[0][1]*fCofactor10 +
+           entry_[0][2]*fCofactor20;
+  
+  return fDet;
+}
+
+/*!
+  \return The transposed matrix
+
+  This method returns a matrix that is the transpose of self.
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::transpose () const
+{
+  T kTranspose[9];
+  int k=0;
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol)
+      kTranspose[k++] = entry_[iCol][iRow];
+  }
+  return GbMatrix3<T>(kTranspose);
+}
+
+/*!
+  \param rkM The matrix to multiply with
+  \return \a rkM multiplied to the transpose of self
+
+  This method returns a matrix R that is the transpose of self matrix S multiplied
+  with \a rkM : \f$ R=S^t*M \f$
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::transposeTimes (const GbMatrix3<T>& rkM) const
+{
+  T kProd[3][3];
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      kProd[iRow][iCol] = T(0.0);
+      for (int iMid = 0; iMid < 3; ++iMid) {
+	kProd[iRow][iCol] += entry_[iMid][iRow]*rkM.entry_[iMid][iCol];
+      }
+    }
+  }
+  return GbMatrix3<T>(kProd);
+}
+
+/*!
+  \param rkM The matrix to multiply with
+  \return Self multiplied with the transpose of \a rkM
+
+  This method returns a matrix R that is the self matrix S multiplied with
+  the transpose of \a rkM : \f$ R=S*M^t \f$
+*/
+template <class T>
+INLINE GbMatrix3<T> 
+GbMatrix3<T>::timesTranspose (const GbMatrix3<T>& rkM) const
+{
+  T kProd[3][3];
+
+  for (int iRow = 0; iRow < 3; ++iRow) {
+    for (int iCol = 0; iCol < 3; ++iCol) {
+      kProd[iRow][iCol] = T(0.0);
+      for (int iMid = 0; iMid < 3; ++iMid) {
+	kProd[iRow][iCol] += entry_[iRow][iMid]*rkM.entry_[iCol][iMid];
+      }
+    }
+  }
+  return GbMatrix3<T>(kProd);
+}
+
+

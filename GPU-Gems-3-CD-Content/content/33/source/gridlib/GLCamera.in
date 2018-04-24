@@ -1,0 +1,296 @@
+INLINE void 
+GLCamera::setFrustumParam(float fov, float as, float n, float f)
+{
+    fov_=fov;
+    aspect_=as;
+    near_=n;
+    far_=f;
+}
+
+INLINE void 
+GLCamera::setZoom(float fov)
+{
+    fov_=fov;
+}
+
+INLINE void 
+GLCamera::setAspect(float as)
+{
+    aspect_=as;
+}
+
+INLINE void 
+GLCamera::setNearFarPlane(float n, float f)
+{
+    near_=n;
+    far_=f;
+}
+
+INLINE float
+GLCamera::getZoom() const
+{
+    return fov_;
+}
+
+INLINE float
+GLCamera::getAspect() const
+{
+    return aspect_;
+}
+
+INLINE float
+GLCamera::getNearPlane() const
+{
+    return near_;
+}
+
+INLINE float
+GLCamera::getFarPlane() const
+{
+    return far_;
+}
+
+
+INLINE GbMatrix4<float>
+GLCamera::getViewProjectionMatrix() const 
+{ 
+    return GbMatrix4<float>(modelViewProjectionMatrix_); 
+}
+
+INLINE GbMatrix4<float> 
+GLCamera::getProjectionMatrix() const 
+{ 
+    return GbMatrix4<float>(projectionMatrix_); 
+}
+
+INLINE GbMatrix4<float>
+GLCamera::getViewMatrix() const 
+{ 
+    return GbMatrix4<float>(modelViewMatrix_); 
+}
+
+INLINE float 
+GLCamera::getSpeed() const 
+{
+    return linearSpeed_;
+}
+
+INLINE void 
+GLCamera::setSpeed(float speed) 
+{
+    linearSpeed_ = speed;
+}
+
+INLINE float 
+GLCamera::getRotationSpeed()  const 
+{
+    return rotSpeed_;
+}
+
+INLINE void 
+GLCamera::setRotationSpeed(float rspeed) 
+{
+    rotSpeed_ = rspeed;
+}
+
+INLINE const GbVec3<float> 
+GLCamera::getEye() const 
+{
+    return eye_;
+}
+
+INLINE void 
+GLCamera::setEye(const GbVec3<float> &eye) 
+{
+    eye_ = eye;
+}
+
+INLINE const GbVec3<float> 
+GLCamera::getLookDirection() const 
+{
+    return lookDir_;
+}
+
+INLINE void 
+GLCamera::setLookDirection(const GbVec3<float> &look) 
+{
+    lookDir_ = look.getNormalized();
+}
+
+INLINE const GbVec3<float> 
+GLCamera::getUpDirection() const 
+{
+    return up_;
+}
+
+INLINE void 
+GLCamera::setUpDirection(const GbVec3<float> &up)
+{
+    up_ = up.getNormalized();
+}
+
+INLINE void 
+GLCamera::faster() 
+{
+    linearSpeed_ *= 1.1f; rotSpeed_ *= 1.1f;
+}
+
+INLINE void 
+GLCamera::slower() 
+{
+    linearSpeed_ /= 1.1f; rotSpeed_ /= 1.1f;
+}
+
+INLINE void 
+GLCamera::moveForward()
+{
+    setEye(getEye() + getSpeed()*getLookDirection());
+}
+
+INLINE void 
+GLCamera::moveBackward()
+{
+    setEye(getEye() - getSpeed()*getLookDirection());
+}
+
+INLINE void 
+GLCamera::pitch(float theta)
+{
+    GbVec3<float> look(getLookDirection());
+    GbVec3<float> up(getUpDirection());
+    setLookDirection(GbMath<float>::Cos(theta)*look + GbMath<float>::Sin(theta)*up);
+    setUpDirection(-GbMath<float>::Sin(theta)*look + GbMath<float>::Cos(theta)*up);
+}
+
+INLINE void 
+GLCamera::pitchUp() {
+    pitch(getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::pitchDown() 
+{
+    pitch(-getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::yawLeft() 
+{
+    yaw(-getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::yawRight() 
+{
+    yaw(getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::moveUp()
+{
+    setEye(getEye() + getSpeed()*getUpDirection());
+}
+
+INLINE void 
+GLCamera::moveDown()
+{
+    setEye(getEye() - getSpeed()*getUpDirection());
+}
+
+
+INLINE void 
+GLCamera::moveRight(int sign /* = 1*/) 
+{
+    GbVec3<float> right(getUpDirection().cross(getLookDirection()));
+    setEye(getEye() +getSpeed()*right*sign);
+}
+
+INLINE void 
+GLCamera::yaw(float theta)
+// theta > 0 implies yaw right.
+{
+    GbVec3<float> look(getLookDirection());
+    GbVec3<float> right(look.cross(getUpDirection()));
+    setLookDirection(GbMath<float>::Cos(theta)*look  + GbMath<float>::Sin(theta)*right); 
+}
+
+INLINE void 
+GLCamera::roll(float theta)
+// theta > 0 implies roll right.
+{
+    GbVec3<float> up(getUpDirection());
+    GbVec3<float> right(getLookDirection().cross(up));
+    setUpDirection(GbMath<float>::Cos(theta)*up + GbMath<float>::Sin(theta)*right);
+}
+
+INLINE void 
+GLCamera::moveLeft() 
+{
+    moveRight(1);
+}
+
+INLINE void 
+GLCamera::rollLeft() 
+{
+    roll(-getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::rollRight() 
+{
+    roll(getRotationSpeed());
+}
+
+INLINE void 
+GLCamera::setMode(CameraMode m) 
+{ 
+    mode_=m; 
+}
+
+INLINE GLCamera::CameraMode 
+GLCamera::getMode() const 
+{ 
+    return mode_; 
+}
+
+INLINE void 
+GLCamera::setEyeMode(EyeMode m) 
+{ 
+    currentEye_=m; 
+}
+
+INLINE GLCamera::EyeMode 
+GLCamera::getEyeMode() const 
+{ 
+    return currentEye_; 
+}
+
+INLINE void 
+GLCamera::setStereoParam(float fl, float es)
+{
+    focalLength_=fl;
+    if (focalLength_<near_) focalLength_=near_;
+    if (focalLength_>far_) focalLength_=far_;
+    eyeSeparation_=es;
+}
+
+INLINE float
+GLCamera::getStereoFocalLength() const
+{
+    return focalLength_;
+}
+
+INLINE float
+GLCamera::getStereoEyeSeparation() const
+{
+    return eyeSeparation_;
+}
+
+INLINE void 
+GLCamera::normalize()
+{
+    lookDir_.normalize();
+    up_.normalize();
+}
+
+

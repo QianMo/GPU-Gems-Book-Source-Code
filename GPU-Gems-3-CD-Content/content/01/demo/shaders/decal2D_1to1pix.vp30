@@ -1,0 +1,33 @@
+struct a2vConnector {
+    float3 objCoord : POSITION;
+    float2 tex : TEXCOORD;
+};
+
+struct v2fConnector {
+  float4 POSITION  : POSITION;
+  float2 tex : TEXCOORD;
+};
+
+cbuffer ShaderCB {
+  float4 viewportDim = float4(8,6,1.0/8.0,1.0/6.0);
+}
+cbuffer MyCB {
+  float4 srcTexSize = float4(8,6,1.0/8.0,1.0/6.0);
+}
+
+v2fConnector main(a2vConnector a2v)
+{
+    v2fConnector v2f;
+    float4 projCoord = float4(a2v.objCoord.xy*srcTexSize.xy*viewportDim.zw, 0, 1);
+    
+    half t = abs(projCoord.y);
+    if (t > 1)
+      projCoord.xy /= t;
+    //#include "fix_proj_coord.vp30"
+    
+    
+    v2f.tex	= a2v.tex.xy;
+    v2f.POSITION = projCoord;
+
+    return v2f;
+}

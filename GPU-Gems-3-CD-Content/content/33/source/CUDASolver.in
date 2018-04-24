@@ -1,0 +1,67 @@
+/*----------------------------------------------------------------------
+|
+| $Id$
+|
++---------------------------------------------------------------------*/
+
+INLINE void
+CUDASolver::storeVertices(int index, int numPoints, const GbVec3<float>* points)
+{
+    unsigned int d[3];
+    d[0] = numPoints; d[1] = 0; d[2] = 0;
+    memcpy(&vertices_[index*CUDA_MAX_LOCAL_ARRAY_SIZE],d,3*sizeof(unsigned int));
+    memcpy(&vertices_[index*CUDA_MAX_LOCAL_ARRAY_SIZE+1],points,numPoints*sizeof(GbVec3<float>));
+}
+
+INLINE void
+CUDASolver::storeIndices(int index, int numIndices, const GbVec3i<int>* indices)
+{
+    unsigned int d[3];
+    d[0] = numIndices; d[1] = 0; d[2] = 0;
+    memcpy(&indices_[index*CUDA_MAX_LOCAL_ARRAY_SIZE],d,3*sizeof(unsigned int));
+    memcpy(&indices_[index*CUDA_MAX_LOCAL_ARRAY_SIZE+1],indices,numIndices*sizeof(GbVec3i<int>));
+}
+
+INLINE void
+CUDASolver::commitVertices() const
+{
+    cudaUploadVertices((float*)vertices_);
+}
+
+INLINE void
+CUDASolver::commitIndices() const
+{
+    cudaUploadIndices((unsigned int*)indices_);
+}
+
+INLINE void
+CUDASolver::allocate()
+{
+    vertices_ = (GbVec3<float>*)allocSystemMem(sizeof(GbVec3<float>) * maxNumObjects_ * CUDA_MAX_LOCAL_ARRAY_SIZE);
+    indices_ = (GbVec3i<int>*)allocSystemMem(sizeof(GbVec3i<int>) * maxNumObjects_ * CUDA_MAX_LOCAL_ARRAY_SIZE);
+}
+
+INLINE void
+CUDASolver::deallocate()
+{
+    freeSystemMem(vertices_);
+    freeSystemMem(indices_);
+}
+
+INLINE void* 
+CUDASolver::allocSystemMem(unsigned int size)
+{
+    return allocHostMem(size);
+}
+
+INLINE void 
+CUDASolver::freeSystemMem(void* mem)
+{
+    freeHostMem(mem);
+}
+
+/*----------------------------------------------------------------------
+|
+| $Log$
+|
++---------------------------------------------------------------------*/

@@ -1,0 +1,90 @@
+//
+// common.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+struct VSINPUT {
+	float4 position		: POSITION;
+	float3 normal		: NORMAL;
+	float2 texcoord		: TEXCOORD0;
+	float3 binormal		: BINORMAL;
+	float3 tangent		: TANGENT;
+};
+
+struct VSOUTPUT {
+	float4 hpos			: POSITION;	
+	float3 diffuse		: TEXCOORD3;
+	float2 texcoord		: TEXCOORD0;
+	float3 position		: TEXCOORD1;
+	float3 normal		: TEXCOORD2;
+	float3 binormal		: TEXCOORD6;
+	float3 tangent		: TEXCOORD7;
+};
+
+const int samples = 40; ///< adjustable constant for the number of samples used
+float4 smpls[40];		///< sample directions
+float  fs[40];			///< normalization*BRDF/PDF
+
+static const float scaleParabolidMap = 1./2.4;
+
+/// Get a filtered sample from a dual-paraboloid
+float3 getSample(uniform sampler2D front, uniform sampler2D back, float4 u_w) {
+	if (u_w.z < 0) {
+		float4 texcoord = float4(u_w.xy/(1-u_w.z)*(scaleParabolidMap)+0.5,u_w.ww);		
+		return tex2Dlod(front, texcoord).rgb;
+	} else {
+		float4 texcoord = float4(-u_w.xy/(1+u_w.z)*(scaleParabolidMap)+0.5,u_w.ww);
+		return tex2Dlod(back, texcoord).rgb;
+	}
+}
+
+// Y in XYZ color-space
+const float3 lum = float3(0.2126, 0.7152, 0.0722);
+
+/// Tonemap and gamma-correct
+float3 colorCorrect(float3 c, float2 keyGamma) {
+	// uncomment for no gamma correction or tone mapping
+	// (useful for obtaining HDR images out of the system)
+	//return c;
+
+	/// TONE MAPPING
+	// compress the luminance domain
+	float3 L_r;
+	L_r[0] = dot(lum,c);
+	L_r[1] = L_r[0]*keyGamma[0];
+	L_r[2] = L_r[1] / (1 + L_r[1]);
+	c *= L_r[2]/L_r[0];
+	
+	// correct for the gamma
+	c = pow(c,keyGamma[1]);
+	
+	return c;
+}
+
+/// construct an under-constrained coordinate from based upon a direction
+float3x3 constructCoordFrame(float4 lobe, float3 u) {
+	float3x3 smpl2Local;
+	
+	u = normalize(u);
+	smpl2Local._m02_m12_m22 = u;
+
+	// generate under-constrained orthogonal direction using
+	// the assumption the reflection direction is axis aligned
+	smpl2Local._m00_m10_m20 = normalize(float3(0,u.z,-u.y));
+	
+	// Find the remaining component in the orthogonal coordinate frame
+	smpl2Local._m01_m11_m21 = cross(smpl2Local._m02_m12_m22, smpl2Local._m00_m10_m20);
+	
+	return smpl2Local;
+	
+}

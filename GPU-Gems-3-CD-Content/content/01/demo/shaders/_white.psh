@@ -1,0 +1,10 @@
+#include "global_color_scale.h"    //* GLOBAL_COLOR_SCALE
+
+struct v2fConnector {
+  float4 projCoord : SV_Position;
+};
+
+float4 main( v2fConnector v2f ) : SV_Target {
+  return float4(GLOBAL_COLOR_SCALE, GLOBAL_COLOR_SCALE, GLOBAL_COLOR_SCALE, 1.0f);
+}
+

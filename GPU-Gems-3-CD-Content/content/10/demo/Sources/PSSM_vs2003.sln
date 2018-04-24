@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSSM_D3D10_vs2003", "PSSM_D3D10_vs2003.vcproj", "{FCBC5729-4879-47E4-AA4E-002F1CC28860}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSSM_OGL_vs2003", "PSSM_OGL_vs2003.vcproj", "{C939095C-B78F-4BFB-938A-29B9F3C7CD50}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSSM_D3D9_vs2003", "PSSM_D3D9_vs2003.vcproj", "{78650E7D-0345-4C47-9A63-B6BB546AEC59}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{FCBC5729-4879-47E4-AA4E-002F1CC28860}.Debug.ActiveCfg = Debug|Win32
+		{FCBC5729-4879-47E4-AA4E-002F1CC28860}.Debug.Build.0 = Debug|Win32
+		{FCBC5729-4879-47E4-AA4E-002F1CC28860}.Release.ActiveCfg = Release|Win32
+		{FCBC5729-4879-47E4-AA4E-002F1CC28860}.Release.Build.0 = Release|Win32
+		{C939095C-B78F-4BFB-938A-29B9F3C7CD50}.Debug.ActiveCfg = Debug|Win32
+		{C939095C-B78F-4BFB-938A-29B9F3C7CD50}.Debug.Build.0 = Debug|Win32
+		{C939095C-B78F-4BFB-938A-29B9F3C7CD50}.Release.ActiveCfg = Release|Win32
+		{C939095C-B78F-4BFB-938A-29B9F3C7CD50}.Release.Build.0 = Release|Win32
+		{78650E7D-0345-4C47-9A63-B6BB546AEC59}.Debug.ActiveCfg = Debug|Win32
+		{78650E7D-0345-4C47-9A63-B6BB546AEC59}.Debug.Build.0 = Debug|Win32
+		{78650E7D-0345-4C47-9A63-B6BB546AEC59}.Release.ActiveCfg = Release|Win32
+		{78650E7D-0345-4C47-9A63-B6BB546AEC59}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

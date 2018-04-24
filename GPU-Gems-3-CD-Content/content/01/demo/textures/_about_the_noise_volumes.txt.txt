@@ -1,0 +1,13 @@
+The volumes are stored in a RAW format with a 5-integer header.
+They are 16x16x16 texels in size, and each texel contains four random 
+half-precision floats in the range [0..1].  The file also stores
+all mip levels down to 1x1x1.  Noise*.vol are just four different 
+volumes with different random values in them; PackedNoise*.vol are 
+special.  In the red channel they have all the same info as the Noise*.vol
+textures.  However, the green/blue/alpha channels store information about
+the values in the red channel for the neighboring texels in +Y, +Z, and +YZ,
+respectively.  This allows you to fetch a value, with incredibly high 
+interpolation precision, by doing manual trilinear interpolation, but you
+only have to take TWO texture samples instead of eight.  See 
+the NHQu() function in shaders\sampleNoise.h for an example of how to
+do this.

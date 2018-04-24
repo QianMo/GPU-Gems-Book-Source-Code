@@ -1,0 +1,53 @@
+//
+// envsphere.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+#include "common.cg"
+
+struct ENVOUTPUT {
+	float4 hpos			: POSITION;	
+	float3 texcoord		: TEXCOORD0;
+	float3 color		: COLOR0;
+};
+
+ENVOUTPUT EnvVShader(VSINPUT IN) {
+	ENVOUTPUT OUT;
+	
+	OUT.hpos = mul(glstate.matrix.mvp, IN.position);
+	OUT.texcoord = IN.normal;
+	
+	return OUT;
+}
+
+
+/// Render the enviornment sphere with a dual paraboloid and 
+/// color correct it accordingly
+float4 EnvFShader(ENVOUTPUT IN,
+				  uniform float2 keyGamma,
+				  uniform sampler2D front : register(s0),
+				  uniform sampler2D back : register(s1)) : COLOR0
+{
+	float3 d = IN.texcoord;
+	float3 res;
+	if (d.z < 0) {
+		float2 texcoord = d.xy/(1-d.z)*(scaleParabolidMap)+0.5;		
+		res = tex2D(front, texcoord).rgb;
+	} else {
+		float2 texcoord = -d.xy/(1+d.z)*(scaleParabolidMap)+0.5;
+		res = tex2D(back, texcoord).rgb;
+	}
+	
+	return float4(colorCorrect(res.rgb,keyGamma),1);
+
+}

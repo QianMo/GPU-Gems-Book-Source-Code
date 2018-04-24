@@ -1,0 +1,17 @@
+// This file lists the names of the shaders to reload
+// when the F8 key is pressed.  If this file doesn't
+// exist, pressing F8 will do nothing.  (Hence you should
+// not include this file with the installer for the 
+// final, shippable demo.)
+//
+// You can have more than one shader per line, as long as they're
+//   separated by whitespace.
+// You can also comment out lines using '//'.
+
+//build_rock_g  floater_start_f    floater_max_f 
+//blobs_reg_f  
+//build_ambo_f
+draw_rock_lo_f draw_rock_med_f draw_rock_hi_f
+composite_f
+bkg_f
+

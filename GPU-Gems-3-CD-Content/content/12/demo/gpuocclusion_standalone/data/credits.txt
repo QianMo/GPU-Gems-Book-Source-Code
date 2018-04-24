@@ -1,0 +1,3 @@
+yeahright30000.obj and sdcc.obj are courtesy of Keenan Crane.
+triStairway_cleanedup.obj is courtesy of Tony Kaap.
+57chevy_normals.obj is copyright Viewpoint Data Labs and may be freely distributed.

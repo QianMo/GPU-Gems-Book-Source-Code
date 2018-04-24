@@ -1,0 +1,76 @@
+#include "hdr_scale.fp30"
+#include "global_color_scale.h"    //* GLOBAL_COLOR_SCALE
+
+struct v2fConnector {
+  float4 projCoord : POSITION;  // cg would accept this, but d3dx compiler dies
+  float2 tex   : TEXCOORD;
+};
+
+struct outConn {
+  float4 broadblur : COLOR0;
+  //float4 narrowblur : COLOR1;
+};
+
+Texture2D tex;
+SamplerState LinearClamp;
+
+cbuffer ShaderCB {
+  float4 g_srcTexSize = float4(8,6,0.125,0.167);
+  float  glow_str = 1;
+}
+
+outConn main(v2fConnector v2f) 
+{
+  outConn ret;
+
+  // NOTE: texel shift (to keep alignment 1:1) is now done in *vertex* shader!
+  float2 temp1 = v2f.tex;// + g_srcTexSize.zw*0.5;  // get some bilinear interp...
+  float2 temp2 = g_srcTexSize.zw;
+  
+  // 1. downsample
+  
+  // note: this is built for downsampling to quarter-res
+  //       (to 1/16 the number of pixels!)
+  float3 sum = float3(0,0,0);
+  sum += tex.Sample(LinearClamp, temp1 + temp2*float2(-1,-1)).xyz;
+  sum += tex.Sample(LinearClamp, temp1 + temp2*float2(-1, 1)).xyz;
+  sum += tex.Sample(LinearClamp, temp1 + temp2*float2( 1,-1)).xyz;
+  sum += tex.Sample(LinearClamp, temp1 + temp2*float2( 1, 1)).xyz;
+  sum *= (1.0/4.0);
+  sum /= (float)(GLOBAL_COLOR_SCALE);
+
+
+  
+  // 2. glow
+  //float3 ret = (tex - 0.85)*1.9;
+  //float3 ret = (tex - 0.80)*1.8;
+  // IMPORTANT: if you allow LDR values (<1) to contribute to glow,
+  //            LDR diffuse color values will blow out @ high end!
+  //            (looks especially bad on skin!!!)
+  //float3 ret = (tex - 1)*2.0;
+  #if (HDR_COLOR_SCALE_TEST==1)
+    sum *= INV_COLOR_SCALE_TO_TEST_HDR_PACKING;
+  #endif
+  
+  // THIS IS SO IMPORTANT YOU JUST WOULDN'T BELIEVE IT:
+  // (to prevent bloom from overpowering the geoms)
+  sum = min(1.55, sum);
+  
+  ret.broadblur.xyz = (sum - 1.03)*3.3;
+  ret.broadblur.xyz = max(float3(0,0,0), ret.broadblur.xyz);
+
+
+
+  // ADD SOFTNESS:
+  ret.broadblur.xyz += sum*lerp(1,SOFTNESS,glow_str);
+
+
+
+  // unused:  
+  ret.broadblur.w = 0;
+
+   
+  return ret;
+}
+
+  

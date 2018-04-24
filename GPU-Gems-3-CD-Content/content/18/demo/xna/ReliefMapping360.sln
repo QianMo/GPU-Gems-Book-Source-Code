@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C# Express 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReliefMapping", "ReliefMapping360.csproj", "{6D999C19-2DEA-441C-81F5-3C943DCDB265}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Xbox 360 = Debug|Xbox 360
+		Release|Xbox 360 = Release|Xbox 360
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Debug|Xbox 360.Deploy.0 = Debug|Xbox 360
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Release|Xbox 360.Build.0 = Release|Xbox 360
+		{6D999C19-2DEA-441C-81F5-3C943DCDB265}.Release|Xbox 360.Deploy.0 = Release|Xbox 360
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

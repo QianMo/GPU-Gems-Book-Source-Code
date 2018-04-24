@@ -1,0 +1,9 @@
+Mark Colbert & Jaroslav Krivanek
+colbert@cs.ucf.edu
+
+Copyright (c) 2007.
+
+The following code is freely distributed "as is" and comes with 
+no guarantees or required support by the authors.  Any use of 
+the code for commercial purposes requires explicit written consent 
+by the authors.

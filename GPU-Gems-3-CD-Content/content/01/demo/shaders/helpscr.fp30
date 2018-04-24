@@ -1,0 +1,25 @@
+// this is actually for both the help screen & about box.
+
+struct v2fConnector {
+  float4 projCoord : POSITION;
+  float2 tex  : TEXCOORD;
+};
+
+Texture2D tex;
+SamplerState LinearClamp;
+
+cbuffer MyCB {
+  float opacity = 1;
+}
+
+half4 main(v2fConnector v2f ) : COLOR 
+{
+
+  half4 ret = tex.Sample(LinearClamp, v2f.tex);
+  ret.w = 1;
+  ret.w *= opacity;
+    
+  return ret;
+}
+
+  

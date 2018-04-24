@@ -1,0 +1,11 @@
+struct v2fConnector {
+  float4 projCoord : POSITION;
+};
+
+cbuffer MyCB {
+  float4 color;
+};
+
+float4 main(v2fConnector a2v) : SV_Target {
+  return color;
+}

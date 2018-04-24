@@ -1,0 +1,10 @@
+struct g2fConnector {
+  float4 projCoord    : POSITION;
+  uint   vertexID     : TEX2;
+  //uint   RTIndex      : SV_RenderTargetArrayIndex;
+};
+
+uint main(g2fConnector g2f) : SV_TARGET0
+{
+  return g2f.vertexID;
+}

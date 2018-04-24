@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="ShaderCompile"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="FXC"
+			DisplayName="FXC"
+			CommandLine="fxc.exe [output] [target] [strict] [compat] [perf] [noopt] [nopre] [child] [Inputs]"
+			Outputs="[outputdir]\$(InputName).o"
+			FileExtensions="*.fx"
+			ExecutionDescription="Executing tool..."
+			>
+			<Properties>
+				<EnumProperty
+					Name="output"
+					DisplayName="Compiler Output"
+					Category="Default"
+					Description="Output to an object file or to stdout if you wish to see the assembler."
+					>
+					<Values>
+						<EnumValue
+							Value="0"
+							Switch="/Fo [outputdir]\$(InputName).o"
+							DisplayName="Object File"
+						/>
+						<EnumValue
+							Value="1"
+							Switch="/Cc"
+							DisplayName="No output.  Just compile to STDOUT."
+						/>
+					</Values>
+				</EnumProperty>
+				<EnumProperty
+					Name="target"
+					DisplayName="Compiler Target"
+					Category="Default"
+					Description="Which shader model target to compile against."
+					>
+					<Values>
+						<EnumValue
+							Value="0"
+							Switch="/T fx_4_0"
+							DisplayName="FX 4.0 ( DX10 for shader model 4 and up )"
+						/>
+						<EnumValue
+							Value="1"
+							Switch="/T fx_2_0"
+							DisplayName="FX 2.0 ( DX9 for shader model 3 and down )"
+						/>
+					</Values>
+				</EnumProperty>
+				<BooleanProperty
+					Name="strict"
+					DisplayName="Enable Strict Mode"
+					Category="Default"
+					Description="Enables strict mode."
+					Switch="/Ges"
+					DefaultValue="true"
+				/>
+				<BooleanProperty
+					Name="compat"
+					DisplayName="Backwards Compatibility ( DX9 syntax )"
+					Category="Dx10"
+					Description="Allows shaders written in SM 3.0 and lower syntax to be compiled for SM 4.0 targets.  Useful for moving DX9 content over to DX10."
+					Switch="/Gec"
+				/>
+				<BooleanProperty
+					Name="perf"
+					DisplayName="Disable Performance Mode"
+					Category="Default"
+					Description="Disabiling performance mode allows the application to update state object members among other things. "
+					Switch="/Gdp"
+				/>
+				<BooleanProperty
+					Name="noopt"
+					DisplayName="Disable Optimizations"
+					Category="Debug"
+					Description="Turns off shader optimizations."
+					Switch="/Od"
+				/>
+				<BooleanProperty
+					Name="nopre"
+					DisplayName="Disable Preshaders"
+					Category="Debug"
+					Description="Disables preshaders.  By default preshaders should be enabled because they can greatly improve performance."
+					Switch="/Op"
+				/>
+				<BooleanProperty
+					Name="child"
+					DisplayName="Child Effect"
+					Category="Dx10"
+					Description="Allows a shader to be compiled as a child effect which allows it to be added to a pool. "
+					Switch="/Gch"
+				/>
+				<StringProperty
+					Name="outputdir"
+					DisplayName="Output Directory"
+					Category="Default"
+					Description="The directory to place the compiled object file in (when not compiling to STDOUT).  The default value is the project&apos;s temp folder."
+					Switch="[value]"
+					DefaultValue="$(IntDir)"
+				/>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

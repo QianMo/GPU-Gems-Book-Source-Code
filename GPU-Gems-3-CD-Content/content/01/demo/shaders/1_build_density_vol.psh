@@ -1,0 +1,29 @@
+#include "master.h"
+
+struct g2fConnector {
+  float4 projCoord  : POSITION;
+  float4 wsCoord    : TEXCOORD;
+  float3 chunkCoord : TEXCOORD1;
+};
+
+Texture3D noiseVol0;
+Texture3D noiseVol1;
+Texture3D noiseVol2;
+Texture3D noiseVol3;
+Texture3D packedNoiseVol0;
+Texture3D packedNoiseVol1;
+Texture3D packedNoiseVol2;
+Texture3D packedNoiseVol3;
+SamplerState LinearRepeat;
+SamplerState NearestClamp;
+SamplerState NearestRepeat;
+SamplerState LinearClamp;
+
+#include "LodCB.h"
+#include "density.h"
+
+float main(g2fConnector g2f) : SV_TARGET0
+{
+  float ret = DENSITY(g2f.wsCoord.xyz);
+  return ret;
+}

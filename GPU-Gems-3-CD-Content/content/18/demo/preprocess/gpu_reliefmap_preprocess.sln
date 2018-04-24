@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpu_reliefmap_preprocess", "SOURCE\gpu_reliefmap_preprocess.vcproj", "{6312AACA-4DDC-4A89-BFE2-0DD9C48053D3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7363EB2B-78E2-42B0-A125-15AC7B38FF1C} = {7363EB2B-78E2-42B0-A125-15AC7B38FF1C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXUT", "DXUT\DXUT.vcproj", "{7363EB2B-78E2-42B0-A125-15AC7B38FF1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6312AACA-4DDC-4A89-BFE2-0DD9C48053D3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6312AACA-4DDC-4A89-BFE2-0DD9C48053D3}.Debug|Win32.Build.0 = Debug|Win32
+		{6312AACA-4DDC-4A89-BFE2-0DD9C48053D3}.Release|Win32.ActiveCfg = Release|Win32
+		{6312AACA-4DDC-4A89-BFE2-0DD9C48053D3}.Release|Win32.Build.0 = Release|Win32
+		{7363EB2B-78E2-42B0-A125-15AC7B38FF1C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7363EB2B-78E2-42B0-A125-15AC7B38FF1C}.Debug|Win32.Build.0 = Debug|Win32
+		{7363EB2B-78E2-42B0-A125-15AC7B38FF1C}.Release|Win32.ActiveCfg = Release|Win32
+		{7363EB2B-78E2-42B0-A125-15AC7B38FF1C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

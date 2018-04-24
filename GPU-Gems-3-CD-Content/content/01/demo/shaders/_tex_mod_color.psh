@@ -1,0 +1,16 @@
+struct v2fConnector {
+  float4 projCoord : POSITION;
+  float2 tex       : TEXTURE;
+};
+
+cbuffer MyCB {
+  float4 color;
+};
+
+SamplerState TrilinearClamp;
+Texture2D    inputTex;
+
+float4 main(v2fConnector v2f) : SV_Target {
+  return color * inputTex.Sample(TrilinearClamp, v2f.tex);
+}
+

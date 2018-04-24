@@ -1,0 +1,47 @@
+// specify any # of nma's here using "consume" command
+consume ../models/main.nma
+consume ../models/tables.nma
+//consume ../models/another1.nma      // etc
+//consume ../models/another2.nma      // etc
+
+false         // fullscreen?
+1280 1024     // fullscreen mode resolution
+960 640 //1248 928      // windowed mode client size
+1.0           // pixel (aspect) correction value (for displays w/non-square pixels)
+32 16 0       // color / z / stencil bits
+true          // when fullscreen: true = find best match for display mode, false = force exact resolution specified above.
+false         // vsync? (applies to fullscreen only)
+
+1             // number of AA samples.  *** WARNING: screenshots don't work with AA ***
+1.0           // supersampling factor (1=none; 2 = rendered image is double-sized)
+0             // UBER_QUALITY (-1=lesser parts, 0=launch, 1=ultra/later) (for shaders - turns on all bells & whistles, cranks all quality knobs)
+true          // display NV logo in corner? (true/false)
+true          // display 'click here for help' in corner? (true/false)
+false         // capture each frame to file? (true/false)
+3             // make screen-capture keys (`=1x1, ~=NxN) available?  0=no, 2+ = NxN tiling.
+               //    -- CAREFUL: CAPTURE ONLY WORKS WITH 1xAA --
+true          // use HAL? (true/false)
+
+
+// <add new params HERE>
+// <add new params HERE>
+// <add new params HERE>
+
+// voxelDim.  This value should be of the form (N*4+1).
+// it equals the number of CORNERS in a chunk.
+// the number of cells is this minus one.
+// for 3 levels of LOD, you want this number MINUS ONE
+// to be a multiple of four.
+// ------------
+// ACTUAL 3D TEXTURE SIZE == # CORNERS == VoxelDim = ODD NUMBER
+// ACTUAL # CELLS = N-1 = MULTIPLE OF 4
+// Note: if you crank this up, increase the VB/IB sizes in main.nma as well.
+33 //49 //33, 41, 49, 57, 65...            // voxel dim of highest LOD chunks.  Must be divisible by 16.
+4  // extra pixels for margin (on EACH SIDE)
+
+// good combos:  49/4
+//               33/4
+
+
+cheese    // magic keyword we check for @ end to make sure you didn't screw up the params!
+up the params!

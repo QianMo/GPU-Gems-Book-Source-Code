@@ -1,0 +1,958 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbVec4.in,v 1.4 2002/08/22 08:49:37 prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec4<T>::operator==(const GbVec4<T>& p) const
+{ 
+  if (EPSILON == T(0.0))
+    return xyz[0]==p.xyz[0] && xyz[1]==p.xyz[1] && xyz[2]==p.xyz[2] && xyz[3]==p.xyz[3];
+  else
+    return GbMath<T>::Abs(xyz[0]-p.xyz[0]) <= EPSILON &&
+           GbMath<T>::Abs(xyz[1]-p.xyz[1]) <= EPSILON &&
+           GbMath<T>::Abs(xyz[2]-p.xyz[2]) <= EPSILON &&
+           GbMath<T>::Abs(xyz[3]-p.xyz[3]) <= EPSILON;
+}
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are \e not the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec4<T>::operator!=(const GbVec4<T>& p) const
+{ 
+  if (EPSILON == T(0.0))
+    return xyz[0]!=p.xyz[0] || xyz[1]!=p.xyz[1] || xyz[2]!=p.xyz[2] || xyz[3]!=p.xyz[3];
+  else
+    return GbMath<T>::Abs(xyz[0]-p.xyz[0]) > EPSILON ||
+           GbMath<T>::Abs(xyz[1]-p.xyz[1]) > EPSILON ||
+           GbMath<T>::Abs(xyz[2]-p.xyz[2]) > EPSILON ||
+           GbMath<T>::Abs(xyz[3]-p.xyz[3]) > EPSILON;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a less-than ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in D-C-B-A order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec4<T>::operator< (const GbVec4<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2], fWTmp = rkVector.xyz[3];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+    if ( GbMath<T>::Abs(xyz[3] - fWTmp) <= EPSILON ) fWTmp = xyz[3];
+  }
+
+  // compare w values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[3]);
+  unsigned int uiTest1 = *(unsigned int*)&fWTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare z values
+  uiTest0 = *(unsigned int*)&(xyz[2]);
+  uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 < uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a less-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in D-C-B-A order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec4<T>::operator<= (const GbVec4<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2], fWTmp = rkVector.xyz[3];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+    if ( GbMath<T>::Abs(xyz[3] - fWTmp) <= EPSILON ) fWTmp = xyz[3];
+  }
+
+  // compare w values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[3]);
+  unsigned int uiTest1 = *(unsigned int*)&fWTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare z values
+  uiTest0 = *(unsigned int*)&(xyz[2]);
+  uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 <= uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a greater ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in D-C-B-A order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec4<T>::operator> (const GbVec4<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2], fWTmp = rkVector.xyz[3];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+    if ( GbMath<T>::Abs(xyz[3] - fWTmp) <= EPSILON ) fWTmp = xyz[3];
+  }
+
+  // compare w values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[3]);
+  unsigned int uiTest1 = *(unsigned int*)&fWTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare z values
+  uiTest0 = *(unsigned int*)&(xyz[2]);
+  uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 > uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a greater-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in D-C-B-A order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec4<T>::operator>= (const GbVec4<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2], fWTmp = rkVector.xyz[3];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+    if ( GbMath<T>::Abs(xyz[3] - fWTmp) <= EPSILON ) fWTmp = xyz[3];
+  }
+
+  // compare w values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[3]);
+  unsigned int uiTest1 = *(unsigned int*)&fWTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare z values
+  uiTest0 = *(unsigned int*)&(xyz[2]);
+  uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 >= uiTest1;
+}
+
+/*!
+  \param p The vector to add
+  \return A sum vector
+
+  This method adds vector \a p to self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator+=(const GbVec4<T>& p)
+{ 
+  xyz[0]+=p.xyz[0]; xyz[1]+=p.xyz[1]; xyz[2]+=p.xyz[2]; xyz[3]+=p.xyz[3]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to add
+  \return A sum vector
+
+  This method adds the scalar \a s to each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator+=(const T& s)
+{ 
+  xyz[0]+=s; xyz[1]+=s; xyz[2]+=s; xyz[3]+=s; 
+  return *this; 
+}
+
+/*!
+  \param p The vector to subtract
+  \return A sum vector
+
+  This method subtracts vector \a p from self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator-=(const GbVec4<T>& p)
+{ 
+  xyz[0]-=p.xyz[0]; xyz[1]-=p.xyz[1]; xyz[2]-=p.xyz[2]; xyz[3]-=p.xyz[3]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return A sum vector
+
+  This method subtracts the scalar \a s from each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator-=(const T& s)
+{ 
+  xyz[0]-=s; xyz[1]-=s; xyz[2]-=s; xyz[3]-=s; 
+  return *this; 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return A multiplied vector
+
+  This method multiplies vector \a v and self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator*=(const GbVec4<T>& v)
+{ 
+  xyz[0]*=v.xyz[0]; xyz[1]*=v.xyz[1]; xyz[2]*=v.xyz[2]; xyz[3]*=v.xyz[3]; 
+  return *this; 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This methods scales self by the integral value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator*=(const int& s)
+{ 
+  T val(s);
+  xyz[0]*=val; xyz[1]*=val; xyz[2]*=val; xyz[3]*=val; 
+  return *this; 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This methods scales self by the floating point value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator*=(const T& s)
+{ 
+  xyz[0]*=s; xyz[1]*=s; xyz[2]*=s; xyz[3]*=s; 
+  return *this; 
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides self componentwise with the values in \a v and returns
+  a reference to self. If a component of the divisor vector \a v is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator/=(const GbVec4<T>& v)
+{ 
+  if ( v.xyz[0] != T(0.0) ) 
+    xyz[0] /= v.xyz[0];
+  else
+    xyz[0] = std::numeric_limits<T>::infinity();
+
+  if ( v.xyz[1] != T(0.0) ) 
+    xyz[1] /= v.xyz[1];
+  else
+    xyz[1] = std::numeric_limits<T>::infinity();
+
+  if ( v.xyz[2] != T(0.0) ) 
+    xyz[2] /= v.xyz[2];
+  else
+    xyz[2] = std::numeric_limits<T>::infinity();
+
+  if ( v.xyz[3] != T(0.0) ) 
+    xyz[3] /= v.xyz[3];
+  else
+    xyz[3] = std::numeric_limits<T>::infinity();
+
+  return *this; 
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the floating point scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator/=(const T& s)
+{ 
+  if ( s != T(0.0) ) {
+    T fInvScalar = T(1.0)/s;
+    xyz[0] *= fInvScalar;
+    xyz[1] *= fInvScalar;
+    xyz[2] *= fInvScalar;
+    xyz[3] *= fInvScalar;
+  }
+  else {
+    xyz[0] = std::numeric_limits<T>::infinity();
+    xyz[1] = std::numeric_limits<T>::infinity();
+    xyz[2] = std::numeric_limits<T>::infinity();
+    xyz[3] = std::numeric_limits<T>::infinity();
+  }
+
+  return *this; 
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the integral scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec4<T>& 
+GbVec4<T>::operator/=(const int& s)
+{ 
+  T val(s);
+  if ( s != 0 ) {
+    T fInvScalar = T(1.0)/val;
+    xyz[0] *= fInvScalar;
+    xyz[1] *= fInvScalar;
+    xyz[2] *= fInvScalar;
+    xyz[3] *= fInvScalar;
+  }
+  else {
+    xyz[0] = std::numeric_limits<T>::infinity();
+    xyz[1] = std::numeric_limits<T>::infinity();
+    xyz[2] = std::numeric_limits<T>::infinity();
+    xyz[3] = std::numeric_limits<T>::infinity();
+  }
+
+  return *this; 
+}
+
+/*!
+  \param p The vector to add
+  \return The sum vector
+
+  This method adds self and the vector \a p componentwise and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator+(const GbVec4<T>& p) const
+{ 
+  return GbVec4<T>( xyz[0]+p.xyz[0], xyz[1]+p.xyz[1], xyz[2]+p.xyz[2], xyz[3]+p.xyz[3] ); 
+}
+
+/*!
+  \param s The scalar to add
+  \return The sum vector
+
+  This method adds a scalar to each component of self and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator+(const T& s) const
+{ 
+  return GbVec4<T>( xyz[0]+s, xyz[1]+s, xyz[2]+s, xyz[3]+s ); 
+}
+
+/*!
+  \param p The vector to subtract
+  \return The sum vector
+
+  This method subtracts vector \a p from self componentwise and returns the
+  sum vector.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator-(const GbVec4<T>& p) const
+{ 
+  return GbVec4<T>( xyz[0]-p.xyz[0], xyz[1]-p.xyz[1], xyz[2]-p.xyz[2], xyz[3]-p.xyz[3] ); 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return The sum vector
+
+  This method subtracts a scalar from each component of self and returns 
+  the sum vector.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator-(const T& s) const
+{ 
+  return GbVec4<T>( xyz[0]-s, xyz[1]-s, xyz[2]-s, xyz[3]-s ); 
+}
+
+/*!
+  \return The inverted vector
+
+  This method returns the inverted self vector.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator-() const
+{ 
+  return GbVec4<T>( -xyz[0], -xyz[1], -xyz[2], -xyz[3] ); 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the integral value \a s.
+*/
+template <class T>
+INLINE GbVec4<T>  
+GbVec4<T>::operator*(const int& s) const
+{ 
+  T val(s);
+  return GbVec4<T>( xyz[0]*val, xyz[1]*val, xyz[2]*val, xyz[3]*val ); 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the floating point value
+  \a s.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::operator*(const T& s) const
+{ 
+  return GbVec4<T>( xyz[0]*s, xyz[1]*s, xyz[2]*s, xyz[3]*s ); 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return The multiplicated vector
+
+  This method returns a vector that is self multiplied componentwise with \a v.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::operator*(const GbVec4<T>& v) const
+{ 
+  return GbVec4<T>( xyz[0]*v.xyz[0], xyz[1]*v.xyz[1], xyz[2]*v.xyz[2], xyz[3]*v.xyz[3] ); 
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::operator/(const int& s) const
+{ 
+  T kQuot[4];
+  T ss(s);
+
+  if ( s != 0 ) {
+    T fInvScalar = T(1.0)/ss;
+    kQuot[0] = fInvScalar*xyz[0];
+    kQuot[1] = fInvScalar*xyz[1];
+    kQuot[2] = fInvScalar*xyz[2];
+    kQuot[3] = fInvScalar*xyz[3];
+    return GbVec4<T>(kQuot);
+  }
+  else
+    return GbVec4<T>(std::numeric_limits<T>::infinity());
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::operator/(const T& s) const
+{ 
+  T kQuot[4];
+
+  if ( s != T(0.0) ) {
+    T fInvScalar = T(1.0)/s;
+    kQuot[0] = fInvScalar*xyz[0];
+    kQuot[1] = fInvScalar*xyz[1];
+    kQuot[2] = fInvScalar*xyz[2];
+    kQuot[3] = fInvScalar*xyz[3];
+    return GbVec4<T>(kQuot);
+  }
+  else
+    return GbVec4<T>(std::numeric_limits<T>::infinity());
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides each component of self by the component from \a v.
+  If a component of \a v is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::operator/(const GbVec4<T>& v) const
+{ 
+  T a=std::numeric_limits<T>::infinity();
+  T b=std::numeric_limits<T>::infinity();
+  T c=std::numeric_limits<T>::infinity();
+  T d=std::numeric_limits<T>::infinity();
+
+  if (v.xyz[0] != T(0.0)) a = xyz[0] / v.xyz[0];
+  if (v.xyz[1] != T(0.0)) b = xyz[1] / v.xyz[1];
+  if (v.xyz[2] != T(0.0)) c = xyz[2] / v.xyz[2];
+  if (v.xyz[3] != T(0.0)) d = xyz[3] / v.xyz[3];
+  
+  return GbVec4<T>(a,b,c,d);
+}
+
+/*!
+  \param a The second vector
+  \return The scalar product value
+
+  This method computes the scalar product (dot product) of
+  self and \a a.
+*/
+template <class T>
+INLINE T
+GbVec4<T>::operator|(const GbVec4<T> &a) const
+{ 
+  return xyz[0]*a.xyz[0] + xyz[1]*a.xyz[1] + xyz[2]*a.xyz[2] + xyz[3]*a.xyz[3];
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE T &
+GbVec4<T>::operator[] (int i) 
+{ 
+  return xyz[i]; 
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE const T & 
+GbVec4<T>::operator[] (int i) const
+{ 
+  return xyz[i]; 
+}
+
+/*!
+  \return Pointer to the component storage
+
+  This method returns a pointer to the internal storage of the
+  components of self.
+
+  \warning The pointer will become invalid if the vector is destroyd.
+*/
+template <class T>
+INLINE const T * 
+GbVec4<T>::getVec4() const
+{ 
+  return xyz; 
+}
+
+/*!
+  \param a The A dimension value
+  \param b The B dimension value
+  \param c The C dimension value
+  \param d The D dimension value
+
+  This method fills the storage of its arguments with the components of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::getVec4(T &a, T &b, T &c, T &d) const
+{
+  a=xyz[0]; b=xyz[1]; c=xyz[2]; d=xyz[3]; 
+}
+  
+/*!
+  \param a A floating point scalar value
+
+  This method writes the given value \a a to the A component of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setA(T a)
+{ 
+  xyz[0] = a; 
+}
+
+/*!
+  \param b A floating point scalar value
+
+  This method writes the given value \a b to the B component of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setB(T b)
+{ 
+  xyz[1] = b; 
+}
+
+/*!
+  \param c A floating point scalar value
+
+  This method writes the given value \a c to the C component of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setC(T c)
+{ 
+  xyz[2] = c; 
+}
+
+/*!
+  \param d A floating point scalar value
+
+  This method writes the given value \a d to the D component of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setD(T d)
+{ 
+  xyz[3] = d; 
+}
+
+/*!
+  \param f Array of three floating point values
+
+  This method writes the given array values \a f to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setVec4(const T f[]) 
+{ 
+  xyz[0]=f[0]; xyz[1]=f[1]; xyz[2]=f[2]; xyz[3]=f[3];  
+}
+
+/*!
+  \param a The A dimension value
+  \param b The B dimension value
+  \param c The C dimension value
+  \param d The D dimension value
+
+  This method writes the given values to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec4<T>::setVec4(T a,T b,T c,T d) 
+{ 
+  xyz[0]=a; xyz[1]=b; xyz[2]=c; xyz[3]=d; 
+}
+
+/*!
+  \return The length of self
+
+  This method computes the \f$ L^\infty \f$ norm of self, commonly referred 
+  to as the length of self and returns the value.
+
+  \internal For numerical stability of algorithms using this method, 
+            an epsilon environment around 1.0 is maintained
+            and vector lengths therein are forced to 1.0 by explicit comparison
+	    against the system specific \p numeric_limit::epsilon
+*/
+template <class T>
+INLINE T
+GbVec4<T>::getNorm() const
+{ 
+  // this is for numerical stability
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2] + xyz[3]*xyz[3];
+  T e = std::numeric_limits<T>::epsilon()*std::numeric_limits<T>::epsilon();
+  return (GbMath<T>::Abs(l-T(1.0)) < e) ? T(1.0) : GbMath<T>::Sqrt(l); 
+}
+
+/*!
+  \return The square length of self
+
+  This method computes the square length of self, in \f$ L^\infty \f$ norm. You
+  should consider using this method because its faster than \p getNorm()
+*/
+template <class T>
+INLINE T
+GbVec4<T>::getSquareNorm() const
+{ 
+  return xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2] + xyz[3]*xyz[3] ; 
+}
+
+/*!
+  \param tolerance Epsilon for numerical accuracy
+  \return A vector with direction of self and length 1.0
+
+  This method returns a normalized version of self. If numerical stability
+  of the algorithm using this method is a concern, you can put a small
+  epsilon value in \a tolerance that is used when comparing the current
+  length of self: If it falls below the tolerance, self is returned unmodified.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::getNormalized(T tolerance) const
+{
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2] + xyz[3]*xyz[3];
+  T e = tolerance*tolerance;
+  if (GbMath<T>::Abs(l-T(1.0)) < e)
+    return *this;
+  else if (l > e) {
+    T fac = T(1.0)/GbMath<T>::Sqrt(l);
+    return GbVec4<T>(xyz[0]*fac, xyz[1]*fac, xyz[2]*fac, xyz[3]*fac);
+  }
+  else
+    return GbVec4<T>::ZERO;
+}
+
+/*!
+  \param tolerance Epsilon for numerical accuracy
+  \return The length of self before normalization
+
+  This method modifies self by scaling it to length 1.0 and returns the
+  length self had before the operation. If numerical stability
+  of the algorithm using this method is a concern, you can put a small
+  epsilon value in \a tolerance that is used when comparing the current
+  length of self: If it falls below the tolerance, self is not modified.
+*/
+template <class T>
+INLINE T
+GbVec4<T>::normalize(T tolerance)
+{ 
+  T norm;
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2] + xyz[3]*xyz[3];  
+  T e = tolerance*tolerance;
+  if (l < e) {
+    xyz[0]= xyz[1]= xyz[2]=  xyz[3]= T(0.0);
+    norm = T(0.0);
+  }
+  else if (GbMath<T>::Abs(l-T(1.0)) > e) {
+    norm = GbMath<T>::Sqrt(l);
+    T fac = T(1.0)/norm;
+    xyz[0] *= fac;
+    xyz[1] *= fac;
+    xyz[2] *= fac;
+    xyz[3] *= fac;
+  }
+  else
+    norm = T(1.0);
+  
+  return norm;
+}
+
+/*!
+  \param v The plane normal
+  \return The projected vector
+
+  Projects self into a plane normal to the given vector \a v, which must
+  have unit length. Self is modified to the new vector and a reference to self is returned.
+*/
+template <class T>
+INLINE const GbVec4<T>&
+GbVec4<T>::projectNormalTo(const GbVec4<T> &v)
+{
+  T sprod = (*this|v);
+  xyz[0]= xyz[0] - v.xyz[0] * sprod;
+  xyz[1]= xyz[1] - v.xyz[1] * sprod;
+  xyz[2]= xyz[2] - v.xyz[2] * sprod;  
+  xyz[3]= xyz[3] - v.xyz[3] * sprod;  
+  return *this;
+}
+
+/*!
+  \param n The surface normal
+  \return The reflected direction vector
+
+  Returns a new vector that is self (as an incoming
+  vector) reflected at a surface with \a n as the normal vector. 
+
+  \internal The normal \a n is reversed if (self|n) is positive.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::getReflectedAt(const GbVec4<T>& n) const
+{
+  GbVec4<T> nn= ((*this | n) > T(0.0)) ? -n : n;
+  return *this - nn * (T(2.0) * (nn|*this));
+}
+
+/*! 
+  \param n The surface normal
+  \param index The refraction index
+  \param total_reflection Will be set to true if total reflection has occurred
+  \return The refracted direction vector
+
+  Returns a new vector that is the self vector refracted
+  (as an incoming vector) at a surface with the normal vector \a n and a
+  \a index of refraction (ni/no, where ni is first along the self
+  vector). In case of total internal reflection \a total_reflection is
+  set to true and self is returned unmodified, otherwise
+  \a total_reflection is false.
+*/
+template <class T>
+INLINE GbVec4<T>
+GbVec4<T>::getRefractedAt(const GbVec4<T>& n, T index, GbBool& total_reflection ) const
+{
+  // Reorient n
+  GbVec4<T> nn= ((*this | n) > T(0.0)) ? -n : n;
+  GbVec4<T> tmp= (*this - nn * (nn|*this)) * index;
+  T length= T(1.0) - (tmp|tmp);
+  total_reflection= (length < T(0.0)) ? true : false;
+  return (length < T(0.0)) ? *this : nn * -GbMath<T>::Sqrt(length) + tmp;
+}
+
+/*!
+  \param a The second vector
+  \return The scalar product value
+
+  This method computes the scalar product (dot product) of
+  self and \a a.
+*/
+template <class T>
+INLINE T
+GbVec4<T>::dot(const GbVec4<T> &a) const
+{ 
+  return a.xyz[0] * xyz[0] + a.xyz[1] * xyz[1] + a.xyz[2] * xyz[2] + a.xyz[3] * xyz[3] ; 
+}
+
+/*!
+  \param a First point
+  \param b Second point
+  \return The angle value
+
+  This method computes and returns the angle between the two vectors given
+  by the two input points and the origin.
+*/
+template <class T>
+INLINE T
+GbVec4<T>::angle(const GbVec4<T> &a, const GbVec4<T> &b)
+{
+  T c = a.dot( b );
+  if( c > T(1.0) ) c = T(1.0);
+  if( c < T(-1.0) ) c = T(-1.0);
+  return GbMath<T>::ACos(c);
+}
+

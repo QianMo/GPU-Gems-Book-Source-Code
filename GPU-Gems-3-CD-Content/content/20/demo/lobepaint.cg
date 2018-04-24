@@ -1,0 +1,75 @@
+//
+// lobepaint.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+
+struct VSINPUT {
+	float4 position		: POSITION;
+	float3 normal		: NORMAL;
+	float2 texcoord		: TEXCOORD0;
+	float3 binormal		: BINORMAL;
+	float3 tangent		: TANGENT;
+};
+
+struct VSOUTPUT {
+	float4 hpos			: POSITION;	
+	float4 color		: COLOR0;
+	float2 texcoord		: TEXCOORD0;
+};
+
+/// displays the SBRDF map via the following false color computation
+float4 FalseColorDisplay(VSOUTPUT IN, uniform sampler2D svbrdf) : COLOR0 {
+	float4 lobe = tex2D(svbrdf, IN.texcoord);
+	
+	// scale and bias the values to be between 0 and 1 (except the exponent)
+	float4 slobe = (lobe+float4(1,0,0,0))/float4(2,1,1,1);
+	
+	// compute the color map
+	float3 c = lerp(float3(0,0,1), float3(1,0,0), slobe.x);
+	c.g = slobe.y;
+	c *= (log10(slobe.b)-1)/2.2;
+	c = lerp(c, float3(1,1,1), slobe.w);
+	
+	return float4(c,1);
+}
+
+/// displays a mesh using the uv-coordinates instead of the position
+VSOUTPUT UVDisplay(VSINPUT IN) {
+float4x4 m = float4x4(float4(2,0,0,-1),
+					  float4(0,-2,0,1),
+					  float4(0,0,1,0),
+					  float4(0,0,0,1));
+
+	VSOUTPUT OUT;
+	
+	OUT.hpos = mul(m,float4(IN.texcoord,0,1)); 
+	OUT.color = float4(0.9,0.9,0.9,0.1);
+	
+	return OUT;
+}
+
+/// ping-pong texture painting method
+float4 Paint(float2 texcoord : TEXCOORD0,
+			 uniform float4 lobe, 
+			 uniform float3 pos,
+			 uniform sampler2D image) : COLOR0
+{	
+	float4 source = tex2D(image, texcoord);
+	
+	float2 l = (pos.xy - texcoord);
+	float alpha = exp(-(dot(l,l) * pos.z));
+	
+	return lerp(source,lobe,alpha);
+}
+

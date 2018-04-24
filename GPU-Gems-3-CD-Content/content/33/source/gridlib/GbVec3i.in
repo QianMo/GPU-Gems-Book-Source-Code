@@ -1,0 +1,623 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbVec3i.in,v 1.3 2003/03/07 08:29:23 prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values.
+*/
+template <class T>
+INLINE GbBool
+GbVec3i<T>::operator==(const GbVec3i<T>& p) const
+{ 
+  return xyz[0]==p.xyz[0] && xyz[1]==p.xyz[1] && xyz[2]==p.xyz[2];
+}
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are \e not the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values.
+*/
+template <class T>
+INLINE GbBool
+GbVec3i<T>::operator!=(const GbVec3i<T>& p) const
+{ 
+  return xyz[0]!=p.xyz[0] || xyz[1]!=p.xyz[1] || xyz[2]!=p.xyz[2];
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values.
+  The method establishes a less-than ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+*/
+template <class T>
+INLINE GbBool
+GbVec3i<T>::operator< (const GbVec3i<T>& rkVector) const
+{
+  // compare z values
+  if (xyz[2] < rkVector.xyz[2]) return true;
+  if (xyz[2] > rkVector.xyz[2]) return false;
+
+  // compare y values
+  if (xyz[1] < rkVector.xyz[1]) return true;
+  if (xyz[1] > rkVector.xyz[1]) return false;
+
+  // compare x values
+  return xyz[0] < rkVector.xyz[0];
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values.
+  The method establishes a less-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+*/
+template <class T>
+INLINE GbBool 
+GbVec3i<T>::operator<= (const GbVec3i<T>& rkVector) const
+{
+  // compare z values
+  if (xyz[2] < rkVector.xyz[2]) return true;
+  if (xyz[2] > rkVector.xyz[2]) return false;
+
+  // compare y values
+  if (xyz[1] < rkVector.xyz[1]) return true;
+  if (xyz[1] > rkVector.xyz[1]) return false;
+
+  // compare x values
+  return xyz[0] <= rkVector.xyz[0];
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values.
+  The method establishes a greater ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+*/
+template <class T>
+INLINE GbBool 
+GbVec3i<T>::operator> (const GbVec3i<T>& rkVector) const
+{
+  // compare z values
+  if (xyz[2] > rkVector.xyz[2]) return true;
+  if (xyz[2] < rkVector.xyz[2]) return false;
+
+  // compare y values
+  if (xyz[1] > rkVector.xyz[1]) return true;
+  if (xyz[1] < rkVector.xyz[1]) return false;
+
+  // compare x values
+  return xyz[0] > rkVector.xyz[0];
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values.
+  The method establishes a greater-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+*/
+template <class T>
+INLINE GbBool 
+GbVec3i<T>::operator>= (const GbVec3i<T>& rkVector) const
+{
+  // compare z values
+  if (xyz[2] > rkVector.xyz[2]) return true;
+  if (xyz[2] < rkVector.xyz[2]) return false;
+
+  // compare y values
+  if (xyz[1] > rkVector.xyz[1]) return true;
+  if (xyz[1] < rkVector.xyz[1]) return false;
+
+  // compare x values
+  return xyz[0] >= rkVector.xyz[0];
+}
+
+/*!
+  \param p The vector to add
+  \return A sum vector
+
+  This method adds vector \a p to self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator+=(const GbVec3i<T>& p)
+{ 
+  xyz[0]+=p.xyz[0]; xyz[1]+=p.xyz[1]; xyz[2]+=p.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to add
+  \return A sum vector
+
+  This method adds the scalar \a s to each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator+=(const T& s)
+{ 
+  xyz[0]+=s; xyz[1]+=s; xyz[2]+=s; 
+  return *this; 
+}
+
+/*!
+  \param p The vector to subtract
+  \return A sum vector
+
+  This method subtracts vector \a p from self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator-=(const GbVec3i<T>& p)
+{ 
+  xyz[0]-=p.xyz[0]; xyz[1]-=p.xyz[1]; xyz[2]-=p.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return A sum vector
+
+  This method subtracts the scalar \a s from each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator-=(const T& s)
+{ 
+  xyz[0]-=s; xyz[1]-=s; xyz[2]-=s; 
+  return *this; 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return A multiplied vector
+
+  This method multiplies vector \a v and self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator*=(const GbVec3i<T>& v)
+{ 
+  xyz[0]*=v.xyz[0]; xyz[1]*=v.xyz[1]; xyz[2]*=v.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This methods scales self by the floating point value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator*=(const float& s)
+{ 
+  T val = T(s);
+  xyz[0]*=val; xyz[1]*=val; xyz[2]*=val; 
+  return *this; 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This methods scales self by the integral value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator*=(const T& s)
+{ 
+  xyz[0]*=s; xyz[1]*=s; xyz[2]*=s; 
+  return *this; 
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides self componentwise with the values in \a v and returns
+  a reference to self. If a component of the divisor vector \a v is zero, 
+  the result is set to zero.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator/=(const GbVec3i<T>& v)
+{ 
+  // integers have no infinity
+  if ( v.xyz[0] != 0 ) 
+    xyz[0] /= v.xyz[0];
+  else
+    xyz[0] = 0;
+
+  if ( v.xyz[1] != 0 ) 
+    xyz[1] /= v.xyz[1];
+  else
+    xyz[1] = 0;
+
+  if ( v.xyz[2] != 0 ) 
+    xyz[2] /= v.xyz[2];
+  else
+    xyz[2] = 0;
+
+  return *this; 
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the integral scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to zero.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator/=(const T& s)
+{ 
+  if ( s != 0 ) {
+    xyz[0] /= s;
+    xyz[1] /= s;
+    xyz[2] /= s;
+  }
+  else {
+    xyz[0] = 0;
+    xyz[1] = 0;
+    xyz[2] = 0;
+  }
+
+  return *this; 
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the floating point scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to zero.
+*/
+template <class T>
+INLINE GbVec3i<T>& 
+GbVec3i<T>::operator/=(const float& s)
+{ 
+  T val = T(s);
+  if ( val != 0 ) {
+    xyz[0] /= val;
+    xyz[1] /= val;
+    xyz[2] /= val;
+  }
+  else {
+    xyz[0] = 0;
+    xyz[1] = 0;
+    xyz[2] = 0;
+  }
+
+  return *this; 
+}
+
+/*!
+  \param p The vector to add
+  \return The sum vector
+
+  This method adds self and the vector \a p componentwise and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator+(const GbVec3i<T>& p) const
+{ 
+  return GbVec3i<T>( xyz[0]+p.xyz[0], xyz[1]+p.xyz[1], xyz[2]+p.xyz[2] ); 
+}
+
+/*!
+  \param s The scalar to add
+  \return The sum vector
+
+  This method adds a scalar to each component of self and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator+(const T& s) const
+{ 
+  return GbVec3i<T>( xyz[0]+s, xyz[1]+s, xyz[2]+s ); 
+}
+
+/*!
+  \param p The vector to subtract
+  \return The sum vector
+
+  This method subtracts vector \a p from self componentwise and returns the
+  sum vector.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator-(const GbVec3i<T>& p) const
+{ 
+  return GbVec3i<T>( xyz[0]-p.xyz[0], xyz[1]-p.xyz[1], xyz[2]-p.xyz[2] ); 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return The sum vector
+
+  This method subtracts a scalar from each component of self and returns 
+  the sum vector.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator-(const T& s) const
+{ 
+  return GbVec3i<T>( xyz[0]-s, xyz[1]-s, xyz[2]-s ); 
+}
+
+/*!
+  \return The inverted vector
+
+  This method returns the inverted self vector.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator-() const
+{ 
+  return GbVec3i<T>( -xyz[0], -xyz[1], -xyz[2] ); 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the floating point value
+  \a s.
+*/
+template <class T>
+INLINE GbVec3i<T>  
+GbVec3i<T>::operator*(const float& s) const
+{ 
+  T val = T(s);
+  return GbVec3i<T>( xyz[0]*val, xyz[1]*val, xyz[2]*val ); 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the integral value \a s.
+*/
+template <class T>
+INLINE GbVec3i<T>
+GbVec3i<T>::operator*(const T& s) const
+{ 
+  return GbVec3i<T>( xyz[0]*s, xyz[1]*s, xyz[2]*s ); 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return The multiplicated vector
+
+  This method returns a vector that is self multiplied componentwise with \a v.
+*/
+template <class T>
+INLINE GbVec3i<T>
+GbVec3i<T>::operator*(const GbVec3i<T>& v) const
+{ 
+  return GbVec3i<T>( xyz[0]*v.xyz[0], xyz[1]*v.xyz[1], xyz[2]*v.xyz[2] ); 
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is zero.
+*/
+template <class T>
+INLINE GbVec3i<T>
+GbVec3i<T>::operator/(const float& s) const
+{ 
+  T kQuot[3];
+  T ss = T(s);
+
+  if ( ss != 0 ) {
+    kQuot[0] = xyz[0] / ss;
+    kQuot[1] = xyz[1] / ss;
+    kQuot[2] = xyz[2] / ss;
+    return GbVec3i<T>(kQuot);
+  }
+  else
+    return GbVec3i<T>(0);
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is zero.
+*/
+template <class T>
+INLINE GbVec3i<T>
+GbVec3i<T>::operator/(const T& s) const
+{ 
+  T kQuot[3];
+
+  if ( s != 0 ) {
+    kQuot[0] = xyz[0] / s;
+    kQuot[1] = xyz[1] / s;
+    kQuot[2] = xyz[2] / s;
+    return GbVec3i<T>(kQuot);
+  }
+  else
+    return GbVec3i<T>(0);
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides each component of self by the component from \a v.
+  If a component of \a v is zero, the result is zero.
+*/
+template <class T>
+INLINE GbVec3i<T>
+GbVec3i<T>::operator/(const GbVec3i<T>& v) const
+{ 
+  T x=0;
+  T y=0;
+  T z=0;
+
+  if (v.xyz[0] != 0) x = xyz[0] / v.xyz[0];
+  if (v.xyz[1] != 0) y = xyz[1] / v.xyz[1];
+  if (v.xyz[2] != 0) z = xyz[2] / v.xyz[2];
+  
+  return GbVec3i<T>(x,y,z);
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE T &
+GbVec3i<T>::operator[] (int i) 
+{ 
+  return xyz[i]; 
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE const T & 
+GbVec3i<T>::operator[] (int i) const
+{ 
+  return xyz[i]; 
+}
+
+/*!
+  \return Pointer to the component storage
+
+  This method returns a pointer to the internal storage of the
+  components of self.
+
+  \warning The pointer will become invalid if the vector is destroyd.
+*/
+template <class T>
+INLINE const T * 
+GbVec3i<T>::getVec3() const
+{ 
+  return xyz; 
+}
+
+/*!
+  \param x The X coordinate
+  \param y The Y coordinate
+  \param z The Z coordinate
+
+  This method fills the storage of its arguments with the components of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::getVec3(T &x, T &y, T &z) const
+{
+  x=xyz[0]; y=xyz[1]; z=xyz[2]; 
+}
+  
+/*!
+  \param x An integral scalar value
+
+  This method writes the given value \a x to the X component of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::setX(T x)
+{ 
+  xyz[0] = x; 
+}
+
+/*!
+  \param y An integral scalar value
+
+  This method writes the given value \a y to the Y component of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::setY(T y)
+{ 
+  xyz[1] = y; 
+}
+
+/*!
+  \param z An integral scalar value
+
+  This method writes the given value \a z to the Z component of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::setZ(T z)
+{ 
+  xyz[2] = z; 
+}
+
+/*!
+  \param f Array of three integral values
+
+  This method writes the given array values \a f to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::setVec3(const T f[]) 
+{ 
+  xyz[0]=f[0]; xyz[1]=f[1]; xyz[2]=f[2]; 
+}
+
+/*!
+  \param x The X coordinate
+  \param y The Y coordinate
+  \param z The Z coordinate
+
+  This method writes the given values to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec3i<T>::setVec3(T x,T y,T z) 
+{ 
+  xyz[0]=x; xyz[1]=y; xyz[2]=z; 
+}
+

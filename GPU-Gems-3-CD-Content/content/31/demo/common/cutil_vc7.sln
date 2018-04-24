@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cutil", "cutil_vc7.vcproj", "{46FB0B73-5A53-444A-8E72-F4F0A373098C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{46FB0B73-5A53-444A-8E72-F4F0A373098C}.Debug.ActiveCfg = Debug|Win32
+		{46FB0B73-5A53-444A-8E72-F4F0A373098C}.Debug.Build.0 = Debug|Win32
+		{46FB0B73-5A53-444A-8E72-F4F0A373098C}.Release.ActiveCfg = Release|Win32
+		{46FB0B73-5A53-444A-8E72-F4F0A373098C}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

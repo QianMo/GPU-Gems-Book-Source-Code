@@ -1,0 +1,15 @@
+
+struct v2fConnector {
+  float4 projCoord : POSITION;  // cg would accept this, but d3dx compiler dies
+  float2 tex  : TEXCOORD;
+};
+
+Texture2D tex;
+SamplerState LinearClamp;
+
+float4 main(v2fConnector v2f) : COLOR 
+{
+  return tex.Sample(LinearClamp, v2f.tex);
+}
+
+  

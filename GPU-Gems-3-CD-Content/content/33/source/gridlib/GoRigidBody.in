@@ -1,0 +1,186 @@
+/*----------------------------------------------------------------------
+|
+| $Id$
+|
++---------------------------------------------------------------------*/
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setMass (T fMass)
+{
+    if (T(0.0) < fMass && fMass < std::numeric_limits<T>::max()) 
+    {
+        mass_ = fMass;
+        invMass_ = T(1.0)/fMass;
+    }
+    else 
+    {
+        // assume the body as immovable
+        mass_ = std::numeric_limits<T>::max();
+        invMass_ = T(0.0);
+        inertia_ = GbMatrix3<T>::IDENTITY;
+        invInertia_ = GbMatrix3<T>::ZERO;
+        orientation_ = GbQuaternion<T>::IDENTITY;
+        linearMomentum_ = GbVec3<T>::ZERO;
+        angularMomentum_ = GbVec3<T>::ZERO;
+        worldTransform_ = GbMatrix3<T>::IDENTITY;
+        linearVelocity_ = GbVec3<T>::ZERO;
+        angularVelocity_ = GbVec3<T>::ZERO;
+    }
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setBodyInertia (const GbMatrix3<T>& rkInertia)
+{
+    inertia_ = rkInertia;
+    invInertia_ = inertia_.inverse();
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setPosition (const GbVec3<T>& rkPos)
+{
+    position_ = rkPos;
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setQOrientation (const GbQuaternion<T>& rkQOrient)
+{
+    orientation_ = rkQOrient;
+    orientation_.toRotationMatrix(worldTransform_);
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setLinearMomentum (const GbVec3<T>& rkLinMom)
+{
+    linearMomentum_ = rkLinMom;
+    linearVelocity_ = invMass_*linearMomentum_;
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setAngularMomentum (const GbVec3<T>& rkAngMom)
+{
+    angularMomentum_ = rkAngMom;
+    angularVelocity_ = worldTransform_*invInertia_*worldTransform_.transpose()*angularMomentum_;
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setROrientation (const GbMatrix3<T>& rkROrient)
+{
+    worldTransform_ = rkROrient;
+    orientation_.fromRotationMatrix(worldTransform_);
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setLinearVelocity (const GbVec3<T>& rkLinVel)
+{
+    linearVelocity_ = rkLinVel;
+    linearMomentum_ = mass_*linearVelocity_;
+}
+
+template <class T>
+INLINE void 
+GoRigidBody<T>::setAngularVelocity (const GbVec3<T>& rkAngVel)
+{
+    angularVelocity_ = rkAngVel;
+    angularMomentum_ = worldTransform_*inertia_*worldTransform_.transpose()*angularVelocity_;
+}
+
+template <class T>
+INLINE T 
+GoRigidBody<T>::getMass () const
+{
+    return mass_;
+}
+
+template <class T>
+INLINE T 
+GoRigidBody<T>::getInverseMass () const
+{
+    return invMass_;
+}
+
+template <class T>
+INLINE const GbMatrix3<T>& 
+GoRigidBody<T>::getBodyInertia () const
+{
+    return inertia_;
+}
+
+template <class T>
+INLINE const GbMatrix3<T>& 
+GoRigidBody<T>::getBodyInverseInertia () const
+{
+    return invInertia_;
+}
+
+template <class T>
+INLINE GbMatrix3<T> 
+GoRigidBody<T>::getWorldInertia () const
+{
+    return worldTransform_*inertia_*worldTransform_.transpose();
+}
+
+template <class T>
+INLINE GbMatrix3<T> 
+GoRigidBody<T>::getWorldInverseInertia () const
+{
+    return worldTransform_*invInertia_*worldTransform_.transpose();
+}
+
+template <class T>
+INLINE const GbVec3<T>& 
+GoRigidBody<T>::getPosition () const
+{
+    return position_;
+}
+
+template <class T>
+INLINE const GbQuaternion<T>& 
+GoRigidBody<T>::getQOrientation () const
+{
+    return orientation_;
+}
+
+template <class T>
+INLINE const GbVec3<T>& 
+GoRigidBody<T>::getLinearMomentum () const
+{
+    return linearMomentum_;
+}
+
+template <class T>
+INLINE const GbVec3<T>& 
+GoRigidBody<T>::getAngularMomentum () const
+{
+    return angularMomentum_;
+}
+
+template <class T>
+INLINE const GbMatrix3<T>& 
+GoRigidBody<T>::getROrientation () const
+{
+    return worldTransform_;
+}
+
+template <class T>
+INLINE const GbVec3<T>& 
+GoRigidBody<T>::getLinearVelocity () const
+{
+    return linearVelocity_;
+}
+
+template <class T>
+INLINE const GbVec3<T>& 
+GoRigidBody<T>::getAngularVelocity () const
+{
+    return angularVelocity_;
+}
+
+

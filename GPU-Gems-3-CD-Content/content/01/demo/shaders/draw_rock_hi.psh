@@ -1,0 +1,2 @@
+#define LOD 0
+#include "draw_rock.psh"

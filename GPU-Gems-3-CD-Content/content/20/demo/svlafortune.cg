@@ -1,0 +1,138 @@
+//
+// svlafortune.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+#include "common.cg"
+
+// storage for pre-computed quasi-random values
+float4 rand[10], randcos[10], randsin[10], randlog[10];
+const int sampleGroups = 10;
+
+/// Compute 4 sample directions simultaneously 
+float3 u4[4];
+void sampleLobe4(float4 lobe, float4 rand, float4 randcosphi, float4 randsinphi) {
+	float4 cos4 = pow(rand, 1.0/(lobe.w+1.0));
+	float4 sin4 = sqrt(1.f-cos4*cos4);
+	
+	float4 x = randcosphi*sin4;
+	float4 y = randsinphi*sin4;
+	
+	u4[0] = float3(x[0], y[0], cos4[0]);
+	u4[1] = float3(x[1], y[1], cos4[1]);
+	u4[2] = float3(x[2], y[2], cos4[2]);
+	u4[3] = float3(x[3], y[3], cos4[3]);
+}
+
+/// Compute 4 PDF evaluations simultaneously
+float4 pdf4(float4 lobe, float4 uz) {
+	float e = lobe.w;
+	return (e+1)*pow(uz, e)/(6.28319);
+}
+
+float4 SVLafortune(VSOUTPUT IN,
+				   uniform float3 specularAlbedo,
+				   uniform float3 diffuseAlbedo,
+			 	   uniform float3 eye,
+				   uniform float2 keyGamma,
+				   uniform sampler2D front : register(s0),
+				   uniform sampler2D back  : register(s1),
+				   uniform sampler2D svbrdf  : register(s2)
+				   ) : COLOR0
+{
+	float4 data = tex2D(svbrdf, IN.texcoord);
+	float4 lobe = data.xxyz;
+
+    float3x3 WorldToLocal = float3x3((IN.binormal), (IN.tangent), (IN.normal));
+	
+	float3 eyeToVert = eye-IN.position;
+	float3 v = normalize(mul(WorldToLocal, eyeToVert));
+	v.z = max(v.z,0.01);
+	v = normalize(v);
+	float3 r = lobe.xyz*v;
+	float magnitude = length(r);
+	
+	// construct the appropriate matrices	
+	float3x3 LocalToWorld;
+	LocalToWorld._m00_m10_m20 = WorldToLocal._m00_m01_m02;
+	LocalToWorld._m01_m11_m21 = WorldToLocal._m10_m11_m12;
+	LocalToWorld._m02_m12_m22 = WorldToLocal._m20_m21_m22;
+
+	float3x3 SampleToLocal = constructCoordFrame(lobe, r);
+	float3x3 SampleToWorld = mul(LocalToWorld, SampleToLocal);
+
+	float norm = (lobe.w+2);
+	
+	float4 c=0;
+	for (int i=0; i < sampleGroups; i++) {
+		sampleLobe4(lobe,rand[i], randcos[i], randsin[i]);
+		float4 cosine;
+		// compute the z-component of the sample in the local coordinate frame from the
+		// reflected coordinate frame, note the z-component = cos[theta] w.r.t. the normal
+		cosine[0] = dot(SampleToLocal._m02_m12_m22, u4[0]);
+		cosine[1] = dot(SampleToLocal._m02_m12_m22, u4[1]);
+		cosine[2] = dot(SampleToLocal._m02_m12_m22, u4[2]);
+		cosine[3] = dot(SampleToLocal._m02_m12_m22, u4[3]);
+		cosine = max(cosine,float4(0,0,0,0));
+		
+		// compute the incoming light vectors in world space
+		float3 u_w0 = mul(SampleToWorld, u4[0]);
+		float3 u_w1 = mul(SampleToWorld, u4[1]);
+		float3 u_w2 = mul(SampleToWorld, u4[2]);
+		float3 u_w3 = mul(SampleToWorld, u4[3]);
+		
+		// vectorize the z-components of the incoming light directions in 
+		// the space of the reflection for BRDF and PDF evaluation
+		float4 uz4 = float4(u4[0].z, u4[1].z, u4[2].z, u4[3].z);
+		
+		// compute the BRDF
+		float4 f4 = norm*pow(magnitude*uz4,lobe.w);
+		cosine *= f4;
+		
+		// get the PDFs
+		float4 lodCmp = pdf4(lobe, uz4);
+		
+		// cosine is basically representing
+		cosine /= lodCmp;
+		
+		// Level-of-detail approximation:
+		// If we assume the dual-paraboloid has no distortion, we can futher simplify
+		// the LOD computation as being the resolution of the map (I), divided by the spherical 
+		// area of the dual paraboloid map (2Pi), divided by the number of samples (N)
+		//
+		// Log[2, I*I/N/(2Pi)]*0.5 + 1 = Log[2, 512*512/40/(2*Pi)]*0.5 + 1 = 5.01329 + 1
+		lodCmp = 6.01329 - log2(lodCmp)*0.5;
+				
+		if (cosine.x > 0) {			
+			c.rgb += getSample(front,back,float4(u_w0,lodCmp[0]))*cosine[0];
+			c.a++;
+		}
+		if (cosine.y > 0) {
+			c.rgb += getSample(front,back,float4(u_w1,lodCmp[1]))*cosine[1];
+			c.a++;
+		}
+		if (cosine.z > 0) {
+			c.rgb += getSample(front,back,float4(u_w2,lodCmp[2]))*cosine[2];
+			c.a++;
+		}
+		if (cosine.w > 0) {
+			c.rgb += getSample(front,back,float4(u_w3,lodCmp[3]))*cosine[3];
+			c.a++;
+		}
+
+	}
+	float3 res = c.rgb/max(c.a,1);
+	res = res*specularAlbedo+IN.diffuse*data.www;
+	
+	return float4(colorCorrect(res.rgb,keyGamma),1);
+}

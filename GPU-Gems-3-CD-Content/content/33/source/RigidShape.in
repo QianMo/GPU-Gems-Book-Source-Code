@@ -1,0 +1,101 @@
+/*----------------------------------------------------------------------
+|
+| $Id$
+|
++---------------------------------------------------------------------*/
+
+INLINE const GbVec3<float>&
+RigidShape::getCenter() const
+{
+    return center_;
+}
+
+INLINE float
+RigidShape::getRadius () const
+{
+    return radius_;
+}
+
+INLINE unsigned int
+RigidShape::getNumVertices() const
+{
+    return meshVertices_.size();
+}
+
+INLINE unsigned int
+RigidShape::getNumFaces() const
+{
+    return meshIndices_.size();
+}
+
+INLINE GbVec3<float>
+RigidShape::getVertex(unsigned int i) const
+{
+    assert(i<meshVertices_.size());
+    return GbVec3<float>(meshVertices_[i]);
+}
+
+INLINE GbVec3<float>
+RigidShape::getWorldSpaceVertex(unsigned int i) const
+{
+    assert(i<meshVertices_.size());
+    return GbVec3<float>(worldTransform_ * meshVertices_[i] + position_);
+}
+
+INLINE GbVec3i<int>
+RigidShape::getTriangle(unsigned int i) const
+{
+    assert(i<meshIndices_.size());
+    return GbVec3i<int>(meshIndices_[i]);
+}
+
+INLINE unsigned int
+RigidShape::getNumHullVertices() const
+{
+    return hullVertices_.size();
+}
+
+INLINE unsigned int
+RigidShape::getNumHullFaces() const
+{
+    return hullIndices_.size();
+}
+
+INLINE GbVec3<float>
+RigidShape::getHullVertex(unsigned int i) const
+{
+    assert(i<hullVertices_.size());
+    return GbVec3<float>(hullVertices_[i]);
+}
+
+INLINE GbVec3<float>
+RigidShape::getWorldSpaceHullVertex(unsigned int i) const
+{
+    assert(i<hullVertices_.size());
+    return GbVec3<float>(worldTransform_ * hullVertices_[i] + position_);
+}
+
+INLINE GbVec3i<int>
+RigidShape::getHullTriangle(unsigned int i) const
+{
+    assert(i<hullIndices_.size());
+    return GbVec3i<int>(hullIndices_[i]);
+}
+
+INLINE const GbVec3i<int>*
+RigidShape::getFaces() const
+{
+    return &meshIndices_[0];
+}
+
+INLINE const GbVec3i<int>*
+RigidShape::getHullFaces() const
+{
+    return &hullIndices_[0];
+}
+
+/*----------------------------------------------------------------------
+|
+| $Log$
+|
++---------------------------------------------------------------------*/

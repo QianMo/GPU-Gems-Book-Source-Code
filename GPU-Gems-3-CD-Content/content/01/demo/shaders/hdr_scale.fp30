@@ -1,0 +1,5 @@
+
+// this determines the fraction of the blurred image
+// that is mixed into the crisp image:
+
+#define SOFTNESS 0.32 //0.30 //0.25     // for downsample_glow.fp30 and composite.fp30

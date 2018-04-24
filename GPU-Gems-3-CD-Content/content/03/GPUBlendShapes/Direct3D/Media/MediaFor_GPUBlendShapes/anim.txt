@@ -1,0 +1,223 @@
+name:ShaniaSmile keys:6 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:74.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:82.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:103.000000 val:1.000000 fixed fixed 1 1 0 -0.044679 1.000000 -0.044679 1.000000
+comp:0 frm:140.000000 val:1.000000 fixed fixed 1 1 0 0.062893 1.000000 0.062893 1.000000
+comp:0 frm:169.000000 val:0.000000 fixed fixed 1 1 0 -0.065403 1.000000 -0.065403 1.000000
+comp:0 frm:173.000000 val:0.000000 fixed fixed 1 1 0 0.088549 1.000000 0.083760 1.000000
+name:SmileOpenSquint2 keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:615.000000 val:0.000000 clamped clamped 1 1 0 0.879380 1.000000 0.879380 1.000000
+comp:0 frm:643.000000 val:0.429780 clamped clamped 1 1 0 0.006994 1.000000 0.006994 1.000000
+comp:0 frm:662.900000 val:0.005847 clamped clamped 1 1 0 -1.220397 1.000000 -1.220397 1.000000
+name:AndieSmile keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:666.000000 val:0.000000 clamped clamped 1 1 0 1.278286 1.000000 1.278286 1.000000
+comp:0 frm:696.000000 val:0.669420 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:791.000000 val:0.000000 clamped clamped 1 1 0 -0.403730 1.000000 -0.403730 1.000000
+name:BestOpenSmile1 keys:5 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:194.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:198.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:210.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:234.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:246.000000 val:0.000000 clamped clamped 1 1 0 -4.763642 1.000000 -4.763642 1.000000
+name:Irritated keys:4 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:907.000000 val:0.000000 clamped clamped 1 1 0 2.043863 1.000000 2.043863 1.000000
+comp:0 frm:929.000000 val:0.785120 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:945.000000 val:0.785120 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:970.000000 val:0.000000 clamped clamped 1 1 0 -1.798771 1.000000 -1.798771 1.000000
+name:EyeBlinkFix1 keys:68 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:49.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:55.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:60.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:65.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:70.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:104.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:110.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:115.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:120.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:125.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:179.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:185.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:190.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:195.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:200.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:213.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:219.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:224.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:229.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:234.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:348.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:354.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:359.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:364.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:369.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:399.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:405.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:410.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:415.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:420.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:483.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:489.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:494.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:499.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:504.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:510.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:515.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:520.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:525.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:563.000000 val:-0.015088 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:574.000000 val:0.000000 fixed fixed 1 1 0 0.057049 1.000000 0.057050 1.000000
+comp:0 frm:581.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:589.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:600.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:733.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:739.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:744.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:749.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:754.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:791.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:797.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:802.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:807.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:812.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:891.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:897.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:902.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:907.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:912.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:965.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:971.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:976.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:981.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:986.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:992.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:997.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:1002.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:1007.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+name:EyeLookUp1 keys:1 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:613.000000 val:0.000000 clamped clamped 1 1 0 0.000000 0.000000 0.000000 0.000000
+name:MouthOpen1 keys:10 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:472.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:480.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:493.000000 val:0.346067 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:509.000000 val:0.338228 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:523.000000 val:0.479340 clamped clamped 1 1 0 -0.461396 1.000000 -0.461396 1.000000
+comp:0 frm:551.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:555.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:722.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:737.000000 val:0.214900 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:816.000000 val:0.000000 clamped clamped 1 1 0 -0.155859 1.000000 -0.155859 1.000000
+name:BrowsUp1 keys:6 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:119.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:123.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:127.000000 val:0.355380 clamped clamped 1 1 0 2.237252 1.000000 2.237252 1.000000
+comp:0 frm:145.000000 val:0.859480 clamped clamped 1 1 0 -0.303904 1.000000 -0.303904 1.000000
+comp:0 frm:194.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:203.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+name:study1 keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:818.000000 val:0.000000 clamped clamped 1 1 0 5.194429 1.000000 5.194429 1.000000
+comp:0 frm:829.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:912.000000 val:0.000000 clamped clamped 1 1 0 -0.690277 1.000000 -0.690277 1.000000
+name:SmirkRt keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:220.000000 val:0.000000 clamped clamped 1 1 0 6.340192 1.000000 6.340192 1.000000
+comp:0 frm:229.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:279.000000 val:0.000000 clamped clamped 1 1 0 -1.145763 1.000000 -1.145763 1.000000
+name:SmirkLft keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:615.000000 val:0.000000 clamped clamped 1 1 0 3.531982 1.000000 3.531982 1.000000
+comp:0 frm:631.280000 val:1.004849 clamped clamped 1 1 0 0.010750 1.000000 0.010750 1.000000
+comp:0 frm:640.790000 val:0.004839 clamped clamped 1 1 0 -6.002796 1.000000 -6.002796 1.000000
+name:SmirkSly1 keys:4 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:449.000000 val:0.000000 clamped clamped 1 1 0 1.789911 1.000000 1.789911 1.000000
+comp:0 frm:481.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:556.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:566.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+name:Disgust keys:5 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:334.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:340.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:348.000000 val:0.504160 clamped clamped 1 1 0 0.266707 1.000000 0.266707 1.000000
+comp:0 frm:427.000000 val:0.404980 clamped clamped 1 1 0 -0.242740 1.000000 -0.242740 1.000000
+comp:0 frm:467.000000 val:0.000000 clamped clamped 1 1 0 -0.580071 1.000000 -0.580071 1.000000
+name:EyeBlinkForcedLft keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:620.000000 val:0.000000 clamped clamped 1 1 0 3.617659 1.000000 3.617659 1.000000
+comp:0 frm:629.730000 val:0.615171 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:638.000000 val:0.000000 clamped clamped 1 1 0 -4.254157 1.000000 -4.254157 1.000000
+name:MildSquint keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:850.000000 val:0.000000 clamped clamped 1 1 0 3.179830 1.000000 3.179830 1.000000
+comp:0 frm:868.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:896.000000 val:0.000000 clamped clamped 1 1 0 -2.045408 1.000000 -2.045408 1.000000
+name:NostrilsIn keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:391.000000 val:0.000000 clamped clamped 1 1 0 3.366461 1.000000 3.366461 1.000000
+comp:0 frm:408.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:479.000000 val:0.000000 clamped clamped 1 1 0 -0.806929 1.000000 -0.806929 1.000000
+name:SmileClosed2 keys:9 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:242.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:247.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:277.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:348.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:383.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:391.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:951.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:975.000000 val:0.892560 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:1000.000000 val:0.000000 clamped clamped 1 1 0 -2.044728 1.000000 -2.044728 1.000000
+name:AngryEyes keys:4 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:-5.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:5.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:35.000000 val:0.504160 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:78.000000 val:0.000000 clamped clamped 1 1 0 -0.671742 1.000000 -0.671742 1.000000
+name:SadNew keys:5 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:249.000000 val:0.000000 clamped clamped 1 1 0 2.366243 1.000000 2.366243 1.000000
+comp:0 frm:258.000000 val:0.371900 clamped clamped 1 1 0 0.267669 1.000000 0.267669 1.000000
+comp:0 frm:295.000000 val:0.214900 clamped clamped 1 1 0 -0.394592 1.000000 -0.394592 1.000000
+comp:0 frm:312.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:315.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+name:EarsBack keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:-1.000000 val:0.000000 clamped clamped 1 1 0 0.373408 1.000000 0.373408 1.000000
+comp:0 frm:34.000000 val:0.228105 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:99.000000 val:0.000000 clamped clamped 1 1 0 -0.201068 1.000000 -0.201068 1.000000
+name:EarsFwd keys:4 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:370.000000 val:0.000000 clamped clamped 1 1 0 2.017374 1.000000 2.017374 1.000000
+comp:0 frm:383.000000 val:0.457917 clamped clamped 1 1 0 0.529256 1.000000 0.529256 1.000000
+comp:0 frm:414.000000 val:0.406451 clamped clamped 1 1 0 -0.468502 1.000000 -0.468502 1.000000
+comp:0 frm:439.000000 val:0.000000 clamped clamped 1 1 0 -0.931434 1.000000 -0.931434 1.000000
+name:BreathBlow keys:7 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:614.000000 val:0.000000 clamped clamped 1 1 0 2.436377 1.000000 2.436377 1.000000
+comp:0 frm:630.510000 val:0.702475 clamped clamped 1 1 0 -0.006045 1.000000 -0.006045 1.000000
+comp:0 frm:659.860000 val:-0.004839 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:803.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:829.000000 val:1.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:860.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:865.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+name:BrowUpRt keys:3 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:620.000000 val:0.000000 clamped clamped 1 1 0 1.832001 1.000000 1.832001 1.000000
+comp:0 frm:629.560000 val:0.305780 clamped clamped 1 1 0 0.008647 1.000000 0.008647 1.000000
+comp:0 frm:652.060000 val:0.004839 fixed fixed 1 1 0 -1.096576 1.000000 -1.087042 1.000000
+name:BrowDownLft keys:5 dim:1
+inputistime:1 outputisangular:0 isweighted:0 preinftype:constant postinftype:constant
+comp:0 frm:209.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:215.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:229.000000 val:0.438020 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:253.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000
+comp:0 frm:255.000000 val:0.000000 clamped clamped 1 1 0 0.000000 1.000000 0.000000 1.000000

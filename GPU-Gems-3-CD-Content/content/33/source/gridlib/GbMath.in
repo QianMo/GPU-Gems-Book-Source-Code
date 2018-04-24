@@ -1,0 +1,1242 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbMath.in,v 1.13 2005/10/18 13:57:02 DOMAIN-I15+prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+#include <stdlib.h>
+
+#define __HI32(x) *((u_int32_t *) &x)
+#define __LO32(x) *((u_int32_t *) &x + 1)
+
+/* Get two 32 bit ints from a double.  */
+#define EXTRACT_WORDS(ix0,ix1,d) \
+do {                             \
+    (ix0) = __HI32(d);       \
+    (ix1) = __LO32(d);       \
+} while (0)  
+
+/* Set a double from two 32 bit ints.  */
+#define INSERT_WORDS(d,ix0,ix1) \
+do {                            \
+    __HI32(d) = (ix0);      \
+    __LO32(d) = (ix1);      \
+} while (0) 
+
+/*!
+  \return Pseudo-zero tolerance limit
+*/
+template <class T>
+const T
+GbMath<T>::ZERO_TOLERANCE = std::numeric_limits<T>::epsilon();
+
+/*!
+  \return The value of \f$ \pi \f$ using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::PI = T(4.0)*T(atan(1.0));
+
+/*!
+  \return The value of \f$ \pi / 2 \f$ using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::PIHALF = T(0.5)*GbMath<T>::PI;
+
+/*!
+  \return The value of \f$ 2 * \pi \f$ using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::TWOPI = T(2.0)*GbMath<T>::PI;
+
+/*!
+  \return The value of \f$ \frac{1}{\pi} \f$ using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::INV_PI = T(1.0)/GbMath<T>::PI;
+
+/*!
+  \return The value of \f$ \frac{1}{2 * \pi} \f$ using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::INV_TWOPI = T(1.0)/GbMath<T>::TWOPI;
+
+/*!
+  \return Factor for converting degrees to radians using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::DEG2RAD = GbMath<T>::PI/T(180.0);
+
+/*!
+  \return Factor for converting radians to degrees using machine precision
+*/
+template <class T>
+const T 
+GbMath<T>::RAD2DEG = T(1.0)/GbMath<T>::DEG2RAD;
+
+/*!
+  \param a First value
+  \param b Second value
+  \return The smaller of both values
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Min(T a, T b) 
+{ 
+    return ((a<b) ? a : b); 
+}
+  
+/*!
+  \param a First value
+  \param b Second value
+  \return The larger of both values
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Max(T a, T b) 
+{ 
+    return ((a>b) ? a : b); 
+}
+
+/*!
+  \param v A floating point number
+  \return The absolut value of \a v
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Abs(T v) 
+{ 
+  return T(fabs(double(v))); 
+}
+
+/*!
+  \param i An integral number
+  \return -1 if the input is negative, 0 if the input is zero, and +1 if the input is positive
+*/
+template <class T>
+INLINE int
+GbMath<T>::Sign(int i) 
+{
+  if ( i > 0 ) return 1;
+  if ( i < 0 ) return -1;
+  return 0;
+}
+
+/*!
+  \param v A floating point number
+  \return -1 if the input is negative, 0 if the input is zero, and +1 if the input is positive
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Sign(T v) 
+{
+  if ( v > T(0.0) ) return T(1.0);
+  if ( v < T(0.0) ) return T(-1.0);
+  return T(0.0);
+}
+
+template <class T>
+INLINE T
+GbMath<T>::FastSqrt(T x) 
+{
+  return T(sqrt(double(x))); 
+}
+
+#if 0
+/*
+ * From  MathLib, e_sqrt.c 
+ * Version 1.0, 15 August 1997, Rick Huebner
+ */
+template <>
+INLINE double
+GbMath<double>::FastSqrt(double x) 
+{
+    static const double one = 1.0, tiny=1.0e-300; 
+    static const int32_t sign = (int)0x80000000;
+    double z;
+    int32_t ix0,s0,q,m,t,i;
+    u_int32_t r,t1,s1,ix1,q1;
+
+    EXTRACT_WORDS(ix0,ix1,x);   
+
+    /* take care of Inf and NaN */
+    if((ix0&0x7ff00000)==0x7ff00000) {
+	return x*x+x;               /* sqrt(NaN)=NaN, sqrt(+inf)=+inf
+				       sqrt(-inf)=sNaN */
+    }
+    /* take care of zero */
+    if(ix0<=0) {
+	if(((ix0&(~sign))|ix1)==0) return x;/* sqrt(+-0) = +-0 */
+	else if(ix0<0)
+	    return (x-x)/(x-x);             /* sqrt(-ve) = sNaN */
+    }
+    /* normalize x */
+    m = (ix0>>20);
+    if(m==0) {                              /* subnormal x */
+	while(ix0==0) {
+	    m -= 21;
+	    ix0 |= (ix1>>11); ix1 <<= 21;
+	}
+	for(i=0;(ix0&0x00100000)==0;i++) ix0<<=1;
+	m -= i-1;
+	ix0 |= (ix1>>(32-i));                                      
+	ix1 <<= i;
+    }
+    m -= 1023;      /* unbias exponent */
+    ix0 = (ix0&0x000fffff)|0x00100000;
+    if(m&1){        /* odd m, double x to make it even */
+	ix0 += ix0 + ((ix1&sign)>>31);
+	ix1 += ix1;
+    }
+    m >>= 1;        /* m = [m/2] */
+
+    /* generate sqrt(x) bit by bit */
+    ix0 += ix0 + ((ix1&sign)>>31);
+    ix1 += ix1;
+    q = q1 = s0 = s1 = 0;   /* [q,q1] = sqrt(x) */
+    r = 0x00200000;         /* r = moving bit from right to left */
+
+    while(r!=0) {
+	t = s0+r;
+	if(t<=ix0) {
+	    s0   = t+r;
+	    ix0 -= t;                       
+	    q   += r;
+	}
+	ix0 += ix0 + ((ix1&sign)>>31);
+	ix1 += ix1;
+	r>>=1;
+    }
+
+    r = sign;
+    while(r!=0) {
+	t1 = s1+r;
+	t  = s0;
+	if((t<ix0)||((t==ix0)&&(t1<=ix1))) {
+	    s1  = t1+r;
+	    if(((t1&sign)==sign)&&(s1&sign)==0) s0 += 1;
+	    ix0 -= t;
+	    if (ix1 < t1) ix0 -= 1;
+	    ix1 -= t1;
+	    q1  += r;
+	}
+	ix0 += ix0 + ((ix1&sign)>>31);
+	ix1 += ix1;
+	r>>=1;                            
+    }
+
+    /* use floating add to find out rounding direction */
+    if((ix0|ix1)!=0) {
+	z = one-tiny; /* trigger inexact flag */
+	if (z>=one) {
+	    z = one+tiny;
+	    if (q1==(u_int32_t)0xffffffff) { q1=0; q += 1;}
+	    else if (z>one) {
+		if (q1==(u_int32_t)0xfffffffe) q+=1;
+		q1+=2;
+	    } else
+		q1 += (q1&1);
+	}
+    }
+    ix0 = (q>>1)+0x3fe00000;
+    ix1 =  q1>>1;
+    if ((q&1)==1) ix1 |= sign;
+    ix0 += (m <<20);
+    INSERT_WORDS(z,ix0,ix1);
+
+    return z;               
+}
+#endif
+
+/*!
+  \param v A floating point number
+  \return \f$ \sqrt{v} \f$ as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Sqrt(T v) 
+{ 
+  return T(sqrt(double(v))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \f$ v^2 \f$ 
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Sqr(T v) 
+{ 
+  return v*v; 
+}
+
+/*!
+  \param v A floating point number
+  \return \f$ \frac[1}{\sqrt{v}} \f$ as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::InvSqrt(T v) 
+{ 
+  return T(1.0/sqrt(double(v))); 
+}
+
+/*!
+  \param a A floating point number (base)
+  \param b A floating point number (exponent)
+  \return \f$ a^b \f$ as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Pow(T a, T b) 
+{ 
+  return T(pow(double(a),double(b))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p log(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Log(T v) 
+{ 
+  return T(log(double(v))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p ceil(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Ceil(T v) 
+{ 
+  return T(ceil(double(v))); 
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::FastFloor(T v) 
+{ 
+  return T(floor(double(v))); 
+}
+
+#if 0
+template <>
+INLINE double
+GbMath<double>::FastFloor(double x) 
+{
+    static const double huge = 1.0e+300;
+    int32_t i0,i1,j0;
+    u_int32_t i,j;
+    EXTRACT_WORDS(i0,i1,x);
+    j0 = ((i0>>20)&0x7ff)-0x3ff;
+    if(j0<20) {
+	if(j0<0) {  /* raise inexact if x != 0 */
+	    if(huge+x>0.0) {/* return 0*sign(x) if |x|<1 */
+		if(i0>=0) {i0=i1=0;}
+		else if(((i0&0x7fffffff)|i1)!=0)
+		{ i0=0xbff00000;i1=0;}
+	    }
+	} else {
+	    i = (0x000fffff)>>j0;
+	    if(((i0&i)|i1)==0) return x; /* x is integral */
+	    if(huge+x>0.0) {        /* raise inexact flag */
+		if(i0<0) i0 += (0x00100000)>>j0;
+		i0 &= (~i); i1=0;
+	    }
+	}
+    } else if (j0>51) {
+	if(j0==0x400) return x+x;   /* inf or NaN */
+	else return x;              /* x is integral */
+    } else {
+	i = ((u_int32_t)(0xffffffff))>>(j0-20);
+	if((i1&i)==0) return x;     /* x is integral */
+	if(huge+x>0.0) {            /* raise inexact flag */
+	    if(i0<0) {
+		if(j0==20) i0+=1;
+		else {
+		    j = i1+(1<<(52-j0));
+		    if(j<i1) i0 +=1 ;       /* got a carry */
+		    i1=j;
+		}
+	    }
+	    i1 &= (~i);
+	}
+    }
+    INSERT_WORDS(x,i0,i1);
+    return x;
+}                                  
+#endif
+
+/*!
+  \param v A floating point number
+  \return \p floor(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Floor(T v) 
+{ 
+  return T(floor(double(v))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p exp(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Exp(T v) 
+{ 
+  return T(exp(double(v))); 
+}
+
+/*!
+  \param a A floating point number
+  \param b A floating point number
+  \return \p fmod(a,b) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Mod(T a, T b) 
+{ 
+  return T(fmod(double(a),double(b))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p round(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Round(T v) 
+{ 
+  return T(floor(double(v)+0.5)); 
+}
+
+/*!
+  \param x A floating point value
+  \return \f$ \sin(x) \f$
+
+  Fast sine function. Specialized for 32-Bit float.
+*/
+template <>
+INLINE float
+GbMath<float>::FastSin2(float x)
+{
+    const float percent = x/GbMath<float>::TWOPI;
+    const long idx_untrimmed = int((percent+200.0f)*512.0f);
+    const int idx = idx_untrimmed % 512;
+    if (idx < 128)
+	return sin_tab[idx];
+    else if (idx < 256)
+	return sin_tab[256 - idx];
+    else if (idx < 384)
+	return -sin_tab[idx - 256];
+    else
+	return -sin_tab[512 - idx];
+}
+
+/*!
+  \param x A floating point value
+  \return \f$ \sin(x) \f$
+
+  Fast sine function. Specialized for 32-Bit float.
+*/
+template <class T>
+INLINE T
+GbMath<T>::FastSin2(T x)
+{
+    staticdebugmsg("","warning: fast sine function only for float32 data");
+    return T(sin(double(x))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p sin(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Sin(T v) 
+{ 
+  return T(sin(double(v))); 
+}
+
+/*!
+  \param x A floating point value
+  \return \f$ \cos(x) \f$
+
+  Fast cosine function. Specialized for 32-Bit float.
+*/
+template <>
+INLINE float 
+GbMath<float>::FastCos2(float x) 
+{
+    const float percent = x/GbMath<float>::TWOPI;
+    const long idx_untrimmed = int((percent+200.0f)*512.0f);
+    const int idx = idx_untrimmed % 512;
+    if (idx < 128)
+	return sin_tab[128 - idx];
+    else if (idx < 256)
+	return -sin_tab[idx - 128];
+    else if (idx < 384)
+	return -sin_tab[384 - idx];
+    else
+	return sin_tab[idx - 384];
+}
+
+/*!
+  \param x A floating point value
+  \return \f$ \cos(x) \f$
+
+  Fast cosine function. Specialized for 32-Bit float.
+*/
+template <class T>
+INLINE T
+GbMath<T>::FastCos2(T x) 
+{ 
+    staticdebugmsg("","warning: fast cosine function only for float32 data");
+    return T(cos(double(x)));
+}
+
+/*!
+  \param v A floating point number
+  \return \p cos(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Cos(T v) 
+{ 
+  return T(cos(double(v)));
+}
+
+/*!
+  \param v A floating point number
+  \return \p tan(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::Tan(T v) 
+{ 
+  return T(tan(double(v))); 
+}
+
+/*!
+  \param v A floating point number
+  \return \p asin(v) as computed by libm.so
+  
+  The input value is clamped to \p [-1,1] to avoid silent returns of NaN
+*/
+template <class T>
+INLINE T 
+GbMath<T>::ASin(T v) 
+{
+  // need to clamp the function arguments, because libm.so sets errno if out of range
+  if ( T(-1.0) < v ) {
+    if ( v < T(1.0) )
+      return T(asin(double(v)));
+    else
+      return GbMath<T>::PIHALF;
+  }
+  else {
+    return -GbMath<T>::PIHALF;
+  }
+}
+
+/*!
+  \param v A floating point number
+  \return \p acos(v) as computed by libm.so
+  
+  The input value is clamped to \p [-1,1] to avoid silent returns of NaN
+*/
+template <class T>
+INLINE T 
+GbMath<T>::ACos(T v) 
+{
+  // need to clamp the function arguments, because libm.so sets errno if out of range
+  if ( T(-1.0) < v ) {
+    if ( v < T(1.0) )
+      return T(acos(double(v)));
+    else
+      return T(0.0);
+  }
+  else {
+    return GbMath<T>::PI;
+  }
+}
+
+/*!
+  \param v A floating point number
+  \return \p atan(v) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::ATan(T v) 
+{ 
+  return T(atan(double(v)));
+}
+
+/*!
+  \param v1 A floating point number
+  \param v2 A floating point number
+  \return \p atan2(v1,v2) as computed by libm.so
+*/
+template <class T>
+INLINE T 
+GbMath<T>::ATan2(T v1, T v2) 
+{ 
+  return T(atan2(double(v1),double(v2)));
+}
+
+/*!
+  \param seed A floating point seed value
+  \return A random number in \p [0,1)
+
+  The random number generator may be seeded by a first call to UnitRandom with a positive seed.
+*/
+template <class T>
+INLINE T 
+GbMath<T>::UnitRandom(T seed) 
+{
+  if ( seed > T(0.0) )
+    srand((unsigned int)seed);
+
+  return T(double(rand())/double(RAND_MAX));
+}
+
+/*!
+  \param seed A floating point seed value
+  \return A random number in \p [-1,1)
+
+  The random number generator may be seeded by a first call to SymmetricRandom with a positive seed.
+*/
+template <class T>
+INLINE T 
+GbMath<T>::SymmetricRandom(T seed) 
+{
+  if ( seed > T(0.0) )
+    srand((unsigned int)seed);
+
+  return T(2.0 * double(rand())/double(RAND_MAX) - 1.0);
+}
+
+/*!
+  \param fMin Lower bound
+  \param fMax Upper bound
+  \param seed A floating point seed value
+  \return A random number in \p [fMin,fMax)
+
+  The random number generator may be seeded by a first call to IntervalRandom with a positive seed.
+*/
+template <class T>
+INLINE T 
+GbMath<T>::IntervalRandom (T fMin, T fMax, T seed)
+{
+  if ( seed > T(0.0) )
+    srand((unsigned int)seed);
+  
+  return fMin + (fMax-fMin)*T(double(rand())/double(RAND_MAX));
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \sin(fT) \f$
+
+  Fast sine function. Maximum absolute error = 1.6415e-04 speedup = 1.91
+
+  \warning assert: \f$ 0 \le fT \le \pi / 2 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastSin0 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(7.61e-03);
+  fResult *= fTSqr;
+  fResult -= T(1.6605e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \sin(fT) \f$
+
+  Fast sine function. Maximum absolute error = 2.3279e-09 speedup = 1.40
+
+  \warning assert: \f$ 0 \le fT \le \pi / 2 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastSin1 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(-2.39e-08);
+  fResult *= fTSqr;
+  fResult += T(2.7526e-06);
+  fResult *= fTSqr;
+  fResult -= T(1.98409e-04);
+  fResult *= fTSqr;
+  fResult += T(8.3333315e-03);
+  fResult *= fTSqr;
+  fResult -= T(1.666666664e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \cos(fT) \f$
+
+  Fast cosine function. Maximum absolute error = 1.1880e-03 speedup = 2.14
+
+  \warning assert: \f$ 0 \le fT \le \pi / 2 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastCos0 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(3.705e-02);
+  fResult *= fTSqr;
+  fResult -= T(4.967e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \cos(fT) \f$
+
+  Fast cosine function. Maximum absolute error = 2.3082e-09 speedup = 1.47
+
+  \warning assert: \f$ 0 \le fT \le \pi / 2 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastCos1 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(-2.605e-07);
+  fResult *= fTSqr;
+  fResult += T(2.47609e-05);
+  fResult *= fTSqr;
+  fResult -= T(1.3888397e-03);
+  fResult *= fTSqr;
+  fResult += T(4.16666418e-02);
+  fResult *= fTSqr;
+  fResult -= T(4.999999963e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \sin^{-1}(fT) \f$
+
+  Fast inverse sine function. Maximum absolute error = 6.7626e-05 speedup = 2.59
+
+  \warning assert: \f$ 0 \le fT \le 1 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastInvSin0 (T fT)
+{
+  T fRoot = GbMath<T>::Sqrt(T(1.0)-fT);
+
+  T fResult = T(-0.0187293);
+  fResult *= fT;
+  fResult += T(0.0742610);
+  fResult *= fT;
+  fResult -= T(0.2121144);
+  fResult *= fT;
+  fResult += T(1.5707288);
+  fResult = GbMath<T>::PIHALF - fRoot*fResult;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \cos^{-1}(fT) \f$
+
+  Fast inverse cosine function. Maximum absolute error = 6.7626e-05 speedup = 2.59
+
+  \warning assert: \f$ 0 \le fT \le 1 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastInvCos0 (T fT)
+{
+  T fRoot = GbMath<T>::Sqrt(T(1.0)-fT);
+
+  T fResult = T(-0.0187293);
+  fResult *= fT;
+  fResult += T(0.0742610);
+  fResult *= fT;
+  fResult -= T(0.2121144);
+  fResult *= fT;
+  fResult += T(1.5707288);
+  fResult *= fRoot;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \tan(fT) \f$
+
+  Fast tangens function. Maximum absolute error = 8.0613e-04 speedup = 2.51
+
+  \warning assert: \f$ 0 \le fT \le \pi / 4 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastTan0 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(2.033e-01);
+  fResult *= fTSqr;
+  fResult += T(3.1755e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \tan(fT) \f$
+
+  Fast tangens function. Maximum absolute error = 1.8897e-08 speedup = 1.71
+
+  \warning assert: \f$ 0 \le fT \le \pi / 4 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastTan1 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(9.5168091e-03);
+  fResult *= fTSqr;
+  fResult += T(2.900525e-03);
+  fResult *= fTSqr;
+  fResult += T(2.45650893e-02);
+  fResult *= fTSqr;
+  fResult += T(5.33740603e-02);
+  fResult *= fTSqr;
+  fResult += T(1.333923995e-01);
+  fResult *= fTSqr;
+  fResult += T(3.333314036e-01);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \tan^{-1}(fT) \f$
+
+  Fast inverse tangens function. Maximum absolute error = 4.8830e-03 speedup = 2.14
+
+  \warning assert: \f$ |fT| \le 1 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastInvTan0 (T fT)
+{
+  T fTSqr = fT*fT;
+  return fT/(T(1.0) + T(0.28)*fTSqr);
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \tan^{-1}(fT) \f$
+  
+  Fast inverse tangens function. Maximum absolute error = 1.1492e-05 speedup = 2.16
+
+  \warning assert: \f$ |fT| \le 1 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastInvTan1 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(0.0208351);
+  fResult *= fTSqr;
+  fResult -= T(0.085133);
+  fResult *= fTSqr;
+  fResult += T(0.180141);
+  fResult *= fTSqr;
+  fResult -= T(0.3302995);
+  fResult *= fTSqr;
+  fResult += T(0.999866);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param fT A floating point value
+  \return \f$ \tan^{-1}(fT) \f$
+
+  Fast inverse tangens function. Maximum absolute error = 1.3593e-08 speedup = 1.50
+
+  \warning assert: \f$ |fT| \le 1 \f$
+*/
+template <class T>
+INLINE T 
+GbMath<T>::FastInvTan2 (T fT)
+{
+  T fTSqr = fT*fT;
+  T fResult = T(0.0028662257);
+  fResult *= fTSqr;
+  fResult -= T(0.0161657367);
+  fResult *= fTSqr;
+  fResult += T(0.0429096138);
+  fResult *= fTSqr;
+  fResult -= T(0.0752896400);
+  fResult *= fTSqr;
+  fResult += T(0.1065626393);
+  fResult *= fTSqr;
+  fResult -= T(0.1420889944);
+  fResult *= fTSqr;
+  fResult += T(0.1999355085);
+  fResult *= fTSqr;
+  fResult -= T(0.3333314528);
+  fResult *= fTSqr;
+  fResult += T(1.0);
+  fResult *= fT;
+  return fResult;
+}
+
+/*!
+  \param x Point to probe
+  \param variance The variance of the distribution
+  \param mean The mean value of the distribution
+  \return The Gaussian density of the distribution at \a x
+
+  This method computes and returns the density at point \a x of a distribution
+  according to the Gauss formula.
+*/
+template <class T>
+INLINE T
+GbMath<T>::GaussianDensity(T x, T variance, T mean)
+{
+    return T( exp((-double(x - mean)*double(x - mean)) * 0.5 / double(variance)) / sqrt(GbMath<double>::TWOPI * double(variance)) );
+}
+
+
+/*!
+  \param x Point to probe
+  \param variance The variance of the distribution
+  \param mean The mean value of the distribution
+  \return The Laplacian density of the distribution at \a x
+
+  This method computes and returns the density at point \a x of a distribution
+  according to the Laplace formula.
+*/
+template <class T>
+INLINE T
+GbMath<T>::LaplacianDensity(T x, T variance, T mean)
+{
+    return T( exp((-sqrt(2.0 / double(variance))) * fabs(double(x - mean))) / sqrt(2.0 * double(variance)) );
+}
+
+/*!
+  \param v A floating point value
+  \return Fast approximation to \f$ \frac{1}{\sqrt{v}} \f$
+
+  \warning This routine works only on little-endian IEEE floating point format numbers
+
+  \internal TO DO.  This routine was designed for 'float'.  Come up with an
+  equivalent one for 'double' and specialize the templates for 'float'
+  and 'double'.
+*/
+template <class T>
+INLINE T
+GbMath<T>::FastInvSqrt (T v)
+{
+    float fFValue = float(v);
+    float fHalf = 0.5f*fFValue;
+    int i  = *(int*)&fFValue;
+    i = 0x5f3759df - (i >> 1);
+    fFValue = *(float*)&i;
+    fFValue = fFValue*(1.5f - fHalf*fFValue*fFValue);
+    return T(fFValue);
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::LogGamma (T fX)
+{
+    const T afCoeff[6] = {
+        T(+76.18009173),
+        T(-86.50532033),
+        T(+24.01409822),
+        T(-1.231739516),
+        T(+0.120858003e-02),
+        T(-0.536382000e-05)
+    };
+
+    fX -= T(1.0);
+    T fTmp = fX + T(5.5);
+    fTmp -= (fX+T(0.5))*GbMath<T>::Log(fTmp);
+    T fSeries = T(1.0);
+    for (int j = 0; j <= 5; j++) {
+        fX += T(1.0);
+        fSeries += afCoeff[j]/fX;
+    }
+    return -fTmp + GbMath<T>::Log(T(2.50662827465)*fSeries);
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::Gamma (T fX)
+{
+    return GbMath<T>::Exp(GbMath<T>::LogGamma(fX));
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::IncompleteGammaS (T fA, T fX)
+{
+    const int iMaxIterations = 100;
+    const T fTolerance = T(3e-07);
+
+    if ( fX > T(0.0) ) {
+        T fAp = fA;
+        T fSum = T(1.0)/fA, fDel = fSum;
+        for (int i = 1; i <= iMaxIterations; i++) {
+            fAp += T(1.0);
+            fDel *= fX/fAp;
+            fSum += fDel;
+            if ( GbMath<T>::Abs(fDel) < GbMath<T>::Abs(fSum)*fTolerance ) {
+                T fArg = -fX+fA*GbMath<T>::Log(fX)-GbMath<T>::LogGamma(fA);
+                return fSum*GbMath<T>::Exp(fArg);
+            }
+        }
+    }
+
+    if ( fX == T(0.0) )
+        return T(0.0);
+
+    return std::numeric_limits<T>::max(); // LogGamma not defined for x < 0
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::IncompleteGammaCF (T fA, T fX)
+{
+    const int iMaxIterations = 100;
+    const T fTolerance = T(3e-07);
+
+    T fA0 = T(1.0), fA1 = fX;
+    T fB0 = 0, fB1 = T(1.0);
+    T fGold = T(0.0), fFac = T(1.0);
+
+    for (int i = 1; i <= iMaxIterations; i++) {
+        T fI = T(i);
+        T fImA = fI - fA;
+        fA0 = (fA1 + fA0*fImA)*fFac;
+        fB0 = (fB1 + fB0*fImA)*fFac;
+        T fItF = fI*fFac;
+        fA1 = fX*fA0 + fItF*fA1;
+        fB1 = fX*fB0 + fItF*fB1;
+        if ( fA1 != T(0.0) ) {
+            fFac = T(1.0)/fA1;
+            T fG = fB1*fFac;
+            if ( GbMath<T>::Abs((fG-fGold)/fG) < fTolerance) {
+                T fArg = -fX + fA*GbMath<T>::Log(fX) - GbMath<T>::LogGamma(fA);
+                return fG*GbMath<T>::Exp(fArg);
+            }
+            fGold = fG;
+        }
+    }
+
+    return std::numeric_limits<T>::max();  // numerical error if you get here
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::IncompleteGamma (T fA, T fX)
+{
+    if ( fX < T(1.0) + fA )
+        return GbMath<T>::IncompleteGammaS(fA,fX);
+    else
+        return T(1.0)-GbMath<T>::IncompleteGammaCF(fA,fX);
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::Erf (T fX)
+{
+    return T(1.0)-GbMath<T>::Erfc(fX);
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::Erfc (T fX)
+{
+    const T afCoeff[10] = {
+        T(-1.26551223),
+        T(+1.00002368),
+        T(+0.37409196),
+        T(+0.09678418),
+        T(-0.18628806),
+        T(+0.27886807),
+        T(-1.13520398),
+        T(+1.48851587),
+        T(-0.82215223),
+        T(+0.17087277)
+    };
+
+    T fZ = GbMath<T>::Abs(fX);
+    T fT = T(1.0)/(T(1.0)+T(0.5)*fZ);
+    T fSum = afCoeff[9];
+
+    for (int i = 9; i >= 0; i--)
+        fSum = fT*fSum + afCoeff[i];
+
+    T fResult = fT*GbMath<T>::Exp(-fZ*fZ + fSum);
+
+    return ( fX >= T(0.0) ? fResult : T(2.0) - fResult );
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::ModBessel0 (T fX)
+{
+    if ( fX < T(0.0) )  // function is even
+        fX = -fX;
+
+    T fT, fResult;
+    int i;
+
+    if ( fX <= T(3.75) ) {
+        const T afCoeff[7] = {
+            T(1.0000000),
+            T(3.5156229),
+            T(3.0899424),
+            T(1.2067492),
+            T(0.2659732),
+            T(0.0360768),
+            T(0.0045813)
+        };
+
+        fT = fX/T(3.75);
+        T fT2 = fT*fT;
+        fResult = afCoeff[6];
+        for (i = 5; i >= 0; i--) {
+            fResult *= fT2;
+            fResult += afCoeff[i];
+        }
+        // |error| < 1.6e-07
+    }
+    else {
+        const T afCoeff[9] = {
+            T(+0.39894228),
+            T(+0.01328592),
+            T(+0.00225319),
+            T(-0.00157565),
+            T(+0.00916281),
+            T(-0.02057706),
+            T(+0.02635537),
+            T(-0.01647633),
+            T(+0.00392377)
+        };
+
+        fT = fX/T(3.75);
+        T fInvT = T(1.0)/fT;
+        fResult = afCoeff[8];
+        for (i = 7; i >= 0; i--) {
+            fResult *= fInvT;
+            fResult += afCoeff[i];
+        }
+        fResult *= GbMath<T>::Exp(fX);
+        fResult /= GbMath<T>::Sqrt(fX);
+        // |error| < 1.9e-07
+    }
+
+    return fResult;
+}
+
+template <class T>
+INLINE T 
+GbMath<T>::ModBessel1 (T fX)
+{
+    int iSign;
+    if ( fX > T(0.0) ) {
+        iSign = 1;
+    }
+    else if ( fX < T(0.0) ) {
+        fX = -fX;
+        iSign = -1;
+    }
+    else {
+        return T(0.0);
+    }
+
+    T fT, fResult;
+    int i;
+
+    if ( fX <= T(3.75) ) {
+        const T afCoeff[7] = {
+            T(0.50000000),
+            T(0.87890549),
+            T(0.51498869),
+            T(0.15084934),
+            T(0.02658733),
+            T(0.00301532),
+            T(0.00032411)
+        };
+
+        fT = fX/T(3.75);
+        T fT2 = fT*fT;
+        fResult = afCoeff[6];
+        for (i = 5; i >= 0; i--) {
+            fResult *= fT2;
+            fResult += afCoeff[i];
+        }
+        fResult *= fX;
+        // |error| < 8e-09
+    }
+    else {
+        const T afCoeff[9] = {
+            T(+0.39894228),
+            T(-0.03988024),
+            T(-0.00362018),
+            T(+0.00163801),
+            T(-0.01031555),
+            T(+0.02282967),
+            T(-0.02895312),
+            T(+0.01787654),
+            T(-0.00420059)
+        };
+
+        fT = fX/T(3.75);
+        T fInvT = T(1.0)/fT;
+        fResult = afCoeff[8];
+        for (i = 7; i >= 0; i--) {
+            fResult *= fInvT;
+            fResult += afCoeff[i];
+        }
+        fResult *= GbMath<T>::Exp(fX);
+        fResult /= GbMath<T>::Sqrt(fX);
+        // |error| < 2.2e-07
+    }
+
+    fResult *= iSign;
+    return fResult;
+}
+

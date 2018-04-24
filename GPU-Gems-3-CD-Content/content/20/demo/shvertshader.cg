@@ -1,0 +1,48 @@
+//
+// shvertshader.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+#include "common.cg"
+
+uniform float4x4 objectToWorld;
+
+/// Computes the irradiance value via a spherical harmonic look-up in a
+/// pre-computed irradiance map
+VSOUTPUT main(VSINPUT IN,
+			  uniform float4x4 rM,
+			  uniform float4x4 gM,
+			  uniform float4x4 bM)
+{
+	VSOUTPUT OUT;
+	
+	float4 rotPos	= mul(objectToWorld, IN.position);
+	
+	// no translation => world^-T = world
+	float4 rotNorm  = mul(objectToWorld, float4(IN.normal,0));
+
+	OUT.hpos = mul(glstate.matrix.mvp, rotPos);
+	OUT.texcoord = IN.texcoord;
+	
+	rotNorm.w = 1;
+	OUT.diffuse.r = dot(rotNorm, mul(rM,rotNorm));
+	OUT.diffuse.g = dot(rotNorm, mul(gM,rotNorm));
+	OUT.diffuse.b = dot(rotNorm, mul(bM,rotNorm));
+
+	OUT.position	= rotPos.xyz;
+	OUT.normal		= rotNorm.xyz;
+	OUT.tangent		= mul(objectToWorld,float4(IN.tangent,0)).xyz;
+	OUT.binormal	= mul(objectToWorld,float4(IN.binormal,0)).xyz;
+
+	return OUT;
+}

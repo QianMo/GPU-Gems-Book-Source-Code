@@ -1,0 +1,272 @@
+!!NVvp4.0
+/*
+ * aes.vpt -- AES encryption and decryption
+ *
+ * You can get complete vertex program by
+ *   %gcc -E -x c++ -P -D MODE=0 -D NUM_KEY=1 -D NUM_ROUND=2 -D NUM_BLOCK=3 -D ENC_KEY_BEGIN=11 -D ENC_KEY_END=25 -D DEC_KEY_BEGIN=26 -D DEC_KEY_END=40 aes.vpt -o aes.vp
+ *
+ *
+ * Because 'UINT' occured 'error: invalid statement' on linux driver 9742, I wrote INT instead of UINT.
+ *
+ * Author Yamanouchi_Takeshi@sega.co.jp
+ */
+
+// input, output
+ATTRIB	state_in	= vertex.attrib[0];
+OUTPUT	state_out	= result.texcoord[0];
+
+// macros
+INT TEMP	_tmp0, _tmp1;		// macro work
+
+#define ROT8(_arg) \
+	SHL.U	_tmp0, _arg, 8; \
+	SHR.U	_arg, _arg, 24; \
+	OR	_arg, _arg, _tmp0
+
+#define ROT16(_arg) \
+	SHL.U	_tmp0, _arg, 16; \
+	SHR.U	_arg, _arg, 16; \
+	OR	_arg, _arg, _tmp0
+
+#define ROT24(_arg) \
+	SHL.U	_tmp0, _arg, 24; \
+	SHR.U	_arg, _arg, 8; \
+	OR	_arg, _arg, _tmp0
+
+#define UNPACK(_res, _arg) \
+	SHR	_res.w, _arg, 24; \
+	SHR	_res.z, _arg, 16; \
+	SHR	_res.y, _arg,  8; \
+	MOV.U	_res.x, _arg; \
+	AND	_res, _res, 0xff
+
+#define PACK(_res, _arg) \
+	SHL	_tmp0.w, _arg.w, 24; \
+	SHL	_tmp0.z, _arg.z, 16; \
+	SHL	_tmp0.y, _arg.y,  8; \
+	OR	_tmp0.w, _tmp0.w, _tmp0.z; \
+	OR	_tmp0.w, _tmp0.w, _tmp0.y; \
+	OR	_res, _tmp0.w, _arg.x
+
+// registers
+INT TEMP	s0, s1, s2, s3;			// round state
+INT TEMP	tmp0, tmp1, tmp2, tmp3;
+INT TEMP	tmp;
+ALIAS		mix0 = tmp0;
+ALIAS		mix1 = tmp1;
+ALIAS		mix2 = tmp2;
+ALIAS		mix3 = tmp3;
+INT TEMP	arg0;
+INT TEMP	cnt;
+
+// parameters
+INT PARAM mode      = program.local[MODE];		// 0:encrypt, 1:decrypt
+INT PARAM num_key   = program.local[NUM_KEY];		// not used
+INT PARAM num_round = program.local[NUM_ROUND];		// number of rounds
+INT PARAM num_block = program.local[NUM_BLOCK];		// not used
+
+INT PARAM enc_key[15] = { program.local[ENC_KEY_BEGIN..ENC_KEY_END] };	// expanded encrypt key
+INT PARAM dec_key[15] = { program.local[DEC_KEY_BEGIN..DEC_KEY_END] };	// expanded decrypt key
+INT PARAM aes_tab[256] = { program.env[0..255] };	// (x,y,z,w)=(s_box, inv_s_box, mix_col, inv_mix_col)
+
+
+// functions
+unpack_state_in:
+	// arg0: round key
+	XOR	tmp, state_in, arg0;
+	UNPACK(s0, tmp.x);
+	UNPACK(s1, tmp.y);
+	UNPACK(s2, tmp.z);
+	UNPACK(s3, tmp.w);
+	RET;
+
+pack_state_out:
+	// arg0: round key
+	PACK(tmp.x, s0);
+	PACK(tmp.y, s1);
+	PACK(tmp.z, s2);
+	PACK(tmp.w, s3);
+	XOR	state_out, tmp, arg0;
+	RET;
+
+sub_bytes_shift_rows:
+	// first row
+	MOV.U	s0.x,  aes_tab[s0.x].x;		// .x: s_box
+	MOV.U	s1.x,  aes_tab[s1.x].x;
+	MOV.U	s2.x,  aes_tab[s2.x].x;
+	MOV.U	s3.x,  aes_tab[s3.x].x;
+	// second row
+	MOV.U	tmp.x, aes_tab[s0.y].x;
+	MOV.U	s0.y,  aes_tab[s1.y].x;
+	MOV.U	s1.y,  aes_tab[s2.y].x;
+	MOV.U	s2.y,  aes_tab[s3.y].x;
+	MOV.U	s3.y,  tmp.x;
+	// third row
+	MOV.U	tmp.x, aes_tab[s0.z].x;
+	MOV.U	s0.z,  aes_tab[s2.z].x;
+	MOV.U	s2.z,  tmp.x;
+	MOV.U	tmp.x, aes_tab[s1.z].x;
+	MOV.U	s1.z,  aes_tab[s3.z].x;
+	MOV.U	s3.z,  tmp.x;
+	// fourth row
+	MOV.U	tmp.x, aes_tab[s3.w].x;
+	MOV.U	s3.w,  aes_tab[s2.w].x;
+	MOV.U	s2.w,  aes_tab[s1.w].x;
+	MOV.U	s1.w,  aes_tab[s0.w].x;
+	MOV.U	s0.w,  tmp.x;
+
+	RET;
+
+inv_shift_rows_inv_sub_bytes:
+	// first row
+	MOV.U	s0.x,  aes_tab[s0.x].y;		// .y: inv_s_box
+	MOV.U	s1.x,  aes_tab[s1.x].y;
+	MOV.U	s2.x,  aes_tab[s2.x].y;
+	MOV.U	s3.x,  aes_tab[s3.x].y;
+	// second row
+	MOV.U	tmp.x, aes_tab[s3.y].y;
+	MOV.U	s3.y,  aes_tab[s2.y].y;
+	MOV.U	s2.y,  aes_tab[s1.y].y;
+	MOV.U	s1.y,  aes_tab[s0.y].y;
+	MOV.U	s0.y,  tmp.x;
+	// third row
+	MOV.U	tmp.x, aes_tab[s3.z].y;
+	MOV.U	s3.z,  aes_tab[s1.z].y;
+	MOV.U	s1.z,  tmp.x;
+	MOV.U	tmp.x, aes_tab[s2.z].y;
+	MOV.U	s2.z,  aes_tab[s0.z].y;
+	MOV.U	s0.z,  tmp.x;
+	// fourth row
+	MOV.U	tmp.x, aes_tab[s0.w].y;
+	MOV.U	s0.w,  aes_tab[s1.w].y;
+	MOV.U	s1.w,  aes_tab[s2.w].y;
+	MOV.U	s2.w,  aes_tab[s3.w].y;
+	MOV.U	s3.w,  tmp.x;
+
+	RET;
+
+mix_columns_add_round_key:
+	// arg0: round key
+	MOV.U	mix0.x, aes_tab[s0.x].z;	// .z: mix_col
+	MOV.U	mix0.y, aes_tab[s1.x].z;
+	MOV.U	mix0.z, aes_tab[s2.x].z;
+	MOV.U	mix0.w, aes_tab[s3.x].z;
+
+	MOV.U	mix1.x, aes_tab[s0.y].z;
+	MOV.U	mix1.y, aes_tab[s1.y].z;
+	MOV.U	mix1.z, aes_tab[s2.y].z;
+	MOV.U	mix1.w, aes_tab[s3.y].z;
+
+	MOV.U	mix2.x, aes_tab[s0.z].z;
+	MOV.U	mix2.y, aes_tab[s1.z].z;
+	MOV.U	mix2.z, aes_tab[s2.z].z;
+	MOV.U	mix2.w, aes_tab[s3.z].z;
+
+	MOV.U	mix3.x, aes_tab[s0.w].z;
+	MOV.U	mix3.y, aes_tab[s1.w].z;
+	MOV.U	mix3.z, aes_tab[s2.w].z;
+	MOV.U	mix3.w, aes_tab[s3.w].z;
+
+	ROT8(mix1);
+	ROT16(mix2);
+	ROT24(mix3);
+
+	XOR	tmp, arg0, mix0;
+	XOR	tmp, tmp, mix1;
+	XOR	tmp, tmp, mix2;
+	XOR	tmp, tmp, mix3;
+
+	UNPACK(s0, tmp.x);
+	UNPACK(s1, tmp.y);
+	UNPACK(s2, tmp.z);
+	UNPACK(s3, tmp.w);
+
+	RET;
+
+inv_mix_columns_add_round_key:
+	// arg0: round key
+	MOV.U	mix0.x, aes_tab[s0.x].w;	// .w: inv_mix_col
+	MOV.U	mix0.y, aes_tab[s1.x].w;
+	MOV.U	mix0.z, aes_tab[s2.x].w;
+	MOV.U	mix0.w, aes_tab[s3.x].w;
+
+	MOV.U	mix1.x, aes_tab[s0.y].w;
+	MOV.U	mix1.y, aes_tab[s1.y].w;
+	MOV.U	mix1.z, aes_tab[s2.y].w;
+	MOV.U	mix1.w, aes_tab[s3.y].w;
+
+	MOV.U	mix2.x, aes_tab[s0.z].w;
+	MOV.U	mix2.y, aes_tab[s1.z].w;
+	MOV.U	mix2.z, aes_tab[s2.z].w;
+	MOV.U	mix2.w, aes_tab[s3.z].w;
+
+	MOV.U	mix3.x, aes_tab[s0.w].w;
+	MOV.U	mix3.y, aes_tab[s1.w].w;
+	MOV.U	mix3.z, aes_tab[s2.w].w;
+	MOV.U	mix3.w, aes_tab[s3.w].w;
+
+	ROT8(mix1);
+	ROT16(mix2);
+	ROT24(mix3);
+
+	XOR	tmp, arg0, mix0;
+	XOR	tmp, tmp, mix1;
+	XOR	tmp, tmp, mix2;
+	XOR	tmp, tmp, mix3;
+
+	UNPACK(s0, tmp.x);
+	UNPACK(s1, tmp.y);
+	UNPACK(s2, tmp.z);
+	UNPACK(s3, tmp.w);
+
+	RET;
+
+encrypt:
+	// input & first round
+	MOV.U	arg0, enc_key[0];
+	CAL	unpack_state_in;
+
+	// loop round
+	SUB.S	cnt.x, num_round.x, 1;
+	MOV.S	cnt.y, 1;
+	REP.S	cnt.x;
+		CAL	sub_bytes_shift_rows;
+		MOV.U	arg0, enc_key[cnt.y];
+		CAL	mix_columns_add_round_key;
+		ADD.S	cnt.y, cnt.y, 1;
+	ENDREP;
+
+	// final round & output
+	CAL	sub_bytes_shift_rows;
+	MOV.U	arg0, enc_key[cnt.y];
+	CAL	pack_state_out;
+	RET;
+
+decrypt:
+	// input & first round
+	SUB.S	cnt.x, num_round.x, 1;
+	MOV.S	cnt.y, num_round.x;
+	MOV.U	arg0, dec_key[cnt.y];
+	CAL	unpack_state_in;
+
+	// loop round
+	REP.S	cnt.x;
+		SUB.S	cnt.y, cnt.y, 1;
+		CAL	inv_shift_rows_inv_sub_bytes;
+		MOV.U	arg0, dec_key[cnt.y];
+		CAL	inv_mix_columns_add_round_key;
+	ENDREP;
+
+	// final round & output
+	CAL	inv_shift_rows_inv_sub_bytes;
+	MOV.U	arg0, dec_key[0];
+	CAL	pack_state_out;
+	RET;
+
+main:
+	SUBC.S	tmp.x, mode.x, 0;
+	CAL	encrypt (EQ.x);
+	SUBC.S	tmp.x, mode.x, 1;
+	CAL	decrypt (EQ.x);
+
+END

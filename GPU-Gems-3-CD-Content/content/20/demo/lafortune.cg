@@ -1,0 +1,70 @@
+//
+// lafortune.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+#include "common.cg"
+
+float4 main	(VSOUTPUT IN,
+			 uniform float4 lobe,
+			 uniform float3 specularAlbedo,
+			 uniform float3 diffuseAlbedo,
+			 uniform float3 eye,
+			 uniform float2 keyGamma,
+			 uniform sampler2D front : register(s0),
+			 uniform sampler2D back  : register(s1)
+			 ) : COLOR0
+{
+	// in reality, these need to be normalized, but that is excluded for efficiency
+    float3x3 WorldToLocal = float3x3((IN.binormal), (IN.tangent), (IN.normal));
+	
+	float3 eyeToVert = eye-IN.position;
+	float3 v = normalize(mul(WorldToLocal, eyeToVert));
+	v.z = max(v.z,0.01);	// avoid precision issue
+	v = normalize(v);
+	float3 r = lobe.xyz*v;
+	float magnitude = pow(length(r),lobe.w);
+	
+	// construct the coordinate frame matrices
+	float3x3 LocalToWorld;
+	LocalToWorld._m00_m10_m20 = WorldToLocal._m00_m01_m02;
+	LocalToWorld._m01_m11_m21 = WorldToLocal._m10_m11_m12;
+	LocalToWorld._m02_m12_m22 = WorldToLocal._m20_m21_m22;
+
+	float3x3 SampleToLocal = constructCoordFrame(lobe, r);
+	float3x3 SampleToWorld = mul(LocalToWorld, SampleToLocal);
+	
+	float4 c=0;
+	for (int i=0; i < samples; i++) {
+		// see genLafortuneSamples in sequencegen.cpp for how samples are pre-calculated
+		float  f = max(0,dot(SampleToLocal._m02_m12_m22, smpls[i].xyz));
+		float3 u_w  = mul(SampleToWorld, smpls[i].xyz);
+		
+		f *= magnitude*fs[i];
+
+		// conditional if to ensure that the sample is contributing a value to the integral;
+		// this can be commented out for faster code at the cost of inaccuracy around
+		// viewing directions tangent to the surface
+		if (f > 0) {
+			c.rgb += getSample(front,back,float4(u_w,smpls[i].w))*f;
+			c.a++;
+		}
+	}
+
+	float3 res = c.rgb/max(c.a,1);
+	//float3 res = c.rgb/samples;  ///< Use this if commenting out the if-condition
+
+	res = res*specularAlbedo+IN.diffuse*diffuseAlbedo;
+	
+	return float4(colorCorrect(res.rgb,keyGamma),1);
+}

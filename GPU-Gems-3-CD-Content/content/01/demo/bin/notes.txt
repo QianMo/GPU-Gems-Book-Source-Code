@@ -1,0 +1,13 @@
+
+  Note that in this demo, the blocks (as they are called in the 
+  GPU Gems 3 chapter) are sometimes referred to as "chunks."  
+  Also note that the highest-res chunks in the code are 4.0 
+  world space units to a side, as opposed to 1.0, as described 
+  in the chapter.  There are 3 levels of detail (LODs): 0 is the 
+  highest, and 1 and 2 are progressively lower levels of detail 
+  (i.e. larger-sized chunks in world space: 4, 10, and 32, 
+  respectively).
+  
+  Check out bin\args.txt for various startup options you can adjust
+  for the demo, including the gridsize for the chunks ("VoxelDim"),
+  window resolution, and so on.

@@ -1,0 +1,116 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbPlane.in,v 1.4 2002/08/20 13:43:25 prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  Construct a plane object.
+
+  \warning This plane is undefined. The normal is set to zero.
+*/
+template <class T>
+INLINE 
+GbPlane<T>::GbPlane()
+  : normal_(GbVec3<T>::ZERO)
+  , constant_(T(0.0))
+{
+}
+
+/*!
+  \param rkNormal The normal vector
+  \param fConstant The plane coefficient
+
+  Construct a plane with the given normal and coefficient.
+*/
+template <class T>
+INLINE 
+GbPlane<T>::GbPlane(const GbVec3<T>& rkNormal, T fConstant)
+  : normal_(rkNormal)
+  , constant_(fConstant)
+{
+}
+
+/*!
+  \param rkNormal The normal vector
+  \param rkPoint The reference point
+
+  Construct a plane through the given point with the given normal.
+*/
+template <class T>
+INLINE 
+GbPlane<T>::GbPlane(const GbVec3<T>& rkNormal, const GbVec3<T>& rkPoint)
+{
+  normal_ = rkNormal;
+  constant_ = rkNormal.dot(rkPoint);
+}
+
+/*!
+  \param i Index for query
+  \return Plane \p P parameter as \p P[0]=N.x, \p P[1]=N.y, \p P[2]=N.z, \p P[3]=c
+*/
+template <class T>
+INLINE T
+GbPlane<T>::operator[] (int i) const
+{
+  if (i<3) return normal_[i];
+  return constant_;
+}
+
+/*!
+  \param n The normal vector
+*/
+template <class T>
+INLINE void
+GbPlane<T>::setNormal (GbVec3<T>& n)
+{
+  normal_ = n;
+}
+
+/*!
+  \return The normal vector of the plane
+*/
+template <class T>
+INLINE const GbVec3<T>
+GbPlane<T>::getNormal () const
+{
+  return GbVec3<T>(normal_);
+}
+
+/*!
+  \param c The plane constant
+*/
+template <class T>
+INLINE void
+GbPlane<T>::setConstant (T c)
+{
+  constant_ = c;
+}
+
+/*!
+  \return The plane constant
+*/
+template <class T>
+INLINE const T
+GbPlane<T>::getConstant () const
+{
+  return constant_;
+}
+
+/*!
+  \param rkPoint The point in question
+  \return The pseudodistance
+
+  This is a pseudodistance.  The sign of the return value is positive if
+  the point is on the positive side of the plane, negative if the point
+  is on the negative side, and zero if the point is on the plane.  The
+  absolute value of the return value is the true distance only when the
+  plane normal is a unit length vector.
+*/
+template <class T>
+INLINE T 
+GbPlane<T>::distanceTo (const GbVec3<T>& rkPoint) const
+{
+  return normal_.dot(rkPoint) - constant_;
+}
+

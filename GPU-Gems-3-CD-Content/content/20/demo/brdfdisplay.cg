@@ -1,0 +1,65 @@
+//
+// brdfdisplay.cg
+// Last Updated:		05.01.07
+// 
+// Mark Colbert & Jaroslav Krivanek
+// colbert@cs.ucf.edu
+//
+// Copyright (c) 2007.
+//
+// The following code is freely distributed "as is" and comes with 
+// no guarantees or required support by the authors.  Any use of 
+// the code for commercial purposes requires explicit written consent 
+// by the authors.
+//
+
+struct VSINPUT {
+	float4 position		: POSITION;
+};
+
+struct VSOUTPUT {
+	float4 hPos			: POSITION;
+	float4 texcoord		: TEXCOORD0;
+	float4 color		: COLOR0;
+};
+
+const float maxValue = 1.25f;
+
+/// Generate the Lafortune BRDF graph for each vertex on the unit sphere
+VSOUTPUT Lafortune(VSINPUT IN, uniform float4 lobe, uniform float3 wo, float diffuse) {
+	VSOUTPUT OUT;
+	float f = pow(max(0,dot(IN.position.xyz, lobe.xxy*wo)),lobe.z)*lobe.w * (lobe.w + 2);
+	f += diffuse;
+	f *= IN.position.z;
+	
+	float3 pos = normalize(IN.position.xyz)*f;
+	
+	float relf = f/maxValue;
+	OUT.color = float4(lerp(float3(0,0,1), float3(1,0,0), relf),0.7f);
+		
+	OUT.hPos = mul(glstate.matrix.mvp, float4(pos,1));
+	
+	return OUT;
+}
+
+/// Generate the Ward BRDF graph for each vertex on the unit sphere
+VSOUTPUT Ward(VSINPUT IN, uniform float3 alphaWeight, uniform float3 wo, float diffuse) {
+	VSOUTPUT OUT;
+
+	float3 h = normalize(IN.position.xyz + wo);	
+	float hz2 = h.z*h.z;
+	float2 h0 = h.xy/alphaWeight.xy;
+	
+	float norm = 1.f/(8*9.8696044*sqrt(IN.position.z*wo.z));
+		
+	float f  = 1.f/(alphaWeight.x*alphaWeight.y) * exp(-2*(dot(h0,h0))/(hz2))*alphaWeight[2];	
+		  f *= norm;
+		  f += diffuse;
+
+	float3 pos = normalize(IN.position.xyz)*f*IN.position.z;
+	
+	OUT.color = float4(lerp(float3(0,0,1), float3(1,0,0), f/maxValue),0.7f);
+	OUT.hPos = mul(glstate.matrix.mvp, float4(pos,1));
+	
+	return OUT;
+}

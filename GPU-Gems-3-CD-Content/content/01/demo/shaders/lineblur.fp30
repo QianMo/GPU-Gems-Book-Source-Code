@@ -1,0 +1,66 @@
+#ifndef USE_SM30
+  #define USE_SM30 1
+#endif
+
+struct v2fConnector {
+  float4 projCoord : POSITION;  // cg would accept this, but d3dx compiler dies
+  float2 tex   : TEXCOORD;
+};
+
+Texture2D tex;
+SamplerState LinearClamp;
+
+cbuffer MyCB {
+  float4 blurAxisAndTexelBias = float4(1,0,0.5,0.5);
+  float4 g_srcTexSize = float4(8,6,0.125,0.167);
+}
+
+float4 main(v2fConnector v2f ) : COLOR
+{
+  // note: in DX, must shift samples +0.5 texels to do a 1:1 blit (i.e. add 0.5/wh before sampling).  (in GL, no shift for 1:1 blit.)
+  // NOTE: texel shift (to keep alignment 1:1) is done in *vertex* shader!
+
+  // This executes 4 times: x, y, x, y
+  // The first two passes have blurAxis of 1.4,0 and 0,1.4
+  //   which leaves some gaps
+  // The second two passes use 0.6,0 and 0,0.6
+  //   and serves to smooth out those gaps
+
+  float2 temp1 = v2f.tex + g_srcTexSize.zw*(blurAxisAndTexelBias.zw - 0.5*0); //DO NOT CHANGE
+  float2 temp2 = blurAxisAndTexelBias.xy * g_srcTexSize.zw * 2.9;  // 1.5 IS SPECIAL
+  float2 temp3 = blurAxisAndTexelBias.xy * g_srcTexSize.zw * 1.0;  // 1.5 IS SPECIAL
+  
+  float4 sum = 0;
+
+  const float w1 = 0.25;                             
+  const float w2 = 0.50;                             
+  const float w3 = 0.75;                             
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(22.0)).xyz *w1;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(20.0)).xyz *w1;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(18.0)).xyz *w1;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(16.0)).xyz *w2;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(14.0)).xyz *w2;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2*-(12.0)).xyz *w2;        
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2*-(10.0)).xyzw*w3;           
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2*-( 8.0)).xyzw*w3;           
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2*-( 6.0)).xyzw*w3;           
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2*-( 4.0)).xyzw;
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2*-( 2.0)).xyzw;
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2        ).xyzw;
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2* ( 2.0)).xyzw;
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2* ( 4.0)).xyzw;
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2* ( 6.0)).xyzw*w3;           
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2* ( 8.0)).xyzw*w3;           
+  sum.xyzw += tex.Sample(LinearClamp, temp1 + temp2* (10.0)).xyzw*w3;           
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (12.0)).xyz *w2;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (14.0)).xyz *w2;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (16.0)).xyz *w2;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (18.0)).xyz *w1;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (20.0)).xyz *w1;        
+  sum.xyz  += tex.Sample(LinearClamp, temp1 + temp2* (22.0)).xyz *w1;        
+  
+  sum.xyz *= (float)(1.0/(float)( 5 + 6*(w3+w2+w1)));
+  sum.w   *= (float)(1.0/(float)( 5 + 6*(w3      )));
+      
+  return sum;
+}

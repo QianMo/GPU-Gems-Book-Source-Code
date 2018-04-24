@@ -1,0 +1,6 @@
+    #ifdef IS_DX     // DX renderer will #define this to be 1
+     #if (IS_DX==1)
+      //projCoord.xy -= viewportDim.zw;  // in DX you must shift fullscreen quads by 1 pixel, otherwise your bilinear samples will be off (only really matters when drawing fullscreen quads!!)
+      projCoord.y *= -1;               // flip Y coords for DX
+     #endif
+    #endif

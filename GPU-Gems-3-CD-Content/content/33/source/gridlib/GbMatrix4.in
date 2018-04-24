@@ -1,0 +1,390 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbMatrix4.in,v 1.5 2005/10/21 09:44:52 DOMAIN-I15+prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  Predefined zero matrix.
+*/
+template <class T>
+const GbMatrix4<T>
+GbMatrix4<T>::ZERO = GbMatrix4<T>(T(0.0),T(0.0),T(0.0),T(0.0),
+				  T(0.0),T(0.0),T(0.0),T(0.0),
+				  T(0.0),T(0.0),T(0.0),T(0.0),
+				  T(0.0),T(0.0),T(0.0),T(0.0));
+
+/*!
+  Predefined identity matrix.
+*/
+template <class T>
+const GbMatrix4<T> 
+GbMatrix4<T>::IDENTITY = GbMatrix4<T>(T(1.0),T(0.0),T(0.0),T(0.0),
+				      T(0.0),T(1.0),T(0.0),T(0.0),
+				      T(0.0),T(0.0),T(1.0),T(0.0),
+				      T(0.0),T(0.0),T(0.0),T(1.0));
+
+/*!
+  \param row The index of the component
+  \return A pointer to the storage of the component
+
+  This method returns a pointer to a component of self.
+
+  \internal Note that this method can be used to get a pointer to the
+            matrix rows as well as for getting a pointer to a specific
+            element writing \p m[][] !
+*/
+template <class T>
+INLINE T* 
+GbMatrix4<T>::operator[] (int row) const
+{
+  return (T*)&entry_[row][0];
+}
+
+/*!
+  \param col Index of matrix column
+  \return The column vector
+
+  This method returns a vector with the components of self in column \a col.
+*/
+template <class T>
+INLINE GbVec4<T> 
+GbMatrix4<T>::getColumn (int col) const
+{
+//  assert( 0 <= col && col < 4 );
+  return GbVec4<T>(entry_[0][col],entry_[1][col],entry_[2][col],entry_[3][col]);
+}
+
+/*!
+  \param m The matrix to add
+  \return The matrix sum
+
+  This method modifies self by adding matrix \a m and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix4<T>& 
+GbMatrix4<T>::operator+=( const GbMatrix4<T>& m )
+{
+  entry_[0][0]+= m.entry_[0][0];
+  entry_[0][1]+= m.entry_[0][1];
+  entry_[0][2]+= m.entry_[0][2];
+  entry_[0][3]+= m.entry_[0][3];
+  entry_[1][0]+= m.entry_[1][0];
+  entry_[1][1]+= m.entry_[1][1];
+  entry_[1][2]+= m.entry_[1][2];
+  entry_[1][3]+= m.entry_[1][3];
+  entry_[2][0]+= m.entry_[2][0];
+  entry_[2][1]+= m.entry_[2][1];
+  entry_[2][2]+= m.entry_[2][2];
+  entry_[2][3]+= m.entry_[2][3];
+  entry_[3][0]+= m.entry_[3][0];
+  entry_[3][1]+= m.entry_[3][1];
+  entry_[3][2]+= m.entry_[3][2];
+  entry_[3][3]+= m.entry_[3][3];
+  return *this;
+}
+
+/*!
+  \param m The matrix to subtract
+  \return The matrix sum
+
+  This method modifies self by subtracting matrix \a m and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix4<T>& 
+GbMatrix4<T>::operator-=( const GbMatrix4<T>& m )
+{
+  entry_[0][0]-= m.entry_[0][0];
+  entry_[0][1]-= m.entry_[0][1];
+  entry_[0][2]-= m.entry_[0][2];
+  entry_[0][3]-= m.entry_[0][3];
+  entry_[1][0]-= m.entry_[1][0];
+  entry_[1][1]-= m.entry_[1][1];
+  entry_[1][2]-= m.entry_[1][2];
+  entry_[1][3]-= m.entry_[1][3];
+  entry_[2][0]-= m.entry_[2][0];
+  entry_[2][1]-= m.entry_[2][1];
+  entry_[2][2]-= m.entry_[2][2];
+  entry_[2][3]-= m.entry_[2][3];
+  entry_[3][0]-= m.entry_[3][0];
+  entry_[3][1]-= m.entry_[3][1];
+  entry_[3][2]-= m.entry_[3][2];
+  entry_[3][3]-= m.entry_[3][3];
+  return *this;
+}
+
+/*!
+  \param m The matrix to multiply self with
+  \return The matrix product
+
+  This method modifies self by multiplying it with \a m from the right
+  and returns a reference to self.
+*/
+template <class T>
+INLINE GbMatrix4<T>& 
+GbMatrix4<T>::operator*=( const GbMatrix4<T>& m )
+{
+  T tmp[4];
+  
+  for (int i= 0; i < 4; ++i) {
+    for (int j= 0; j < 4; ++j)
+      tmp[j]= entry_[i][0] * m.entry_[0][j] + 
+	      entry_[i][1] * m.entry_[1][j] +
+	      entry_[i][2] * m.entry_[2][j] + 
+	      entry_[i][3] * m.entry_[3][j];
+
+    entry_[i][0]= tmp[0];
+    entry_[i][1]= tmp[1];
+    entry_[i][2]= tmp[2];
+    entry_[i][3]= tmp[3];
+  }
+  return *this;
+}
+
+/*!
+  \param m The matrix to compare with
+  \return true if matrices are the same
+  
+  This method compares \a m with self componentwise and returns true
+  if all components have the same value.
+*/
+template <class T>
+INLINE GbBool 
+GbMatrix4<T>::operator== (const GbMatrix4<T>& m) const
+{
+  for (int iRow = 0; iRow < 4; ++iRow) {
+    for (int iCol = 0; iCol < 4; ++iCol) {
+      if ( entry_[iRow][iCol] != m.entry_[iRow][iCol] )
+	return false;
+    }
+  }
+
+  return true;
+}
+
+/*!
+  \param m The matrix to compare with
+  \return true if matrices are \e not the same
+
+  This method compares \a m with self componentwise and returns
+  false if all components have the same value.
+*/
+template <class T>
+INLINE GbBool 
+GbMatrix4<T>::operator!= (const GbMatrix4<T>& m) const
+{
+  return !operator==(m);
+}
+
+/*!
+  \param m The matrix to add
+  \return The matrix sum
+
+  This method returns a matrix that is self added to \a m .
+*/
+template <class T>
+INLINE GbMatrix4<T> 
+GbMatrix4<T>::operator+ (const GbMatrix4<T>& m) const
+{
+  T kSum[16];
+  int k=0;
+
+  for (int iRow = 0; iRow < 4; ++iRow) {
+    for (int iCol = 0; iCol < 4; ++iCol) {
+      kSum[k++] = entry_[iRow][iCol] + m.entry_[iRow][iCol];
+    }
+  }
+  return GbMatrix4<T>(kSum);
+}
+
+/*!
+  \param m The matrix to subtract
+  \return The matrix sum
+
+  This method returns a matrix that is \a m subtracted from self.
+*/
+template <class T>
+INLINE GbMatrix4<T> 
+GbMatrix4<T>::operator- (const GbMatrix4<T>& m) const
+{
+  T kDiff[16];
+  int k=0;
+
+  for (int iRow = 0; iRow < 4; ++iRow) {
+    for (int iCol = 0; iCol < 4; ++iCol) {
+      kDiff[k++] = entry_[iRow][iCol] - m.entry_[iRow][iCol];
+    }
+  }
+  return GbMatrix4<T>(kDiff);
+}
+
+/*!
+  \param m The matrix to multiply self with
+  \return The matrix product
+
+  This method returns a matrix that is self multiplied with \a m from the right.
+*/
+template <class T>
+INLINE GbMatrix4<T>
+GbMatrix4<T>::operator*( const GbMatrix4<T>& m ) const
+{
+  T tmp[16];
+  int k= 0;
+  
+  for (int i= 0; i < 4; ++i)
+    for (int j= 0; j < 4; ++j)
+      tmp[k++]= entry_[i][0] * m.entry_[0][j] + 
+	        entry_[i][1] * m.entry_[1][j] +
+	        entry_[i][2] * m.entry_[2][j] + 
+	        entry_[i][3] * m.entry_[3][j];
+  
+  return GbMatrix4<T>(tmp);
+}
+
+/*!
+  \return The inverted matrix
+
+  This method returns a matrix that is self inverted componentwise.
+*/
+template <class T>
+INLINE GbMatrix4<T> 
+GbMatrix4<T>::operator- () const
+{
+  T kNeg[16];
+  int k=0;
+  for (int iRow = 0; iRow < 4; ++iRow) {
+    for (int iCol = 0; iCol < 4; ++iCol)
+      kNeg[k++] = -entry_[iRow][iCol];
+  }
+  return GbMatrix4<T>(kNeg);
+}
+
+/*!
+  \param v The 4x1 vector to multiply
+  \return The 4x1 multiplication result
+
+  This method returns a vector that is self multiplied with \a v from the right.
+ */
+template <class T>
+INLINE GbVec4<T> 
+GbMatrix4<T>::operator*( const GbVec4<T>& v) const
+{
+  return GbVec4<T>(entry_[0][0] * v[0] + entry_[0][1] * v[1] +
+		   entry_[0][2] * v[2] + entry_[0][3] * v[3],
+		   entry_[1][0] * v[0] + entry_[1][1] * v[1] +
+		   entry_[1][2] * v[2] + entry_[1][3] * v[3],
+		   entry_[2][0] * v[0] + entry_[2][1] * v[1] +
+		   entry_[2][2] * v[2] + entry_[2][3] * v[3],
+		   entry_[3][0] * v[0] + entry_[3][1] * v[1] +
+		   entry_[3][2] * v[2] + entry_[3][3] * v[3]);
+}
+
+/*!
+  \return The transposed matrix
+
+  This method returns a matrix that is the transpose of self.
+*/
+template <class T>
+INLINE GbMatrix4<T> 
+GbMatrix4<T>::transpose () const
+{
+  T kTranspose[16];
+  int k=0;
+  for (int iRow = 0; iRow < 4; ++iRow) {
+    for (int iCol = 0; iCol < 4; ++iCol)
+      kTranspose[k++] = entry_[iCol][iRow];
+  }
+  return GbMatrix4<T>(kTranspose);
+}
+
+/*!
+  \param v The 3D vector to transform
+  \param w Additional W coordinate
+  \return The transformed vector
+
+  Multiply a point of dimension 3 from the right to self
+  while taking \a w as the homogeneous parameter of \a v and return
+  the transformed vector.
+
+  \note Use this method to transform 3D points as OpenGL matrices do it.
+*/
+template <class T>
+INLINE GbVec3<T> 
+GbMatrix4<T>::transform( const GbVec3<T>& v, T w) const
+{
+  T ret[3];
+  T new_w= T(0.0);
+  
+  for (int j= 0; j < 3; ++j)
+    new_w += entry_[3][j] * v[j];
+  new_w += entry_[3][3] * w;
+  if (GbMath<T>::Abs(new_w) < std::numeric_limits<T>::epsilon()) {
+    new_w = T(1.0);
+    errormsg("operator*(GbVec3<T>, w) yields zero homogenous coordinate");
+  }
+
+  for (int i= 0; i < 3; ++i) {
+    ret[i]= T(0.0);
+    for (int j= 0; j < 3; ++j)
+      ret[i]+= entry_[i][j] * v[j];
+    ret[i]+= entry_[i][3] * w;
+    ret[i]/= new_w;
+  }
+
+  return GbVec3<T>(ret);
+}
+
+/*!
+  \param a11 Upper left coefficient
+  \param a12 Upper right coefficient
+  \param a21 Lower left coefficient
+  \param a22 Lower right coefficient
+  \return The determinant of a 2x2 sub matrix
+*/
+template <class T>
+INLINE T
+GbMatrix4<T>::det2(const T a11, const T a12, const T a21, const T a22) const
+{
+  return a11*a22 - a12*a21;
+}
+
+/*!
+  \param a11 Matrix coefficient
+  \param a12 Matrix coefficient
+  \param a13 Matrix coefficient
+  \param a21 Matrix coefficient
+  \param a22 Matrix coefficient
+  \param a23 Matrix coefficient
+  \param a31 Matrix coefficient
+  \param a32 Matrix coefficient
+  \param a33 Matrix coefficient
+  \return The determinant of a 3x3 sub matrix
+*/
+template <class T>
+INLINE T
+GbMatrix4<T>::det3(const T a11, const T a12, const T a13, 
+		   const T a21, const T a22, const T a23,
+		   const T a31, const T a32, const T a33) const
+{
+  return  a11*det2(a22,a23,a32,a33) -
+          a21*det2(a12,a13,a32,a33) +
+          a31*det2(a12,a13,a22,a23) ;
+}
+
+/*!
+  \param a First array
+  \param b Second array
+
+  Swap the contents of the two arrays.
+*/
+template <class T>
+INLINE void
+GbMatrix4<T>::swap(T a[4], T b[4]) const
+{
+  T tmp;
+  tmp= a[0]; a[0]= b[0]; b[0]= tmp;
+  tmp= a[1]; a[1]= b[1]; b[1]= tmp;
+  tmp= a[2]; a[2]= b[2]; b[2]= tmp;
+  tmp= a[3]; a[3]= b[3]; b[3]= tmp;
+}
+

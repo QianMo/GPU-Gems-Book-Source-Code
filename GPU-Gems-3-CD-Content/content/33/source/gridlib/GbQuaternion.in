@@ -1,0 +1,391 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbQuaternion.in,v 1.7 2004/11/08 11:04:03 DOMAIN-I15+prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  Predefined zero quaternion
+*/
+template <class T>
+const GbQuaternion<T> 
+GbQuaternion<T>::ZERO = GbQuaternion<T>(T(0.0),T(0.0),T(0.0),T(0.0));
+
+/*!
+  Predefined identity quaternion
+*/
+template <class T>
+const GbQuaternion<T> 
+GbQuaternion<T>::IDENTITY = GbQuaternion<T>(T(1.0),T(0.0),T(0.0),T(0.0));
+
+/*!
+  Cutoff for sine values near zero for numerical stability.
+*/
+template <class T>
+const T 
+GbQuaternion<T>::EPSILON = std::numeric_limits<T>::epsilon(); // max. 1e-03
+
+/*!
+  \return The W component value
+*/
+template <class T>
+INLINE T
+GbQuaternion<T>::W() const
+{
+  return w_;
+}
+
+/*!
+  \return A vector with the XYZ component values
+*/
+template <class T>
+INLINE GbVec3<T>
+GbQuaternion<T>::XYZ() const
+{
+  return GbVec3<T>(x_,y_,z_);
+}
+
+/*!
+  \param w The W component
+  \param x The X component
+  \param y The Y component
+  \param z The Z component
+
+  This method writes the given values to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbQuaternion<T>::set(T w, T x, T y, T z)
+{
+  w_=w; x_=x; y_=y; z_=z;
+}
+
+/*!
+  \param rkQ The quaternion to copy
+  \return A reference to self
+*/
+template <class T>
+INLINE GbQuaternion<T>& 
+GbQuaternion<T>::operator= (const GbQuaternion<T>& rkQ)
+{
+  w_ = rkQ.w_;
+  x_ = rkQ.x_;
+  y_ = rkQ.y_;
+  z_ = rkQ.z_;
+  return *this;
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return True if equal
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator== (const GbQuaternion<T>& rkQ) const
+{
+    if ( w_ != rkQ.w_ ) return false;
+    if ( x_ != rkQ.x_ ) return false;
+    if ( y_ != rkQ.y_ ) return false;
+    if ( z_ != rkQ.z_ ) return false;
+    return true;
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return False if equal
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator!= (const GbQuaternion<T>& rkQ) const
+{
+    return !operator==(rkQ);
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return Integer indicating ordering
+*/
+template <class T>
+INLINE int 
+GbQuaternion<T>::compareArrays (const GbQuaternion<T>& rkQ) const
+{
+    T tuple0[4];
+    T tuple1[4];
+    tuple0[0] = w_; tuple0[1] = x_; tuple0[2] = y_; tuple0[3] = z_; 
+    tuple1[0] = rkQ.w_; tuple1[1] = rkQ.x_; tuple1[2] = rkQ.y_; tuple1[3] = rkQ.z_; 
+    return memcmp(tuple0,tuple1,4*sizeof(T));
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return True if less
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator< (const GbQuaternion<T>& rkQ) const
+{
+    return compareArrays(rkQ) < 0;
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return True if less or equal
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator<= (const GbQuaternion<T>& rkQ) const
+{
+    return compareArrays(rkQ) <= 0;
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return True if greater
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator> (const GbQuaternion<T>& rkQ) const
+{
+    return compareArrays(rkQ) > 0;
+}
+
+/*!
+  \param rkQ The quaternion to compare to
+  \return True if greater or equal
+*/
+template <class T>
+INLINE GbBool 
+GbQuaternion<T>::operator>= (const GbQuaternion<T>& rkQ) const
+{
+    return compareArrays(rkQ) >= 0;
+}
+
+/*!
+  \param rkQ The quaternion to add
+  \return The sum quaternion
+
+  This method adds self and the quaternion \a rkQ and returns the sum.
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator+ (const GbQuaternion<T>& rkQ) const
+{
+  return GbQuaternion<T>(w_+rkQ.w_,x_+rkQ.x_,y_+rkQ.y_,z_+rkQ.z_);
+}
+
+/*!
+  \param rkQ The quaternion to subtract
+  \return The sum quaternion
+
+  This method subtracts the quaternion \a rkQ from self and returns the sum.
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator- (const GbQuaternion<T>& rkQ) const
+{
+  return GbQuaternion<T>(w_-rkQ.w_,x_-rkQ.x_,y_-rkQ.y_,z_-rkQ.z_);
+}
+
+/*!
+  \param rkQ The quaternion to multiply with
+  \return The product quaternion
+
+  This method multiplies the quaternion \a rkQ with self and returns the product.
+
+  \note Multiplication is not generally commutative, so in most cases p*q != q*p.
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator* (const GbQuaternion<T>& rkQ) const
+{
+  return GbQuaternion<T>
+    (
+      w_*rkQ.w_-x_*rkQ.x_-y_*rkQ.y_-z_*rkQ.z_,
+      w_*rkQ.x_+x_*rkQ.w_+y_*rkQ.z_-z_*rkQ.y_,
+      w_*rkQ.y_+y_*rkQ.w_+z_*rkQ.x_-x_*rkQ.z_,
+      w_*rkQ.z_+z_*rkQ.w_+x_*rkQ.y_-y_*rkQ.x_
+    );
+}
+
+/*!
+  \param fScalar The floating point scaling factor
+  \return The scaled quaternion
+
+  This method returns a quaternion that is self scaled by the floating point value
+  \a fScalar .
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator* (T fScalar) const
+{
+  return GbQuaternion<T>(fScalar*w_,fScalar*x_,fScalar*y_,fScalar*z_);
+}
+
+/*!
+  \param fScalar The floating point scaling factor
+  \return The inverse scaled quaternion
+
+  This method returns a quaternion that is self inverse scaled by the floating point value
+  \a fScalar .
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator/ (T fScalar) const
+{
+
+    if ( fScalar != T(0.0) ) {
+        T fInvScalar = T(1.0)/fScalar;
+	return GbQuaternion<T>(fInvScalar*w_,
+			       fInvScalar*x_,
+			       fInvScalar*y_,
+			       fInvScalar*z_);
+    }
+    return GbQuaternion<T>(std::numeric_limits<T>::max(),
+			   std::numeric_limits<T>::max(),
+			   std::numeric_limits<T>::max(),
+			   std::numeric_limits<T>::max());
+}
+
+/*!
+  \return The inverted vector
+
+  This method returns the inverted self vector.
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::operator- () const
+{
+  return GbQuaternion<T>(-w_,-x_,-y_,-z_);
+}
+
+/*!
+  \param rkQ The quaternion to add to self
+  \return Reference to self
+*/
+template <class T>
+INLINE GbQuaternion<T>& 
+GbQuaternion<T>::operator+= (const GbQuaternion<T>& rkQ)
+{
+    w_ += rkQ.w_;
+    x_ += rkQ.x_;
+    y_ += rkQ.y_;
+    z_ += rkQ.z_;
+    return *this;
+}
+
+/*!
+  \param rkQ The quaternion to subtract from self
+  \return Reference to self
+*/
+template <class T>
+INLINE GbQuaternion<T>& 
+GbQuaternion<T>::operator-= (const GbQuaternion<T>& rkQ)
+{
+    w_ -= rkQ.w_;
+    x_ -= rkQ.x_;
+    y_ -= rkQ.y_;
+    z_ -= rkQ.z_;
+    return *this;
+}
+
+/*!
+  \param fScalar The scalar to scale self with
+  \return Reference to self
+*/
+template <class T>
+INLINE GbQuaternion<T>& 
+GbQuaternion<T>::operator*= (T fScalar)
+{
+    w_ *= fScalar;
+    x_ *= fScalar;
+    y_ *= fScalar;
+    z_ *= fScalar;
+    return *this;
+}
+
+/*!
+  \param fScalar The scalar to inversely scale self with
+  \return Reference to self
+*/
+template <class T>
+INLINE GbQuaternion<T>& 
+GbQuaternion<T>::operator/= (T fScalar)
+{
+    if ( fScalar != T(0.0) ) {
+        T fInvScalar = T(1.0)/fScalar;
+	w_ *= fInvScalar;
+	x_ *= fInvScalar;
+	y_ *= fInvScalar;
+	z_ *= fInvScalar;
+    }
+    else {
+	w_ = std::numeric_limits<T>::max();
+	x_ = std::numeric_limits<T>::max();
+	y_ = std::numeric_limits<T>::max();
+	z_ = std::numeric_limits<T>::max();
+    }
+    
+    return *this;
+}
+
+/*!
+  \param rkQ The second quaternion
+  \return The scalar product value
+
+  This method computes the scalar product (dot product) of
+  self and \a rkQ .
+*/
+template <class T>
+INLINE T 
+GbQuaternion<T>::dot (const GbQuaternion<T>& rkQ) const
+{
+  return w_*rkQ.w_+x_*rkQ.x_+y_*rkQ.y_+z_*rkQ.z_;
+}
+
+/*!
+  \return The norm of self
+
+  This method computes the norm (=square length) of self and returns the 
+  value.
+*/
+template <class T>
+INLINE T 
+GbQuaternion<T>::norm () const
+{
+  return w_*w_+x_*x_+y_*y_+z_*z_;
+}
+
+/*!
+  \return The inverse quaternion
+
+  This method computes and returnes the inverse quaternion of self. 
+  Self must be non-zero. If the norm of self is zero, the ZERO quaternion is returned.
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::inverse () const
+{
+  T fNorm = norm();
+  if ( fNorm > T(0.0) ) {
+    T fInvNorm = T(1.0)/fNorm;
+    return GbQuaternion<T>(w_*fInvNorm,-x_*fInvNorm,-y_*fInvNorm,-z_*fInvNorm);
+  }
+  // return an invalid result to flag the error
+  return GbQuaternion<T>::ZERO;
+}
+
+/*!
+  \return The inverse quaternion (conjugate)
+
+  This method computes and returns the inverse quaternion \e for \e unit
+  \e quaternions \e only (= conjugate quaternion).
+*/
+template <class T>
+INLINE GbQuaternion<T> 
+GbQuaternion<T>::unitInverse () const
+{
+  // assert:  'this' is unit length
+  return GbQuaternion<T>(w_,-x_,-y_,-z_);
+}
+
+

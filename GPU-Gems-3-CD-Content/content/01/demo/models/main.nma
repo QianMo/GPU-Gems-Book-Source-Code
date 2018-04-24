@@ -1,0 +1,2693 @@
+Scene {
+  cameras [
+    Camera mainCamShape {
+      useScreenAspectRatio 1
+      near 0.1
+      minNear 0.1
+      dynamicNear 0
+      far 9999
+      maxFar 9999.9
+      dynamicFar 0
+      fieldOfView 1.35 //1.4 //0.95
+      aspectRatio 1
+      position 0 0 0
+      orientation 1 0 0 0
+      transform "mainCam"
+    }
+  ] // cameras
+  transforms [
+    MayaTransform mainCam {
+      scalePivot 0 0 0
+      scalePivotTranslate 0 0 0
+      scale 1 1 1
+      rotationPivot 0 0 0
+      rotationPivotTranslate 0 0 0
+      rotationOrientation 0 0 0
+      rotation 0 0 0
+      translation 0 0 0
+      rotationOrder xyz
+    }
+    MayaTransform _identityTransform {
+      scalePivot 0 0 0
+      scalePivotTranslate 0 0 0
+      scale 1 1 1
+      rotationPivot 0 0 0
+      rotationPivotTranslate 0 0 0
+      rotationOrientation 0 0 0
+      rotation 0 0 0
+      translation 0 0 0
+      rotationOrder xyz
+    }
+    MayaTransform bkgNoiseCoordXform1 {
+      scalePivot 0 0 0
+      scalePivotTranslate 0 0 0
+      scale 1 1 1
+      rotationPivot 0 0 0
+      rotationPivotTranslate 0 0 0
+      rotationOrientation 0 0 0
+      rotation 73 -21 34      // in degrees
+      translation 0 0 0
+      rotationOrder xyz
+    }
+    MayaTransform bkgNoiseCoordXform2 {
+      scalePivot 0 0 0
+      scalePivotTranslate 0 0 0
+      scale 1 1 1
+      rotationPivot 0 0 0
+      rotationPivotTranslate 0 0 0
+      rotationOrientation 0 0 0
+      rotation -51 37 142      // in degrees
+      translation 0 0 0
+      rotationOrder xyz
+    }
+    MayaTransform bkgNoiseCoordXform3 {
+      scalePivot 0 0 0
+      scalePivotTranslate 0 0 0
+      scale 1 1 1
+      rotationPivot 0 0 0
+      rotationPivotTranslate 0 0 0
+      rotationOrientation 0 0 0
+      rotation -31 92 -23      // in degrees
+      translation 0 0 0
+      rotationOrder xyz
+    }
+    MayaTransform xform_octave0 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1       //UPDATE
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave1 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave2 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0       //UPDATE
+      translation 0 0 0
+    }
+    MayaTransform xform_octave3 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave4 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave5 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave6 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+    MayaTransform xform_octave7 {
+      scalePivot 0 0 0 scalePivotTranslate 0 0 0 rotationPivot 0 0 0 rotationPivotTranslate 0 0 0 rotationOrientation 0 0 0 rotationOrder xyz
+      scale       1 1 1
+      rotation    0 0 0
+      translation 0 0 0
+    }
+  ] // transforms
+  constantBuffers [
+
+    ConstantBuffer g_ChunkCB {
+      paramName "ChunkCB"
+      constants [
+        FloatParam { paramName "wsChunkPos" value 0 0 0 0 }
+        FloatParam { paramName "opacity"    value 0 0 0 0 }
+      ]
+    }
+    ConstantBuffer g_LodCB_hi {
+      paramName "LodCB"
+      constants [
+        FloatParam { paramName "VoxelDim"         value 0 0 0 0 }
+        FloatParam { paramName "VoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "wsVoxelSize"      value 0 0 0 0 }
+        FloatParam { paramName "wsChunkSize"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDim"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "Margin"                         }
+        FloatParam { paramName "VoxelDimPlusMargins"            }
+        FloatParam { paramName "VoxelDimPlusMarginsMinusOne"    }
+        FloatParam { paramName "InvVoxelDimPlusMargins"         }
+        FloatParam { paramName "InvVoxelDimPlusMarginsMinusOne" }
+      ]
+    }
+    ConstantBuffer g_LodCB_med {
+      paramName "LodCB"
+      constants [
+        FloatParam { paramName "VoxelDim"         value 0 0 0 0 }
+        FloatParam { paramName "VoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "wsVoxelSize"      value 0 0 0 0 }
+        FloatParam { paramName "wsChunkSize"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDim"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "Margin"                         }
+        FloatParam { paramName "VoxelDimPlusMargins"            }
+        FloatParam { paramName "VoxelDimPlusMarginsMinusOne"    }
+        FloatParam { paramName "InvVoxelDimPlusMargins"         }
+        FloatParam { paramName "InvVoxelDimPlusMarginsMinusOne" }
+      ]
+    }
+    ConstantBuffer g_LodCB_lo {
+      paramName "LodCB"
+      constants [
+        FloatParam { paramName "VoxelDim"         value 0 0 0 0 }
+        FloatParam { paramName "VoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "wsVoxelSize"      value 0 0 0 0 }
+        FloatParam { paramName "wsChunkSize"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDim"      value 0 0 0 0 }
+        FloatParam { paramName "InvVoxelDimMinusOne" value 0 0 0 0 }
+        FloatParam { paramName "Margin"                         }
+        FloatParam { paramName "VoxelDimPlusMargins"            }
+        FloatParam { paramName "VoxelDimPlusMarginsMinusOne"    }
+        FloatParam { paramName "InvVoxelDimPlusMargins"         }
+        FloatParam { paramName "InvVoxelDimPlusMarginsMinusOne" }
+      ]
+    }
+
+    ConstantBuffer SliderCB {
+      paramName "SliderCB"
+      constants [
+        
+        // The FloatParams here automatically become the sliders
+        //   in the demo when you hit the 's' key.  
+        // *** If you add/change things here, change them 
+        //   in shaders\sliders.h as well! ***
+        
+        FloatParam { paramName "bump_scale"     value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "bump_freq"      value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "diffuse_light"  value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "spec_light"     value 1 0 0 0 max 32 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "ambient_occlusion" value 1 0 0 0 max 2 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "light_wrap"     value 0.15 0 0 0 max 1 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "fog_density"    value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        FloatParam { paramName "color_saturation" value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        //FloatParam { paramName "my_new_value_1" value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        //FloatParam { paramName "my_new_value_2" value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+        //FloatParam { paramName "my_new_value_3" value 1 0 0 0 max 4 0 0 0 min 0 0 0 0 }
+      ]
+    }
+    
+    ConstantBuffer g_GlobalRockCB {    //UPDATE
+      paramName "g_GlobalRockCB"
+      constants [
+        TransformParam { paramName "octaveMat0" map xform transform "xform_octave0" }
+        TransformParam { paramName "octaveMat1" map xform transform "xform_octave1" }
+        TransformParam { paramName "octaveMat2" map xform transform "xform_octave2" }
+        TransformParam { paramName "octaveMat3" map xform transform "xform_octave3" }
+        TransformParam { paramName "octaveMat4" map xform transform "xform_octave4" }
+        TransformParam { paramName "octaveMat5" map xform transform "xform_octave5" }
+        TransformParam { paramName "octaveMat6" map xform transform "xform_octave6" }
+        TransformParam { paramName "octaveMat7" map xform transform "xform_octave7" }
+        
+        MiscParam { paramName "timeValues" param time }
+        
+        FloatParam { paramName "wsEyePos" value 0 0 0 0 }
+        FloatParam { paramName "wsLookAt" value 0 0 0 0 }
+      ]
+    }
+    
+    ConstantBuffer DebugInfoCB {
+      paramName "DebugInfoCB"
+      constants [
+        FloatParam { paramName "debugInfo" value 1 1 1 1 }
+      ]
+    }
+    ConstantBuffer TimeCB {
+      paramName "TimeCB"
+      constants [
+        MiscParam { paramName "time" param time }
+      ]
+    }
+    ConstantBuffer BkgNoiseTransforms {
+      paramName "BkgNoiseTransforms"
+      constants [
+        TransformParam { paramName "noiseXform1" transform "bkgNoiseCoordXform1" map xform }
+        TransformParam { paramName "noiseXform2" transform "bkgNoiseCoordXform2" map xform }
+        TransformParam { paramName "noiseXform3" transform "bkgNoiseCoordXform3" map xform }
+      ]
+    }
+  ] // constantBuffers
+  textures [
+  
+    // primary color & depth targets:
+
+    Proc2DTexture sceneColorTarget {
+      dimensions 1024 768   //AUTO
+      format     rgb10a2 // or you could use float4_16
+      numMipmaps 1
+      numSamples 4          //AUTO
+    }
+    Proc2DTexture sceneDepthTarget {
+      dimensions 1024 768   //AUTO
+      format     depth32
+      numMipmaps 1
+      numSamples 4          //AUTO
+    }
+    
+    Proc3DTexture density_vol {
+      dimensions   64 64 64    // autosized! - with margins (for ambo & gradients)
+      format       float1_16
+      numMipmaps   1
+    }
+    Proc3DTexture VertexIDVolume {
+      dimensions   192 64 64    // autosized! - without margins
+      format       uint16_r  //because you can't use blending or .Sample with UINT16.
+      numMipmaps   1
+    }
+    
+    // extra color buffers for post-processing:
+    Proc2DTexture postproc_A {
+      dimensions 512 384    //AUTO
+      format float4_16
+      numMipmaps 1
+      numSamples 1
+    }
+    Proc2DTexture postproc_B {
+      dimensions 512 384    //AUTO
+      format float4_16
+      numMipmaps 1
+      numSamples 1
+    }
+
+    // various static textures
+    3DTexture hypernoise_00  { filenames [ "..\textures\noise_half_16cubed_mips_00.vol" ] format default }
+    3DTexture hypernoise_01  { filenames [ "..\textures\noise_half_16cubed_mips_01.vol" ] format default }
+    3DTexture hypernoise_02  { filenames [ "..\textures\noise_half_16cubed_mips_02.vol" ] format default }
+    3DTexture hypernoise_03  { filenames [ "..\textures\noise_half_16cubed_mips_03.vol" ] format default }
+    
+    //  these have the .R values of the +Y, +Z, and +YZ neighbors 
+    //  (1 texel) packed into the .GBA of each texel.
+    //  (while the .R matches the .R of the unpacked versions above)
+    //  (...see textures\about_these_noise_volumes.txt)
+    3DTexture packednoise_00  { filenames [ "..\textures\packednoise_half_16cubed_mips_00.vol" ] format default }
+    3DTexture packednoise_01  { filenames [ "..\textures\packednoise_half_16cubed_mips_01.vol" ] format default }
+    3DTexture packednoise_02  { filenames [ "..\textures\packednoise_half_16cubed_mips_02.vol" ] format default }
+    3DTexture packednoise_03  { filenames [ "..\textures\packednoise_half_16cubed_mips_03.vol" ] format default }
+
+    2DTexture helpscrTex  { filename "..\textures\helpscr.tga" format default }  
+    2DTexture aboutboxTex { filename "..\textures\about.tga" format default }  
+    2DTexture logo_texture { filename "..\textures\logo.tga" format default }
+    2DTexture clickhelp_texture { filename "..\textures\clickhelp.tga" format default }
+    2DTexture sliderBar   { filename "..\textures\sliderbar.tga" format default }  
+    2DTexture sliderBtn   { filename "..\textures\sliderbutton.tga" format default }  
+    
+    2DTexture AltColorRamp { filename "..\textures\altmap.tga" format default }  
+    
+    //CubicCrossTexture skyCube {
+    //  filename "..\textures\skyCube.tga"
+    //  format default
+    //  numMipmaps 1
+    //}
+    
+    2DTexture dummyTex { filename "..\textures\dummyTex.tga" format default }  
+    
+
+  ]
+  renderPasses [
+    
+    RenderPass build_density_pass {
+      colorTargets [ "density_vol" , ]
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ "build_density_shape" ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }
+    
+    RenderPass list_nonempty_cells {
+      streamTargets [ "nonempty_cell_list" ] 
+      streamOutputEnabled 1
+      clearsStreamOut 1       //OK
+      fragmentPathEnabled 0
+      clearsColor 1
+      clearColor 0 0 0 0
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ "list_nonempty_cells_shape" ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }
+    
+    // these two passes are an optimization;
+    // they allow us to share vertices, resulting in ~1/6th 
+    // as much vertex generation work.
+    RenderPass list_verts_to_generate {
+      streamTargets [ "vert_list" ] 
+      streamOutputEnabled 1
+      clearsStreamOut 1       //OK
+      fragmentPathEnabled 0
+      clearsColor 1
+      clearColor 0 0 0 0
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ "list_verts_to_generate_shape" ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }
+    RenderPass splat_vertex_IDs {
+      colorTargets [ "VertexIDVolume" ]
+      depthTarget ""
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ // "clear_vertex_IDs_shape" ,   // note: don't need this if things are working properly. :)
+               "splat_vertex_IDs_shape" 
+             ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }
+    
+    RenderPass gen_vertices {
+      streamTargets [ "vb_wc_000" , "vb_wn_000" ]       //UPDATE
+      streamOutputEnabled 1
+      clearsStreamOut 1       //OK
+      fragmentPathEnabled 0
+      clearsColor 1
+      clearColor 0 0 0 0
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ "gen_vertices_shape" ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }    
+    RenderPass gen_indices {
+      streamTargets [ "idx_000" ]       //UPDATE
+      streamOutputEnabled 1
+      clearsStreamOut 1       //OK
+      fragmentPathEnabled 0
+      clearsColor 1
+      clearColor 0 0 0 0
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape" //ignored
+      useSceneShapes 0
+      shapes [ "gen_indices_shape" ]
+      useSceneBackgrounds 0
+      useListIndices 0
+      viewport 0 0 -1 -1
+      active 0       //OK - these all always stay off.  App manually runs passes when it wants.
+    }    
+
+    RenderPass mainDrawPass2 {
+      colorTargets [ "sceneColorTarget" ]
+      depthTarget "sceneDepthTarget"
+      clearsColor 1
+      clearColor 0.161 0.322 0.588 0  // must match FOG_COLOR in shaders\master.h 
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [  
+               //"draw_bkg_group" , 
+               
+               //"draw_rock_lo_shape" ,
+               //"draw_rock_med_shape" ,
+               //"draw_rock_hi_shape" ,
+               
+               // to make optimal use of zbuffer to avoid reshading:
+               "draw_rock_hi_opaque_shape" ,
+               "draw_rock_med_opaque_shape" ,
+               "draw_rock_lo_shape" ,
+               "draw_rock_med_alpha_shape" ,
+               "draw_rock_hi_alpha_shape" ,
+               
+             ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1 //0
+    }
+    // POST-PROCESSING PASSES:
+    
+    RenderPass nvDownsampleFloatPass {
+      colorTargets [ "postproc_A" , ]
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvDownsampleFloatPass_group" , ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+    RenderPass nvBlurFloatPass1 {
+      colorTargets [ "postproc_B" , ]
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvBlurFloatPass1_group" , ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+    RenderPass nvBlurFloatPass2 {
+      colorTargets [ "postproc_A" , ]
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvBlurFloatPass2_group" , ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+    RenderPass nvBlurFloatPass3 {
+      colorTargets [ "postproc_B" , ]
+      clearsColor 0
+      clearColor 0 0 0 0
+      clearsDepth 0
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvBlurFloatPass3_group" , ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+    RenderPass nvBlurFloatPass4 {
+      colorTargets [ "postproc_A" , ]
+      clearsColor 1
+      clearColor 0 0 0 0
+      clearsDepth 1
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvBlurFloatPass4_group" , ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+
+
+    // this does the final, fine-grained motion blur pass
+    // as well as the final compositing.
+    RenderPass nvPrimaryRenderPass {
+      clearsColor 1 // <- AUTO SET BY CODE      
+                          //SLI: "In all rendering modes [SLI or not], only clear framebuffer color when necessary."
+                          // but we clear it anyway (for the black bars in 'widescreen' mode)
+      clearColor 0 0 0 0 //0.9 0.6 0.3 0
+      clearsDepth 1       //SLI: "In all rendering modes, always clear framebuffer Z/depth."
+      clearDepth 1
+      clearsStencil 0
+      clearStencil 0
+      camera "mainCamShape"
+      useSceneShapes 0
+      shapes [ "nvPrimaryRenderPass_group" , "helpscr_group" ]
+      useSceneBackgrounds 0
+            useListIndices 0
+      viewport 0 0 -1 -1
+      active 1
+    }
+  
+  
+  ] // renderPasses  
+  renderParams [
+    BlendParams BlendLineblur {
+      colorSrcBlend  one
+      colorDestBlend zero
+      colorBlendOp   add
+      alphaSrcBlend  one
+      alphaDestBlend zero
+      alphaBlendOp   add
+      blendColor      0 0 0 0
+      alphaToCoverage 0
+      redMask   1
+      greenMask 1
+      blueMask  1
+      alphaMask 1
+    }
+    BlendParams BlendAdd {
+      colorSrcBlend  one
+      colorDestBlend one
+      colorBlendOp   add
+      alphaSrcBlend  one
+      alphaDestBlend one
+      alphaBlendOp   add
+      blendColor      0 0 0 0
+      alphaToCoverage 0
+      redMask   1
+      greenMask 1
+      blueMask  1
+      alphaMask 1
+    }
+    BlendParams BlendAlpha {
+      colorSrcBlend src_alpha
+      colorDestBlend inv_src_alpha
+      colorBlendOp add
+      alphaSrcBlend  zero //src_alpha
+      alphaDestBlend one  //inv_src_alpha
+      alphaBlendOp add
+      blendColor 0 0 0 0
+      redMask 1
+      greenMask 1
+      blueMask 1
+      alphaMask 1
+    }
+    BlendParams BlendColor_PreserveAlpha {
+      colorSrcBlend src_alpha
+      colorDestBlend inv_src_alpha
+      colorBlendOp add
+      alphaSrcBlend  zero
+      alphaDestBlend one
+      alphaBlendOp add
+      blendColor 0 0 0 0
+      redMask 1
+      greenMask 1
+      blueMask 1
+      alphaMask 1
+    }
+    BlendParams BlendColor_AddAlpha {
+      colorSrcBlend src_alpha
+      colorDestBlend inv_src_alpha
+      colorBlendOp add
+      alphaSrcBlend  one
+      alphaDestBlend one
+      alphaBlendOp add
+      blendColor 0 0 0 0
+      redMask 1
+      greenMask 1
+      blueMask 1
+      alphaMask 1
+    }
+    SamplerState NearestRepeat {
+      minFilter nearest
+      magFilter nearest
+      mipFilter nearest
+      wrapU repeat
+      wrapV repeat
+      wrapW repeat
+      mipmapBias 0
+      anisotropy 0
+      enableShadowCompare 0
+    }
+    SamplerState NearestClamp {
+      minFilter nearest
+      magFilter nearest
+      mipFilter nearest
+      wrapU clamp
+      wrapV clamp
+      wrapW clamp
+      mipmapBias 0
+      anisotropy 0
+      enableShadowCompare 0
+    }
+    SamplerState LinearRepeat {
+      minFilter linear
+      magFilter linear
+      mipFilter linear
+      wrapU repeat
+      wrapV repeat
+      wrapW repeat
+      mipmapBias 0
+      anisotropy 0
+      enableShadowCompare 0
+    }  
+    SamplerState LinearClamp {
+      minFilter linear
+      magFilter linear
+      mipFilter linear
+      wrapU clamp
+      wrapV clamp
+      wrapW clamp
+      mipmapBias 0
+      anisotropy 0
+      enableShadowCompare 0
+    }  
+  ] // renderParams
+  shaders [
+  
+    Shader build_density_vol_v {
+      filename "..\shaders\1_build_density_vol.vsh"
+      profile vs_4_0
+      entryFunc ""
+    }
+    Shader build_density_vol_g {
+      filename "..\shaders\1_build_density_vol.gsh"
+      profile gs_4_0
+      entryFunc ""
+    }
+    Shader build_density_vol_f {
+      filename "..\shaders\1_build_density_vol.psh"
+      profile ps_4_0
+      entryFunc ""
+    }
+    
+    Shader list_nonempty_cells_v {
+      filename "..\shaders\3_list_nonempty_cells.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        TextureParam { paramName "density_vol" texture "density_vol" samplerState "LinearClamp"  }
+        TextureParam { paramName "blah1"     texture "dummyTex"        samplerState "NearestClamp" }
+      ]
+    }
+    Shader list_nonempty_cells_g {
+      filename "..\shaders\3_list_nonempty_cells.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader list_verts_to_generate_v {
+      filename "..\shaders\4_list_verts_to_generate.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader list_verts_to_generate_g {
+      filename "..\shaders\4_list_verts_to_generate.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    
+    Shader clear_vertex_IDs_v {
+      filename "..\shaders\5a_clear_vertex_IDs.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader clear_vertex_IDs_g {
+      filename "..\shaders\5a_clear_vertex_IDs.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader clear_vertex_IDs_f {
+      filename "..\shaders\5a_clear_vertex_IDs.psh"
+      profile ps_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    
+    Shader splat_vertex_IDs_v {
+      filename "..\shaders\5b_splat_vertex_IDs.vsh"
+      profile vs_4_0
+      entryFunc "main"
+    }
+    Shader splat_vertex_IDs_g {
+      filename "..\shaders\5b_splat_vertex_IDs.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader splat_vertex_IDs_f {
+      filename "..\shaders\5b_splat_vertex_IDs.psh"
+      profile ps_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader gen_vertices_v {
+      filename "..\shaders\6_gen_vertices.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        TextureParam { paramName "density_vol" texture "density_vol" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol0" texture "hypernoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "noiseVol1" texture "hypernoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "noiseVol2" texture "hypernoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol3" texture "hypernoise_03" samplerState "NearestClamp" }
+        TextureParam { paramName "packedNoiseVol0" texture "packednoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "packedNoiseVol1" texture "packednoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "packedNoiseVol2" texture "packednoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "packedNoiseVol3" texture "packednoise_03" samplerState "NearestClamp" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "g_mc_lut" referencedNode "g_mc_lut" }      
+        ConstantBufferRef { paramName "g_ambo_lut" referencedNode "g_ambo_lut" }              
+      ]
+    }
+    Shader gen_vertices_g {
+      filename "..\shaders\6_gen_vertices.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader gen_indices_v {
+      filename "..\shaders\7_gen_indices.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        // no params
+      ]
+    }
+    Shader gen_indices_g {
+      filename "..\shaders\7_gen_indices.gsh"
+      profile gs_4_0
+      entryFunc "main"
+      shaderParams [
+        TextureParam { paramName "VertexIDVol" texture "VertexIDVolume" samplerState "NearestClamp"  }
+        ConstantBufferRef { paramName "g_mc_lut2" referencedNode "g_mc_lut2" }      
+        ConstantBufferRef { paramName "g_mc_lut" referencedNode "g_mc_lut" }      
+      ]
+    }
+    
+    
+    Shader draw_rock_lo_v {
+      filename "..\shaders\draw_rock.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        BufferParam { paramName "vb_worldCoordAmbo" geometry "" channelName "a2v.worldCoordAmbo" }
+        BufferParam { paramName "vb_worldNorm"      geometry "" channelName "a2v.worldNormal" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            TransformParam { paramName "viewProj" map view_proj }
+            TransformParam { paramName "view"     map view      }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+            MiscParam { paramName "g_screenSize"    param textureDim referencedObject "sceneColorTarget" }
+            FloatParam { paramName "zbias" value 2 0 0 0 }
+          ]
+        }
+      ]
+    }
+    Shader draw_rock_med_v {
+      filename "..\shaders\draw_rock.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        BufferParam { paramName "vb_worldCoordAmbo" geometry "" channelName "a2v.worldCoordAmbo" }
+        BufferParam { paramName "vb_worldNorm"      geometry "" channelName "a2v.worldNormal" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            TransformParam { paramName "viewProj" map view_proj }
+            TransformParam { paramName "view"     map view      }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+            MiscParam { paramName "g_screenSize"    param textureDim referencedObject "sceneColorTarget" }
+            FloatParam { paramName "zbias" value 1 0 0 0 }
+          ]
+        }
+      ]
+    }
+    Shader draw_rock_hi_v {
+      filename "..\shaders\draw_rock.vsh"
+      profile vs_4_0
+      entryFunc "main"
+      shaderParams [
+        BufferParam { paramName "vb_worldCoordAmbo" geometry "" channelName "a2v.worldCoordAmbo" }
+        BufferParam { paramName "vb_worldNorm"      geometry "" channelName "a2v.worldNormal" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            TransformParam { paramName "viewProj" map view_proj }
+            TransformParam { paramName "view"     map view      }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+            MiscParam { paramName "g_screenSize"    param textureDim referencedObject "sceneColorTarget" }
+            FloatParam { paramName "zbias" value 0 0 0 0 }
+          ]
+        }
+      ]
+    }
+
+    
+    Shader draw_rock_lo_f {
+      filename "..\shaders\draw_rock_lo.psh"
+      profile ps_4_0
+      entryFunc ""
+      shaderParams [
+        TextureParam { paramName "noiseVol0" texture "hypernoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "noiseVol1" texture "hypernoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "noiseVol2" texture "hypernoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol3" texture "hypernoise_03" samplerState "NearestClamp" }
+        TextureParam { paramName "packedNoiseVol0" texture "packednoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "packedNoiseVol1" texture "packednoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "packedNoiseVol2" texture "packednoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "packedNoiseVol3" texture "packednoise_03" samplerState "NearestClamp" }
+        TextureParam  { paramName "AltColorRamp"     texture "AltColorRamp"        samplerState "NearestRepeat" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        ConstantBufferRef { paramName "SliderCB" referencedNode "SliderCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            FloatParam   { paramName "g_opacity" value 1 0 0 0 }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+          ]
+        }
+      ]
+    }
+    Shader draw_rock_med_f {
+      filename "..\shaders\draw_rock_med.psh"
+      profile ps_4_0
+      entryFunc ""
+      shaderParams [
+        TextureParam { paramName "noiseVol0" texture "hypernoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "noiseVol1" texture "hypernoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "noiseVol2" texture "hypernoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol3" texture "hypernoise_03" samplerState "NearestClamp" }
+        TextureParam { paramName "packedNoiseVol0" texture "packednoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "packedNoiseVol1" texture "packednoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "packedNoiseVol2" texture "packednoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "packedNoiseVol3" texture "packednoise_03" samplerState "NearestClamp" }
+        TextureParam  { paramName "AltColorRamp"     texture "AltColorRamp"        samplerState "NearestRepeat" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        ConstantBufferRef { paramName "SliderCB" referencedNode "SliderCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            FloatParam   { paramName "g_opacity" value 1 0 0 0 }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+          ]
+        }
+      ]
+    }
+    Shader draw_rock_hi_f {
+      filename "..\shaders\draw_rock_hi.psh"
+      profile ps_4_0
+      entryFunc ""
+      shaderParams [
+        TextureParam { paramName "noiseVol0" texture "hypernoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "noiseVol1" texture "hypernoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "noiseVol2" texture "hypernoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol3" texture "hypernoise_03" samplerState "NearestClamp" }
+        TextureParam { paramName "packedNoiseVol0" texture "packednoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "packedNoiseVol1" texture "packednoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "packedNoiseVol2" texture "packednoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "packedNoiseVol3" texture "packednoise_03" samplerState "NearestClamp" }
+        TextureParam  { paramName "AltColorRamp"     texture "AltColorRamp"        samplerState "NearestRepeat" }
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        ConstantBufferRef { paramName "SliderCB" referencedNode "SliderCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            FloatParam   { paramName "g_opacity" value 1 0 0 0 }
+            MiscParam { paramName "g_worldEyePosIn" param camWorldPos }
+          ]
+        }
+      ]
+    }
+
+    Shader logo_f {
+      filename "..\shaders\logo.fp30"
+      profile ps_2_0
+      entryFunc ""
+      shaderParams [
+      ]
+    }
+    Shader logo_v {
+      filename "..\shaders\logo.vp30"
+      profile vs_2_a
+      entryFunc "main"
+      shaderParams [
+      ]
+    }
+ 
+    //Shader bkg_v {
+    //  filename "..\shaders\bkg.vsh"
+    //  profile vs_4_0
+    //  entryFunc "main"
+    //  shaderParams [
+    //    ConstantBuffer ShaderCB {
+    //      paramName "ShaderCB"
+    //      constants [	
+    //        TransformParam {
+    //          paramName "view"
+    //          map view
+    //        }
+    //        TransformParam {
+    //          paramName "proj"
+    //          map proj
+    //        }
+    //      ]
+    //    }
+    //  ]      
+    //}
+    //Shader bkg_f {
+    //  filename "..\shaders\bkg.psh"
+    //  profile ps_4_0
+    //  entryFunc "main"
+    //  shaderParams [
+    //    ConstantBufferRef { paramName "TimeCB" referencedNode "TimeCB" }      
+    //    ConstantBufferRef { paramName "SliderCB" referencedNode "SliderCB" }      
+    //    ConstantBufferRef { paramName "BkgNoiseTransforms" referencedNode "BkgNoiseTransforms" }      
+    //    TextureParam  { paramName "skyCube"          texture "skyCube"               samplerState "LinearRepeat" }
+    //  ]      
+    //}
+  
+    Shader decal2D_scale_v {
+      filename "..\shaders\decal2D_scale.vp30"
+      profile vs_4_0 //vs_2_a
+      entryFunc "main"
+    }
+    Shader decal2D_scale_f {
+      filename "..\shaders\decal2D_scale.fp30"
+      profile ps_2_0
+      entryFunc ""
+    }
+    Shader decal2D_1to1pix_v {
+      filename "..\shaders\decal2D_1to1pix.vp30"
+      profile vs_2_a
+      entryFunc "main"
+      shaderParams [
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam {
+              paramName "viewportDim"
+              param viewportDim
+            }
+          ]
+        }
+      ] // globalParams
+    }
+    Shader helpscr_f {
+      filename "..\shaders\helpscr.fp30"
+      profile ps_2_0
+      entryFunc ""
+      shaderParams [
+      ] 
+    }
+    Shader downsample_glow_f {
+      filename "..\shaders\downsample_glow.fp30"
+      profile ps_2_0
+      entryFunc ""
+      shaderParams [
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam {
+              paramName "g_srcTexSize"
+              param textureDim
+              referencedObject "sceneColorTarget"
+            }
+            FloatParam { paramName "glow_str" value 1 0 0 0 }
+          ]
+        }
+        TextureParam {
+          paramName "tex"
+          texture "sceneColorTarget"
+          samplerState "LinearClamp"
+        }
+      ] // globalParams
+    }
+    Shader lineblur_f {
+      filename "..\shaders\lineblur.fp30"
+      profile ps_3_0       // if using cg, requires ps_3_0 due to cg compiler bug
+      entryFunc ""
+    }
+    Shader composite_f {
+      filename "..\shaders\composite.fp30"
+      profile ps_3_0 //ps_2_a
+      entryFunc ""
+      shaderParams [
+        ConstantBufferRef { paramName "SliderCB" referencedNode "SliderCB" }      
+        ConstantBuffer {
+          paramName "ShaderCB"
+          constants [	
+            MiscParam { paramName "time" param time }
+            MiscParam {
+              paramName "g_screenSize"
+              param textureDim
+              referencedObject "sceneColorTarget"
+            }
+            FloatParam { paramName "brightness" value 1 0 0 0 }
+            FloatParam { paramName "glow_str" value 0.3 0 0 0 }
+          ]
+        }
+        TextureParam { paramName "VertexIDVol" texture "VertexIDVolume" samplerState "NearestClamp"  }//FIXME
+        TextureParam {
+          paramName "glowTex"
+          texture "postproc_A"
+          samplerState "LinearClamp" //"NearestRepeat" //
+        }
+        TextureParam {
+          paramName "origTex"
+          texture "sceneColorTarget"
+          samplerState "LinearClamp"
+        }
+      ] // globalParams
+    }
+
+  
+  ] // shaders
+  renderSettings [
+   
+    RenderSettings rs_build_density {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthNoTest"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "build_density_vol_v"
+      geometryShader "build_density_vol_g"
+      fragmentShader "build_density_vol_f"
+    }
+
+    
+    RenderSettings rs_list_nonempty_cells    {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "list_nonempty_cells_v"
+      geometryShader "list_nonempty_cells_g"
+    }
+    RenderSettings rs_list_verts_to_generate {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "list_verts_to_generate_v"
+      geometryShader "list_verts_to_generate_g"
+    }
+    RenderSettings rs_clear_vertex_IDs       {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "clear_vertex_IDs_v"
+      geometryShader "clear_vertex_IDs_g"
+      fragmentShader "clear_vertex_IDs_f"
+    }
+    RenderSettings rs_splat_vertex_IDs       {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault" //"BlendAdd"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "splat_vertex_IDs_v"
+      geometryShader "splat_vertex_IDs_g"
+      fragmentShader "splat_vertex_IDs_f"
+    }
+    RenderSettings rs_gen_vertices           {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "gen_vertices_v"
+      geometryShader "gen_vertices_g"
+    }
+    RenderSettings rs_gen_indices            {
+      cullParams     "_CullNoCull"
+      blendParams    "_BlendDefault"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "gen_indices_v"
+      geometryShader "gen_indices_g"
+    }
+
+   
+    RenderSettings rs_draw_rock_lo {
+      cullParams     "_CullDefault" 
+      blendParams    "BlendAlpha"//"_BlendDefault"//"BlendColor_AddAlpha"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "draw_rock_lo_v"
+      fragmentShader "draw_rock_lo_f"
+    }
+    RenderSettings rs_draw_rock_med {
+      cullParams     "_CullDefault" 
+      blendParams    "BlendAlpha"//"_BlendDefault"//"BlendColor_AddAlpha"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "draw_rock_med_v"
+      fragmentShader "draw_rock_med_f"
+    }
+    RenderSettings rs_draw_rock_hi {
+      cullParams     "_CullDefault" 
+      blendParams    "BlendAlpha"//"_BlendDefault"//"BlendColor_AddAlpha"
+      depthParams    "_DepthDefault"
+      stencilParams  "_StencilDefault"
+      rasterParams   "_RasterDefault"
+      vertexShader   "draw_rock_hi_v"
+      fragmentShader "draw_rock_hi_f"
+    }
+   
+    //RenderSettings rs_draw_bkg {
+    //  cullParams     "_CullNoCull"
+    //  blendParams    "_BlendDefault"
+    //  depthParams    "_DepthDefault"
+    //  stencilParams  "_StencilDefault"
+    //  rasterParams   "_RasterDefault"
+    //  vertexShader   "bkg_v"
+    //  geometryShader ""
+    //  fragmentShader "bkg_f"
+    //}
+   
+    RenderSettings rs_downsample_glow {
+      cullParams "_CullNoCull"
+      blendParams "BlendLineblur"
+      depthParams "_DepthNoTest"
+      stencilParams "_StencilDefault"
+      rasterParams "_RasterDefault"
+      vertexShader "decal2D_scale_v"
+      fragmentShader "downsample_glow_f"
+    }
+    RenderSettings rs_lineblur {
+      cullParams "_CullNoCull"
+      blendParams "BlendLineblur"
+      depthParams "_DepthNoTest"
+      stencilParams "_StencilDefault"
+      rasterParams "_RasterDefault"
+      vertexShader "decal2D_scale_v"
+      fragmentShader "lineblur_f"
+    }
+    RenderSettings rs_composite {
+      cullParams "_CullNoCull"
+      blendParams "_BlendDefault"
+      depthParams "_DepthNoTest"
+      stencilParams "_StencilDefault"
+      rasterParams "_RasterDefault"
+      vertexShader "decal2D_scale_v"
+      fragmentShader "composite_f"
+    }
+    
+    RenderSettings rs_helpscr {
+      cullParams "_CullNoCull"
+      blendParams "BlendAlpha"
+      depthParams "_DepthNoTest"
+      stencilParams "_StencilDefault"
+      rasterParams "_RasterDefault"
+      vertexShader "decal2D_1to1pix_v"
+      fragmentShader "helpscr_f"
+    }
+    RenderSettings rs_logo {
+      cullParams "_CullNoCull"
+      blendParams "_BlendAlpha"
+      depthParams "_DepthNoTest"
+      stencilParams "_StencilDefault"
+      rasterParams "_RasterDefault"
+      vertexShader "logo_v"
+      fragmentShader "logo_f"
+    }
+  
+  ] // renderSettings
+  
+  shapes [  
+
+    Shape build_density_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 0
+      sortSet 2
+      sortType none
+      transform "_identityTransform"
+      numInstances 0       //UPDATE
+      renderSettings "rs_build_density"
+      vShaderParams [
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        ConstantBufferRef { paramName "ChunkCB" referencedNode "g_ChunkCB" }
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_med" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+        ConstantBuffer {
+          paramName "MyCB"
+          constants [	
+            MiscParam { paramName "viewportDim" param viewportDim }
+          ]
+        }
+      ]
+      fShaderParams [
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_hi" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+        ConstantBufferRef { paramName "g_GlobalRockCB" referencedNode "g_GlobalRockCB" }      
+        TextureParam { paramName "noiseVol0" texture "hypernoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "noiseVol1" texture "hypernoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "noiseVol2" texture "hypernoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "noiseVol3" texture "hypernoise_03" samplerState "NearestClamp" }
+        TextureParam { paramName "packedNoiseVol0" texture "packednoise_00" samplerState "LinearRepeat"  }
+        TextureParam { paramName "packedNoiseVol1" texture "packednoise_01" samplerState "NearestRepeat" }
+        TextureParam { paramName "packedNoiseVol2" texture "packednoise_02" samplerState "LinearClamp"  }
+        TextureParam { paramName "packedNoiseVol3" texture "packednoise_03" samplerState "NearestClamp" }
+      ]
+      geometry "quadProxy_geo"
+    }
+
+
+    Shape list_nonempty_cells_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortSet 2 sortType none transform "_identityTransform"
+      numInstances 0  // --> CODE MUST SET THIS TO THE # OF Z SLICES (cells) PER CHUNK
+      renderSettings "rs_list_nonempty_cells"
+      vShaderParams [ 
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_hi" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+      ]
+      gShaderParams [ ]
+      fShaderParams [ ]
+      geometry "dummy_corners" //KIV - since we need extra row @ edges - was "dummy_cells"
+    }
+    Shape list_verts_to_generate_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortSet 2 sortType none transform "_identityTransform"
+      numInstances 1
+      renderSettings "rs_list_verts_to_generate"
+      vShaderParams [ ]
+      gShaderParams [ ]
+      fShaderParams [ ]
+      geometry "nonempty_cell_list_geom"
+    }
+    Shape clear_vertex_IDs_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortType none transform "_identityTransform"
+      sortSet 1 
+      numInstances 0    // MUST BE SET BY CODE
+      renderSettings "rs_clear_vertex_IDs"
+      vShaderParams [ ]
+      gShaderParams [ ]
+      fShaderParams [ ]
+      geometry "quadProxy_geo"
+    }
+    Shape splat_vertex_IDs_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortType none transform "_identityTransform"
+      sortSet 3 
+      numInstances 1
+      renderSettings "rs_splat_vertex_IDs"
+      vShaderParams [ 
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_med" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+      ]
+      gShaderParams [ ]
+      fShaderParams [ ]
+      geometry "vert_list_geom"
+    }
+    Shape gen_vertices_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortSet 2 sortType none transform "_identityTransform"
+      numInstances 1
+      renderSettings "rs_gen_vertices"
+      vShaderParams [ 
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_lo" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+      ]
+      gShaderParams [ ]
+      fShaderParams [ ]
+      geometry "vert_list_geom"
+    }
+    Shape gen_indices_shape {
+      cull never sphereCenter 0 0 0 sphereRadius 0 sortSet 2 sortType none transform "_identityTransform"
+      numInstances 1
+      renderSettings "rs_gen_indices"
+      vShaderParams [ ]
+      gShaderParams [ 
+        ConstantBufferRef { paramName "LodCB"   referencedNode "g_LodCB_hi" } //each of the LodCB's has to have a shader that uses it, to provide its layout info to the engine!
+      ]
+      fShaderParams [ ]
+      geometry "nonempty_cell_list_geom"
+    }
+
+
+    Shape draw_rock_lo_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 1
+      sortSet 90
+      sortType front_to_back
+      transform "_identityTransform"
+      renderSettings "rs_draw_rock_lo"
+      vShaderParams [ ]
+      fShaderParams [
+        ConstantBuffer {
+          paramName "ColorCB"
+          constants [	
+            FloatParam { paramName "color" value 1 1 1 0 }
+          ]
+        }
+      ]
+      geometry "" //"ib_000"
+    }
+    Shape draw_rock_med_opaque_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 1
+      sortSet 90
+      sortType front_to_back
+      transform "_identityTransform"
+      renderSettings "rs_draw_rock_med"
+      vShaderParams [ ]
+      fShaderParams [
+        ConstantBuffer {
+          paramName "ColorCB"
+          constants [	
+            FloatParam { paramName "color" value 1 1 1 0 }
+          ]
+        }
+      ]
+      geometry "" //"ib_000"
+    }
+    Shape draw_rock_med_alpha_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 1
+      sortSet 90
+      sortType front_to_back
+      transform "_identityTransform"
+      renderSettings "rs_draw_rock_med"
+      vShaderParams [ ]
+      fShaderParams [
+        ConstantBuffer {
+          paramName "ColorCB"
+          constants [	
+            FloatParam { paramName "color" value 1 1 1 0 }
+          ]
+        }
+      ]
+      geometry "" //"ib_000"
+    }
+    Shape draw_rock_hi_opaque_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 1
+      sortSet 90
+      sortType front_to_back
+      transform "_identityTransform"
+      renderSettings "rs_draw_rock_hi"
+      vShaderParams [ ]
+      fShaderParams [
+        ConstantBuffer {
+          paramName "ColorCB"
+          constants [	
+            FloatParam { paramName "color" value 1 1 1 0 }
+          ]
+        }
+      ]
+      geometry "" //"ib_000"
+    }
+    Shape draw_rock_hi_alpha_shape {
+      cull never
+      sphereCenter 0 0 0
+      sphereRadius 1
+      sortSet 90
+      sortType front_to_back
+      transform "_identityTransform"
+      renderSettings "rs_draw_rock_hi"
+      vShaderParams [ ]
+      fShaderParams [
+        ConstantBuffer {
+          paramName "ColorCB"
+          constants [	
+            FloatParam { paramName "color" value 1 1 1 0 }
+          ]
+        }
+      ]
+      geometry "" //"ib_000"
+    }
+
+ 
+  
+    //ShapeGroup draw_bkg_group {
+    //  children [
+    //    Shape draw_bkg_shape {
+    //      cull never
+    //      sphereCenter 0 0 0
+    //      sphereRadius 0
+    //      sortSet 2
+    //      sortType none
+    //      transform "_identityTransform"
+    //      renderSettings "rs_draw_bkg"
+    //      geometry "QuadGeomBlurBox"
+    //    }
+    //  ] // children
+    //}
+    
+    ShapeGroup nvDownsampleFloatPass_group {
+      children [
+        Shape quadProxy_shape_nvDownsampleFloatPass {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_downsample_glow"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+    ShapeGroup nvBlurFloatPass1_group {
+      children [
+        Shape quadProxy_shape_nvBlurFloatPass1 {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_lineblur"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  // NOTE: THIS OFF-AXIS BLUR FOR PASSES 1+2 (of 4) RULEZ
+                  paramName "blurAxisAndTexelBias"
+                  value 1.2 0.2 0.5 0.5
+                }
+                MiscParam {
+                  paramName "g_srcTexSize"
+                  param textureDim
+                  referencedObject "postproc_A"
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "postproc_A"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+    ShapeGroup nvBlurFloatPass2_group {
+      children [
+        Shape quadProxy_shape_nvBlurFloatPass2 {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_lineblur"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  // NOTE: THIS OFF-AXIS BLUR FOR PASSES 1+2 (of 4) RULEZ
+                  paramName "blurAxisAndTexelBias"
+                  value -0.2 1.2 -0.5 -0.5
+                }
+                MiscParam {
+                  paramName "g_srcTexSize"
+                  param textureDim
+                  referencedObject "postproc_B"
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "postproc_B"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+    ShapeGroup nvBlurFloatPass3_group {
+      children [
+        Shape quadProxy_shape_nvBlurFloatPass3 {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_lineblur"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "blurAxisAndTexelBias"
+                  value 0.6 0 0.5 0.5
+                }
+                MiscParam {
+                  paramName "g_srcTexSize"
+                  param textureDim
+                  referencedObject "postproc_A"
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "postproc_A"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+    ShapeGroup nvBlurFloatPass4_group {
+      children [
+        Shape quadProxy_shape_nvBlurFloatPass4 {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_lineblur"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "blurAxisAndTexelBias"
+                  value 0 0.6 -0.5 -0.5
+                }
+                MiscParam {
+                  paramName "g_srcTexSize"
+                  param textureDim
+                  referencedObject "postproc_B"
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "postproc_B"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+    ShapeGroup nvPrimaryRenderPass_group {
+      children [
+        
+        Shape quadProxy_shape_nvPrimaryRenderPass {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 2
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_composite"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+                MiscParam {
+                  paramName "viewportDim"
+                  param viewportDim
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 1 1 1 0
+                  min 0 0 0 0
+                  max 1 1 1 0
+                }
+              ]
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ]
+    }
+
+
+    ShapeGroup helpscr_group {
+      children [
+        Shape helpscr_shape {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 99
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_helpscr"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                MiscParam {
+                  paramName "srcTexSize"
+                  param textureDim
+                  referencedObject "helpscrTex"
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "opacity"
+                  value 0 0 0 0
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "helpscrTex"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+
+        Shape aboutbox_shape {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 99
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_helpscr"
+          vShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                MiscParam {
+                  paramName "srcTexSize"
+                  param textureDim
+                  referencedObject "aboutboxTex"
+                }
+              ]
+            }
+          ]
+          fShaderParams [
+            ConstantBuffer {
+              paramName "MyCB"
+              constants [	
+                FloatParam {
+                  paramName "opacity"
+                  value 0 0 0 0
+                }
+              ]
+            }
+            TextureParam {
+              paramName "tex"
+              texture "aboutboxTex"
+              samplerState "LinearClamp"
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+        
+      ]
+    } 
+
+    ShapeGroup nvLogo_group {
+      children [
+        Shape nvLogo_quadProxy_shape {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 500
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_logo"
+          fShaderParams [
+            TextureParam {
+              paramName "logo"
+              texture "logo_texture"
+              samplerState "LinearClamp" // "LinearClamp"
+            }
+            ConstantBuffer {
+              paramName "LogoF_CB"
+              constants [	
+                FloatParam { paramName "opacity" value 1 0 0 0 }            
+                FloatParam { paramName "streaky" value 1 0 0 0 }            
+                MiscParam { paramName "time" param time }
+              ]
+            }
+          ]
+          vShaderParams [
+            ConstantBuffer {
+              paramName "LogoV_CB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 0.16 0.20 1 0
+                }
+                FloatParam {
+                  paramName "offset"
+                  value 0.875 -0.555 0 0
+                }
+              ]
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+        Shape clickhelp_shape {
+          cull never
+          sphereCenter 0 0 0
+          sphereRadius 0
+          sortSet 500
+          sortType none
+          transform "_identityTransform"
+          renderSettings "rs_logo"
+          fShaderParams [
+            TextureParam {
+              paramName "logo"
+              texture "clickhelp_texture"
+              samplerState "LinearClamp" // "LinearClamp"
+            }
+            ConstantBuffer {
+              paramName "LogoF_CB"
+              constants [	
+                FloatParam { paramName "opacity" value 0 0 0 0 }            
+                FloatParam { paramName "streaky" value 0 0 0 0 }            
+                MiscParam { paramName "time" param time }
+              ]
+            }
+          ]
+          vShaderParams [
+            ConstantBuffer {
+              paramName "LogoV_CB"
+              constants [	
+                FloatParam {
+                  paramName "scale"
+                  value 0.16 0.20 1 0
+                }
+                FloatParam {
+                  paramName "offset"
+                  value 0.875 -0.555 0 0
+                }
+              ]
+            }
+          ]
+          geometry "quadProxy_geo"
+        }
+      ] // children
+    }
+
+      
+  ] // shapes
+  geometries [
+    Mesh dummy_cells {        // there are ~63x63 of these
+      useRestartPrimIndex 0
+      data [
+        Pnt2fArray {
+          channelName "a2v.uv_write"
+          animationSet -1
+          // CODE WILL FILL THIS WITH VALUES
+          //value [ -1 1 0.5 , ]       //UPDATE
+        }
+        Pnt2fArray {
+          channelName "a2v.uv_read"
+          animationSet -1
+          // CODE WILL FILL THIS WITH VALUES
+          //value [ -1 1 0.5 , ]       //UPDATE
+        }
+      ] // data
+      indices [
+        VertexIndexNonIndexed {
+          primType point_list
+          numVertices 0   // CODE WILL ADJUST THIS VALUE       //UPDATE
+        }
+      ] // indices
+    }
+    Mesh dummy_corners {        // there are ~64x64 of these
+      useRestartPrimIndex 0
+      data [
+        Pnt2fArray {
+          channelName "a2v.uv_write"
+          animationSet -1
+          // CODE WILL FILL THIS WITH VALUES
+          //value [ -1 1 0.5 , ]       //UPDATE
+        }
+        Pnt2fArray {
+          channelName "a2v.uv_read"
+          animationSet -1
+          // CODE WILL FILL THIS WITH VALUES
+          //value [ -1 1 0.5 , ]       //UPDATE
+        }
+      ] // data
+      indices [
+        VertexIndexNonIndexed {
+          primType point_list
+          numVertices 0   // CODE WILL ADJUST THIS VALUE       //UPDATE
+        }
+      ] // indices
+    }
+    Mesh quadProxy_geo {
+      useRestartPrimIndex 0
+      data [
+        Pnt3fArray {
+          channelName "a2v.objCoord"
+          animationSet -1
+          value [ -1 1 0.5 , -1 -1 0.5 , 1 1 0.5 , 1 -1 0.5 , ]
+        }
+        Vec2fArray {
+          channelName "a2v.tex"
+          animationSet -1
+          //value [ 0 0 , 0 1 , 1 0 , 1 1 , ]    // gl  rightside-up
+          value [ 0 1 , 0 0 , 1 1 , 1 0 , ]    // dx flipped, since we bypass proj. matrix
+        }
+      ] // data
+      indices [
+        VertexIndex {
+          primType tri_strip
+          indices [ 0 , 2 , 1 , 3 , ]
+        }
+      ] // indices
+    }
+    IndexedFaceSet QuadGeomBlurBox { 
+      data [
+        Pnt3fArray {
+          channelName "a2v.objCoord"
+          animationSet -1
+          value [   1.0 -1.0 -1.0 ,    1.0  1.0 -1.0 ,    1.0 -1.0  1.0 ,    1.0  1.0  1.0 ,    
+                   -1.0 -1.0  1.0 ,   -1.0  1.0  1.0 ,   -1.0 -1.0 -1.0 ,   -1.0  1.0 -1.0 ,   
+                    1.0  1.0  1.0 ,    1.0  1.0 -1.0 ,   -1.0  1.0  1.0 ,   -1.0  1.0 -1.0 ,   
+                    1.0 -1.0 -1.0 ,    1.0 -1.0  1.0 ,   -1.0 -1.0 -1.0 ,   -1.0 -1.0  1.0 ,  
+                    1.0 -1.0  1.0 ,    1.0  1.0  1.0 ,   -1.0 -1.0  1.0 ,   -1.0  1.0  1.0 ,  
+                   -1.0 -1.0 -1.0 ,   -1.0  1.0 -1.0 ,    1.0 -1.0 -1.0 ,    1.0  1.0 -1.0 , ]
+        }
+      ] // end data
+      indices [
+        VertexIndex {
+          primType tri_list
+          indices [ 
+             0 ,  2 ,  1 ,  2 ,  1 ,  3 , 
+             4 ,  6 ,  5 ,  6 ,  5 ,  7 , 
+             8 , 10 ,  9 , 10 ,  9 , 11 , 
+            12 , 14 , 13 , 14 , 13 , 15 , 
+            16 , 18 , 17 , 18 , 17 , 19 , 
+            20 , 22 , 21 , 22 , 21 , 23 , 
+          ]
+        }
+      ] // end indices
+    } // end indexedfaceset
+
+    
+    // VERTEX BUFFERS
+    // note: at VoxelDim==33, maxVertexCount of 3200 almost cuts it.
+    StreamOutGeometry vb_000 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_000 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_000 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_001 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_001 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_001 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_002 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_002 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_002 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_003 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_003 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_003 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_004 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_004 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_004 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_005 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_005 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_005 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_006 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_006 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_006 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_007 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_007 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_007 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_008 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_008 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_008 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_009 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_009 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_009 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_010 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_010 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_010 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_011 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_011 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_011 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_012 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_012 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_012 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_013 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_013 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_013 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_014 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_014 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_014 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_015 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_015 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_015 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_016 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_016 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_016 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_017 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_017 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_017 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_018 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_018 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_018 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_019 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_019 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_019 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_020 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_020 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_020 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_021 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_021 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_021 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_022 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_022 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_022 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_023 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_023 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_023 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_024 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_024 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_024 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_025 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_025 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_025 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_026 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_026 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_026 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_027 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_027 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_027 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_028 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_028 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_028 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_029 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_029 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_029 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_030 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_030 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_030 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_031 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_031 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_031 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_032 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_032 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_032 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_033 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_033 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_033 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_034 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_034 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_034 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_035 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_035 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_035 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_036 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_036 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_036 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_037 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_037 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_037 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_038 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_038 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_038 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_039 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_039 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_039 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_040 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_040 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_040 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_041 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_041 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_041 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_042 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_042 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_042 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_043 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_043 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_043 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_044 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_044 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_044 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_045 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_045 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_045 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_046 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_046 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_046 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_047 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_047 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_047 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_048 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_048 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_048 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_049 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_049 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_049 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_050 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_050 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_050 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_051 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_051 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_051 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_052 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_052 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_052 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_053 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_053 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_053 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_054 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_054 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_054 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_055 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_055 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_055 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_056 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_056 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_056 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_057 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_057 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_057 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_058 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_058 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_058 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_059 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_059 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_059 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_060 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_060 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_060 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_061 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_061 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_061 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_062 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_062 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_062 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_063 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_063 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_063 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_064 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_064 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_064 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_065 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_065 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_065 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_066 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_066 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_066 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_067 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_067 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_067 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_068 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_068 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_068 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_069 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_069 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_069 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_070 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_070 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_070 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_071 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_071 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_071 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_072 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_072 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_072 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_073 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_073 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_073 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_074 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_074 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_074 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_075 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_075 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_075 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_076 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_076 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_076 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_077 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_077 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_077 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_078 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_078 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_078 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_079 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_079 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_079 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_080 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_080 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_080 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_081 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_081 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_081 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_082 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_082 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_082 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_083 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_083 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_083 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_084 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_084 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_084 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_085 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_085 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_085 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_086 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_086 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_086 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_087 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_087 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_087 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_088 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_088 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_088 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_089 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_089 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_089 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_090 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_090 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_090 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_091 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_091 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_091 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_092 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_092 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_092 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_093 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_093 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_093 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_094 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_094 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_094 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_095 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_095 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_095 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_096 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_096 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_096 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_097 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_097 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_097 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_098 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_098 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_098 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_099 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_099 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_099 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_100 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_100 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_100 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_101 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_101 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_101 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_102 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_102 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_102 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_103 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_103 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_103 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_104 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_104 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_104 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_105 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_105 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_105 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_106 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_106 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_106 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_107 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_107 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_107 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_108 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_108 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_108 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_109 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_109 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_109 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_110 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_110 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_110 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_111 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_111 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_111 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_112 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_112 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_112 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_113 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_113 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_113 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_114 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_114 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_114 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_115 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_115 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_115 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_116 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_116 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_116 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_117 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_117 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_117 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_118 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_118 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_118 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_119 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_119 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_119 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_120 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_120 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_120 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_121 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_121 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_121 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_122 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_122 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_122 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_123 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_123 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_123 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_124 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_124 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_124 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_125 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_125 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_125 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_126 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_126 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_126 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_127 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_127 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_127 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_128 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_128 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_128 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_129 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_129 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_129 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_130 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_130 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_130 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_131 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_131 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_131 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_132 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_132 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_132 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_133 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_133 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_133 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_134 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_134 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_134 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_135 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_135 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_135 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_136 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_136 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_136 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_137 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_137 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_137 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_138 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_138 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_138 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_139 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_139 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_139 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_140 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_140 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_140 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_141 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_141 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_141 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_142 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_142 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_142 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_143 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_143 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_143 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_144 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_144 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_144 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_145 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_145 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_145 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_146 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_146 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_146 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_147 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_147 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_147 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_148 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_148 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_148 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_149 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_149 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_149 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_150 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_150 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_150 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_151 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_151 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_151 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_152 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_152 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_152 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_153 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_153 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_153 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_154 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_154 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_154 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_155 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_155 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_155 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_156 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_156 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_156 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_157 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_157 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_157 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_158 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_158 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_158 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_159 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_159 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_159 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_160 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_160 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_160 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_161 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_161 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_161 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_162 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_162 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_162 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_163 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_163 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_163 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_164 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_164 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_164 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_165 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_165 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_165 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_166 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_166 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_166 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_167 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_167 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_167 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_168 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_168 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_168 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_169 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_169 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_169 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_170 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_170 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_170 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_171 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_171 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_171 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_172 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_172 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_172 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_173 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_173 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_173 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_174 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_174 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_174 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_175 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_175 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_175 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_176 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_176 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_176 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_177 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_177 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_177 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_178 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_178 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_178 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_179 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_179 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_179 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_180 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_180 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_180 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_181 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_181 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_181 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_182 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_182 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_182 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_183 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_183 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_183 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_184 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_184 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_184 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_185 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_185 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_185 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_186 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_186 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_186 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_187 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_187 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_187 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_188 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_188 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_188 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_189 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_189 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_189 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_190 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_190 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_190 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_191 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_191 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_191 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_192 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_192 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_192 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_193 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_193 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_193 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_194 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_194 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_194 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_195 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_195 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_195 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_196 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_196 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_196 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_197 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_197 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_197 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_198 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_198 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_198 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_199 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_199 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_199 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_200 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_200 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_200 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_201 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_201 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_201 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_202 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_202 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_202 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_203 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_203 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_203 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_204 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_204 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_204 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_205 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_205 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_205 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_206 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_206 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_206 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_207 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_207 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_207 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_208 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_208 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_208 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_209 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_209 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_209 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_210 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_210 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_210 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_211 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_211 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_211 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_212 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_212 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_212 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_213 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_213 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_213 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_214 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_214 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_214 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_215 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_215 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_215 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_216 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_216 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_216 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_217 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_217 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_217 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_218 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_218 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_218 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_219 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_219 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_219 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_220 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_220 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_220 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_221 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_221 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_221 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_222 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_222 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_222 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_223 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_223 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_223 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_224 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_224 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_224 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_225 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_225 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_225 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_226 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_226 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_226 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_227 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_227 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_227 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_228 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_228 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_228 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_229 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_229 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_229 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_230 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_230 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_230 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_231 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_231 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_231 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_232 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_232 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_232 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_233 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_233 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_233 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_234 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_234 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_234 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_235 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_235 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_235 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_236 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_236 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_236 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_237 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_237 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_237 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_238 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_238 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_238 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_239 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_239 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_239 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_240 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_240 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_240 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_241 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_241 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_241 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_242 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_242 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_242 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_243 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_243 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_243 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_244 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_244 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_244 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_245 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_245 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_245 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_246 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_246 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_246 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_247 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_247 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_247 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_248 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_248 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_248 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_249 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_249 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_249 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_250 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_250 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_250 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_251 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_251 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_251 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_252 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_252 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_252 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_253 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_253 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_253 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_254 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_254 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_254 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_255 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_255 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_255 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_256 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_256 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_256 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_257 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_257 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_257 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_258 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_258 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_258 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_259 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_259 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_259 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_260 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_260 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_260 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_261 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_261 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_261 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_262 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_262 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_262 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_263 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_263 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_263 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_264 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_264 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_264 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_265 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_265 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_265 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_266 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_266 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_266 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_267 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_267 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_267 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_268 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_268 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_268 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_269 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_269 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_269 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_270 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_270 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_270 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_271 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_271 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_271 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_272 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_272 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_272 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_273 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_273 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_273 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_274 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_274 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_274 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_275 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_275 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_275 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_276 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_276 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_276 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_277 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_277 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_277 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_278 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_278 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_278 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_279 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_279 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_279 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_280 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_280 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_280 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_281 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_281 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_281 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_282 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_282 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_282 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_283 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_283 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_283 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_284 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_284 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_284 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_285 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_285 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_285 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_286 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_286 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_286 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_287 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_287 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_287 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_288 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_288 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_288 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_289 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_289 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_289 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_290 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_290 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_290 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_291 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_291 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_291 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_292 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_292 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_292 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_293 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_293 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_293 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_294 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_294 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_294 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_295 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_295 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_295 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_296 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_296 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_296 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_297 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_297 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_297 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_298 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_298 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_298 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+    StreamOutGeometry vb_299 { maxVertexCount 6400 outputPrimType point_list data [ Pnt4fArray vb_wc_299 { channelName "a2v.worldCoordAmbo" animationSet -1 value [ ] } Pnt4fArray vb_wn_299 { channelName "a2v.worldNormal"    animationSet -1 value [ ] } ] }
+
+
+
+    
+    // INDEX BUFFERS
+    // each index buffer holds point primitives that have a single int3
+    // the int3 holds the 3 indices that make up a triangle
+    // NOTE: # indices should be roughly 6X the # of vertices.
+    StreamOutGeometry ib_000  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_000 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_001  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_001 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_002  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_002 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_003  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_003 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_004  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_004 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_005  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_005 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_006  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_006 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_007  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_007 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_008  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_008 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_009  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_009 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_010  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_010 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_011  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_011 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_012  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_012 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_013  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_013 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_014  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_014 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_015  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_015 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_016  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_016 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_017  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_017 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_018  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_018 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_019  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_019 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_020  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_020 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_021  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_021 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_022  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_022 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_023  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_023 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_024  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_024 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_025  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_025 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_026  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_026 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_027  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_027 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_028  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_028 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_029  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_029 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_030  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_030 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_031  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_031 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_032  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_032 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_033  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_033 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_034  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_034 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_035  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_035 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_036  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_036 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_037  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_037 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_038  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_038 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_039  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_039 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_040  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_040 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_041  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_041 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_042  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_042 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_043  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_043 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_044  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_044 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_045  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_045 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_046  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_046 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_047  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_047 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_048  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_048 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_049  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_049 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_050  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_050 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_051  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_051 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_052  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_052 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_053  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_053 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_054  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_054 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_055  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_055 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_056  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_056 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_057  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_057 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_058  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_058 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_059  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_059 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_060  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_060 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_061  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_061 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_062  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_062 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_063  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_063 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_064  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_064 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_065  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_065 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_066  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_066 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_067  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_067 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_068  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_068 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_069  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_069 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_070  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_070 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_071  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_071 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_072  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_072 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_073  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_073 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_074  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_074 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_075  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_075 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_076  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_076 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_077  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_077 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_078  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_078 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_079  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_079 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_080  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_080 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_081  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_081 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_082  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_082 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_083  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_083 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_084  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_084 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_085  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_085 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_086  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_086 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_087  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_087 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_088  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_088 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_089  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_089 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_090  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_090 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_091  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_091 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_092  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_092 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_093  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_093 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_094  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_094 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_095  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_095 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_096  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_096 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_097  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_097 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_098  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_098 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_099  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_099 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_100  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_100 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_101  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_101 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_102  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_102 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_103  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_103 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_104  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_104 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_105  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_105 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_106  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_106 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_107  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_107 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_108  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_108 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_109  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_109 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_110  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_110 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_111  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_111 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_112  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_112 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_113  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_113 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_114  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_114 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_115  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_115 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_116  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_116 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_117  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_117 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_118  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_118 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_119  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_119 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_120  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_120 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_121  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_121 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_122  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_122 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_123  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_123 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_124  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_124 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_125  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_125 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_126  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_126 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_127  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_127 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_128  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_128 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_129  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_129 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_130  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_130 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_131  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_131 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_132  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_132 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_133  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_133 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_134  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_134 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_135  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_135 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_136  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_136 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_137  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_137 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_138  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_138 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_139  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_139 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_140  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_140 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_141  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_141 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_142  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_142 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_143  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_143 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_144  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_144 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_145  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_145 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_146  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_146 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_147  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_147 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_148  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_148 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_149  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_149 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_150  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_150 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_151  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_151 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_152  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_152 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_153  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_153 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_154  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_154 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_155  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_155 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_156  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_156 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_157  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_157 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_158  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_158 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_159  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_159 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_160  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_160 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_161  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_161 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_162  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_162 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_163  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_163 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_164  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_164 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_165  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_165 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_166  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_166 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_167  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_167 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_168  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_168 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_169  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_169 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_170  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_170 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_171  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_171 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_172  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_172 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_173  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_173 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_174  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_174 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_175  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_175 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_176  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_176 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_177  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_177 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_178  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_178 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_179  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_179 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_180  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_180 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_181  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_181 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_182  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_182 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_183  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_183 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_184  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_184 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_185  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_185 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_186  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_186 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_187  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_187 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_188  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_188 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_189  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_189 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_190  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_190 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_191  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_191 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_192  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_192 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_193  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_193 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_194  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_194 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_195  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_195 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_196  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_196 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_197  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_197 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_198  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_198 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_199  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_199 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_200  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_200 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_201  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_201 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_202  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_202 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_203  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_203 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_204  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_204 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_205  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_205 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_206  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_206 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_207  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_207 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_208  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_208 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_209  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_209 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_210  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_210 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_211  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_211 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_212  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_212 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_213  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_213 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_214  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_214 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_215  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_215 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_216  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_216 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_217  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_217 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_218  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_218 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_219  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_219 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_220  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_220 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_221  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_221 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_222  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_222 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_223  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_223 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_224  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_224 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_225  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_225 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_226  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_226 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_227  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_227 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_228  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_228 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_229  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_229 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_230  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_230 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_231  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_231 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_232  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_232 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_233  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_233 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_234  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_234 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_235  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_235 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_236  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_236 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_237  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_237 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_238  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_238 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_239  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_239 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_240  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_240 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_241  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_241 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_242  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_242 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_243  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_243 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_244  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_244 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_245  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_245 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_246  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_246 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_247  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_247 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_248  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_248 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_249  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_249 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_250  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_250 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_251  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_251 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_252  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_252 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_253  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_253 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_254  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_254 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_255  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_255 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_256  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_256 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_257  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_257 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_258  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_258 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_259  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_259 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_260  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_260 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_261  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_261 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_262  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_262 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_263  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_263 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_264  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_264 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_265  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_265 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_266  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_266 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_267  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_267 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_268  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_268 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_269  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_269 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_270  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_270 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_271  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_271 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_272  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_272 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_273  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_273 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_274  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_274 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_275  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_275 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_276  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_276 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_277  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_277 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_278  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_278 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_279  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_279 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_280  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_280 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_281  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_281 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_282  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_282 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_283  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_283 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_284  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_284 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_285  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_285 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_286  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_286 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_287  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_287 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_288  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_288 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_289  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_289 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_290  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_290 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_291  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_291 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_292  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_292 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_293  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_293 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_294  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_294 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_295  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_295 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_296  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_296 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_297  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_297 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_298  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_298 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    StreamOutGeometry ib_299  { maxVertexCount 32768 outputPrimType tri_list data [ UintArray idx_299 { channelName "a2v.index" animationSet -1 value [ ] } ] }
+    
+    StreamOutGeometry vert_list_geom { 
+      maxVertexCount 64000 
+      outputPrimType point_list 
+      data [ 
+        UintArray vert_list          { 
+          channelName "a2v.z8_y8_x8_null4_edgeNum4" animationSet -1 value [ ] 
+        } 
+      ] 
+    }
+    
+    StreamOutGeometry nonempty_cell_list_geom { 
+      maxVertexCount 64000
+      outputPrimType point_list 
+      data [ 
+        UintArray nonempty_cell_list { 
+          channelName "a2v.z8_y8_x8_case8"  animationSet -1 value [ ] 
+        }
+      ] 
+    }
+    
+  ] // end geometries
+}

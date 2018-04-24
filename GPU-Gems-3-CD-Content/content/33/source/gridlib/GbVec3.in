@@ -1,0 +1,1066 @@
+/*----------------------------------------------------------------------
+|
+| $Id: GbVec3.in,v 1.6 2002/08/01 07:58:48 prkipfer Exp $
+|
++---------------------------------------------------------------------*/
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec3<T>::operator==(const GbVec3<T>& p) const
+{ 
+  if (EPSILON == T(0.0))
+    return xyz[0]==p.xyz[0] && xyz[1]==p.xyz[1] && xyz[2]==p.xyz[2];
+  else
+    return GbMath<T>::Abs(xyz[0]-p.xyz[0]) <= EPSILON &&
+           GbMath<T>::Abs(xyz[1]-p.xyz[1]) <= EPSILON &&
+           GbMath<T>::Abs(xyz[2]-p.xyz[2]) <= EPSILON;
+}
+
+/*!
+  \param p The vector to compare to
+  \return True if vectors are \e not the same
+
+  This method compares self to the vector \a p. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec3<T>::operator!=(const GbVec3<T>& p) const
+{ 
+  if (EPSILON == T(0.0))
+    return xyz[0]!=p.xyz[0] || xyz[1]!=p.xyz[1] || xyz[2]!=p.xyz[2];
+  else
+    return GbMath<T>::Abs(xyz[0]-p.xyz[0]) > EPSILON ||
+           GbMath<T>::Abs(xyz[1]-p.xyz[1]) > EPSILON ||
+           GbMath<T>::Abs(xyz[2]-p.xyz[2]) > EPSILON;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a less-than ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool
+GbVec3<T>::operator< (const GbVec3<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+  }
+
+  // compare z values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[2]);
+  unsigned int uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 < uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has less-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a less-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec3<T>::operator<= (const GbVec3<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+  }
+
+  // compare z values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[2]);
+  unsigned int uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 < uiTest1 ) return true;
+  if ( uiTest0 > uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 <= uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a greater ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec3<T>::operator> (const GbVec3<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+  }
+
+  // compare z values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[2]);
+  unsigned int uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 > uiTest1;
+}
+
+/*!
+  \param rkVector The vector to compare to
+  \return True if self has greater-equal ordering than \a rkVector
+
+  This method compares self to the vector \a rkVector. The comparison is
+  done componentwise based on the coordinate values. It supports fuzzy logic.
+  The method establishes a greater-equal ordering in the sense of assigning 
+  importance to the dimensions: the dimensions are checked in Z-Y-X order
+  with early termination.
+
+  \sa EPSILON
+*/
+template <class T>
+INLINE GbBool 
+GbVec3<T>::operator>= (const GbVec3<T>& rkVector) const
+{
+  T fXTmp = rkVector.xyz[0], fYTmp = rkVector.xyz[1], fZTmp = rkVector.xyz[2];
+  if ( EPSILON > T(0.0) ) {
+    if ( GbMath<T>::Abs(xyz[0] - fXTmp) <= EPSILON ) fXTmp = xyz[0];
+    if ( GbMath<T>::Abs(xyz[1] - fYTmp) <= EPSILON ) fYTmp = xyz[1];
+    if ( GbMath<T>::Abs(xyz[2] - fZTmp) <= EPSILON ) fZTmp = xyz[2];
+  }
+
+  // compare z values
+  unsigned int uiTest0 = *(unsigned int*)&(xyz[2]);
+  unsigned int uiTest1 = *(unsigned int*)&fZTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare y values
+  uiTest0 = *(unsigned int*)&(xyz[1]);
+  uiTest1 = *(unsigned int*)&fYTmp;
+  if ( uiTest0 > uiTest1 ) return true;
+  if ( uiTest0 < uiTest1 ) return false;
+
+  // compare x values
+  uiTest0 = *(unsigned int*)&(xyz[0]);
+  uiTest1 = *(unsigned int*)&fXTmp;
+  return uiTest0 >= uiTest1;
+}
+
+/*!
+  \param p The vector to add
+  \return A sum vector
+
+  This method adds vector \a p to self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator+=(const GbVec3<T>& p)
+{ 
+  xyz[0]+=p.xyz[0]; xyz[1]+=p.xyz[1]; xyz[2]+=p.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to add
+  \return A sum vector
+
+  This method adds the scalar \a s to each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator+=(const T& s)
+{ 
+  xyz[0]+=s; xyz[1]+=s; xyz[2]+=s; 
+  return *this; 
+}
+
+/*!
+  \param p The vector to subtract
+  \return A sum vector
+
+  This method subtracts vector \a p from self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator-=(const GbVec3<T>& p)
+{ 
+  xyz[0]-=p.xyz[0]; xyz[1]-=p.xyz[1]; xyz[2]-=p.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return A sum vector
+
+  This method subtracts the scalar \a s from each component of self and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator-=(const T& s)
+{ 
+  xyz[0]-=s; xyz[1]-=s; xyz[2]-=s; 
+  return *this; 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return A multiplied vector
+
+  This method multiplies vector \a v and self componentwise and returns 
+  a reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator*=(const GbVec3<T>& v)
+{ 
+  xyz[0]*=v.xyz[0]; xyz[1]*=v.xyz[1]; xyz[2]*=v.xyz[2]; 
+  return *this; 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This methods scales self by the integral value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator*=(const int& s)
+{ 
+  T val(s);
+  xyz[0]*=val; xyz[1]*=val; xyz[2]*=val; 
+  return *this; 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This methods scales self by the floating point value \a s and returns a
+  reference to self.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator*=(const T& s)
+{ 
+  xyz[0]*=s; xyz[1]*=s; xyz[2]*=s; 
+  return *this; 
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides self componentwise with the values in \a v and returns
+  a reference to self. If a component of the divisor vector \a v is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator/=(const GbVec3<T>& v)
+{ 
+  if ( v.xyz[0] != T(0.0) ) 
+    xyz[0] /= v.xyz[0];
+  else
+    xyz[0] = std::numeric_limits<T>::infinity();
+
+  if ( v.xyz[1] != T(0.0) ) 
+    xyz[1] /= v.xyz[1];
+  else
+    xyz[1] = std::numeric_limits<T>::infinity();
+
+  if ( v.xyz[2] != T(0.0) ) 
+    xyz[2] /= v.xyz[2];
+  else
+    xyz[2] = std::numeric_limits<T>::infinity();
+
+  return *this; 
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the floating point scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator/=(const T& s)
+{ 
+  if ( s != T(0.0) ) {
+    T fInvScalar = T(1.0)/s;
+    xyz[0] *= fInvScalar;
+    xyz[1] *= fInvScalar;
+    xyz[2] *= fInvScalar;
+  }
+  else {
+    xyz[0] = std::numeric_limits<T>::infinity();
+    xyz[1] = std::numeric_limits<T>::infinity();
+    xyz[2] = std::numeric_limits<T>::infinity();
+  }
+
+  return *this; 
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The divided vector
+
+  This method divides self componentwise by the integral scalar \a s and returns
+  a reference to self. If \a s is zero, 
+  the result is set to infinity.
+*/
+template <class T>
+INLINE GbVec3<T>& 
+GbVec3<T>::operator/=(const int& s)
+{ 
+  T val(s);
+  if ( s != 0 ) {
+    T fInvScalar = T(1.0)/val;
+    xyz[0] *= fInvScalar;
+    xyz[1] *= fInvScalar;
+    xyz[2] *= fInvScalar;
+  }
+  else {
+    xyz[0] = std::numeric_limits<T>::infinity();
+    xyz[1] = std::numeric_limits<T>::infinity();
+    xyz[2] = std::numeric_limits<T>::infinity();
+  }
+
+  return *this; 
+}
+
+/*!
+  \param p The vector to add
+  \return The sum vector
+
+  This method adds self and the vector \a p componentwise and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator+(const GbVec3<T>& p) const
+{ 
+  return GbVec3<T>( xyz[0]+p.xyz[0], xyz[1]+p.xyz[1], xyz[2]+p.xyz[2] ); 
+}
+
+/*!
+  \param s The scalar to add
+  \return The sum vector
+
+  This method adds a scalar to each component of self and returns the sum
+  vector.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator+(const T& s) const
+{ 
+  return GbVec3<T>( xyz[0]+s, xyz[1]+s, xyz[2]+s ); 
+}
+
+/*!
+  \param p The vector to subtract
+  \return The sum vector
+
+  This method subtracts vector \a p from self componentwise and returns the
+  sum vector.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator-(const GbVec3<T>& p) const
+{ 
+  return GbVec3<T>( xyz[0]-p.xyz[0], xyz[1]-p.xyz[1], xyz[2]-p.xyz[2] ); 
+}
+
+/*!
+  \param s The scalar to subtract
+  \return The sum vector
+
+  This method subtracts a scalar from each component of self and returns 
+  the sum vector.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator-(const T& s) const
+{ 
+  return GbVec3<T>( xyz[0]-s, xyz[1]-s, xyz[2]-s ); 
+}
+
+/*!
+  \return The inverted vector
+
+  This method returns the inverted self vector.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator-() const
+{ 
+  return GbVec3<T>( -xyz[0], -xyz[1], -xyz[2] ); 
+}
+
+/*!
+  \param s The integral scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the integral value \a s.
+*/
+template <class T>
+INLINE GbVec3<T>  
+GbVec3<T>::operator*(const int& s) const
+{ 
+  T val(s);
+  return GbVec3<T>( xyz[0]*val, xyz[1]*val, xyz[2]*val ); 
+}
+
+/*!
+  \param s The floating point scaling factor
+  \return The scaled vector
+
+  This method returns a vector that is self scaled by the floating point value
+  \a s.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator*(const T& s) const
+{ 
+  return GbVec3<T>( xyz[0]*s, xyz[1]*s, xyz[2]*s ); 
+}
+
+/*!
+  \param v The vector to multiply with
+  \return The multiplicated vector
+
+  This method returns a vector that is self multiplied componentwise with \a v.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator*(const GbVec3<T>& v) const
+{ 
+  return GbVec3<T>( xyz[0]*v.xyz[0], xyz[1]*v.xyz[1], xyz[2]*v.xyz[2] ); 
+}
+
+/*!
+  \param s The integral divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator/(const int& s) const
+{ 
+  T kQuot[3];
+  T ss(s);
+
+  if ( s != 0 ) {
+    T fInvScalar = T(1.0)/ss;
+    kQuot[0] = fInvScalar*xyz[0];
+    kQuot[1] = fInvScalar*xyz[1];
+    kQuot[2] = fInvScalar*xyz[2];
+    return GbVec3<T>(kQuot);
+  }
+  else
+    return GbVec3<T>(std::numeric_limits<T>::infinity());
+}
+
+/*!
+  \param s The floating point divisor scalar
+  \return The inverse scaled vector
+
+  This method returns a vector that is self scaled inversely: Each component is 
+  divided by \a s. If \a s is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator/(const T& s) const
+{ 
+  T kQuot[3];
+
+  if ( s != T(0.0) ) {
+    T fInvScalar = T(1.0)/s;
+    kQuot[0] = fInvScalar*xyz[0];
+    kQuot[1] = fInvScalar*xyz[1];
+    kQuot[2] = fInvScalar*xyz[2];
+    return GbVec3<T>(kQuot);
+  }
+  else
+    return GbVec3<T>(std::numeric_limits<T>::infinity());
+}
+
+/*!
+  \param v The divisor vector
+  \return The divided vector
+
+  This method divides each component of self by the component from \a v.
+  If a component of \a v is zero, the result is infinity.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator/(const GbVec3<T>& v) const
+{ 
+  T x=std::numeric_limits<T>::infinity();
+  T y=std::numeric_limits<T>::infinity();
+  T z=std::numeric_limits<T>::infinity();
+
+  if (v.xyz[0] != T(0.0)) x = xyz[0] / v.xyz[0];
+  if (v.xyz[1] != T(0.0)) y = xyz[1] / v.xyz[1];
+  if (v.xyz[2] != T(0.0)) z = xyz[2] / v.xyz[2];
+  
+  return GbVec3<T>(x,y,z);
+}
+
+/*!
+  \param a The second vector
+  \return The scalar product value
+
+  This method computes the scalar product (dot product) of
+  self and \a a.
+*/
+template <class T>
+INLINE T
+GbVec3<T>::operator|(const GbVec3<T> &a) const
+{ 
+  return xyz[0]*a.xyz[0] + xyz[1]*a.xyz[1] + xyz[2]*a.xyz[2];
+}
+
+/*!
+  \param a The second vector
+  \return The vector product vector
+
+  This method computes the vector product (cross product)
+  of self and \a a.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::operator^(const GbVec3<T>& a) const
+{ 
+  return GbVec3<T>( xyz[1]*a.xyz[2] - xyz[2]*a.xyz[1],
+		    xyz[2]*a.xyz[0] - xyz[0]*a.xyz[2],
+		    xyz[0]*a.xyz[1] - xyz[1]*a.xyz[0]); 
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE T &
+GbVec3<T>::operator[] (int i) 
+{
+  return xyz[i];
+}
+
+/*!
+  \param i The index of the component
+  \return The coordinate value
+
+  This method returns the \a i th component of self.
+*/
+template <class T>
+INLINE const T & 
+GbVec3<T>::operator[] (int i) const
+{ 
+  return xyz[i]; 
+}
+
+/*!
+  \return Pointer to the component storage
+
+  This method returns a pointer to the internal storage of the
+  components of self.
+
+  \warning The pointer will become invalid if the vector is destroyd.
+*/
+template <class T>
+INLINE const T * 
+GbVec3<T>::getVec3() const
+{ 
+  return xyz; 
+}
+
+/*!
+  \param x The X coordinate
+  \param y The Y coordinate
+  \param z The Z coordinate
+
+  This method fills the storage of its arguments with the components of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::getVec3(T &x, T &y, T &z) const
+{
+  x=xyz[0]; y=xyz[1]; z=xyz[2]; 
+}
+
+/*!
+  \param x A floating point scalar value
+
+  This method writes the given value \a x to the X component of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::setX(T x)
+{ 
+  xyz[0] = x; 
+}
+
+/*!
+  \param y A floating point scalar value
+
+  This method writes the given value \a y to the Y component of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::setY(T y)
+{ 
+  xyz[1] = y; 
+}
+
+/*!
+  \param z A floating point scalar value
+
+  This method writes the given value \a z to the Z component of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::setZ(T z)
+{ 
+  xyz[2] = z; 
+}
+
+/*!
+  \param f Array of three floating point values
+
+  This method writes the given array values \a f to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::setVec3(const T f[]) 
+{ 
+  xyz[0]=f[0]; xyz[1]=f[1]; xyz[2]=f[2]; 
+}
+
+/*!
+  \param x The X coordinate
+  \param y The Y coordinate
+  \param z The Z coordinate
+
+  This method writes the given values to the respective components of self.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::setVec3(T x,T y,T z) 
+{ 
+  xyz[0]=x; xyz[1]=y; xyz[2]=z; 
+}
+
+/*!
+  \return The length of self
+
+  This method computes the \f$ L^\infty \f$ norm of self, commonly referred 
+  to as the length of self and returns the value.
+
+  \internal For numerical stability of algorithms using this method, 
+            an epsilon environment around 1.0 is maintained
+            and vector lengths therein are forced to 1.0 by explicit comparison
+	    against the system specific \p numeric_limit::epsilon
+*/
+template <class T>
+INLINE T
+GbVec3<T>::getNorm() const
+{ 
+  // this is for numerical stability
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2];
+  T e = std::numeric_limits<T>::epsilon()*std::numeric_limits<T>::epsilon();
+  return (GbMath<T>::Abs(l-T(1.0)) < e) ? T(1.0) : GbMath<T>::Sqrt(l); 
+}
+
+/*!
+  \return The square length of self
+
+  This method computes the square length of self, in \f$ L^\infty \f$ norm. You
+  should consider using this method because its faster than \p getNorm()
+*/
+template <class T>
+INLINE T
+GbVec3<T>::getSquareNorm() const
+{ 
+  return xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2] ; 
+}
+
+/*!
+  \param tolerance Epsilon for numerical accuracy
+  \return A vector with direction of self and length 1.0
+
+  This method returns a normalized version of self. If numerical stability
+  of the algorithm using this method is a concern, you can put a small
+  epsilon value in \a tolerance that is used when comparing the current
+  length of self: If it falls below the tolerance, self is returned unmodified.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::getNormalized(T tolerance) const
+{
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2];
+  T e = tolerance*tolerance;
+  if (GbMath<T>::Abs(l-T(1.0)) < e)
+    return *this;
+  else if (l > e) {
+    T fac = T(1.0)/GbMath<T>::Sqrt(l);
+    return GbVec3<T>(xyz[0]*fac, xyz[1]*fac, xyz[2]*fac);
+  }
+  else
+    return GbVec3<T>::ZERO;
+}
+
+/*!
+  \param tolerance Epsilon for numerical accuracy
+  \return The length of self before normalization
+
+  This method modifies self by scaling it to length 1.0 and returns the
+  length self had before the operation. If numerical stability
+  of the algorithm using this method is a concern, you can put a small
+  epsilon value in \a tolerance that is used when comparing the current
+  length of self: If it falls below the tolerance, self is not modified.
+*/
+template <class T>
+INLINE T
+GbVec3<T>::normalize(T tolerance)
+{ 
+  T norm;
+  T l = xyz[0]*xyz[0] + xyz[1]*xyz[1] + xyz[2]*xyz[2];  
+  T e = tolerance*tolerance;
+  if (l < e) {
+    xyz[0]= xyz[1]= xyz[2]= T(0.0);
+    norm = T(0.0);
+  }
+  else if (GbMath<T>::Abs(l-T(1.0)) > e) {
+    norm = GbMath<T>::Sqrt(l);
+    T fac = T(1.0)/norm;
+    xyz[0] *= fac;
+    xyz[1] *= fac;
+    xyz[2] *= fac;
+  }
+  else
+    norm = T(1.0);
+  
+  return norm;
+}
+
+/*!
+  \return The orthonormal vector
+
+  Returns a vector that is orthonormal to self. Nothing
+  else can be assumed for the direction of this vector.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::getOrthogonalVector() const
+{
+  // Determine the  component with max. absolute value
+  int max= (GbMath<T>::Abs(xyz[0]) > GbMath<T>::Abs(xyz[1])) ? 0 : 1;
+  max= (GbMath<T>::Abs(xyz[max]) > GbMath<T>::Abs(xyz[2])) ? max : 2;
+
+  // Choose another axis than the one with max component and project
+  // orthogonal to self
+  GbVec3<T> vec(T(0.0));
+  vec[(max+1)%3]= T(1.0);
+  vec.normalize();
+  vec.projectNormalTo(this->getNormalized());
+  return vec;
+}
+
+/*!
+  \param v The plane normal
+  \return The projected vector
+
+  Projects self into a plane normal to the given vector \a v, which must
+  have unit length. Self is modified to the new vector and a reference to self is returned.
+*/
+template <class T>
+INLINE const GbVec3<T>&
+GbVec3<T>::projectNormalTo(const GbVec3<T> &v)
+{
+  T sprod = (*this|v);
+  xyz[0]= xyz[0] - v.xyz[0] * sprod;
+  xyz[1]= xyz[1] - v.xyz[1] * sprod;
+  xyz[2]= xyz[2] - v.xyz[2] * sprod;  
+  return *this;
+}
+
+/*!
+  \param n The surface normal
+  \return The reflected direction vector
+
+  Returns a new vector that is self (as an incoming
+  vector) reflected at a surface with \a n as the normal vector. 
+
+  \internal The normal \a n is reversed if (self|n) is positive.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::getReflectedAt(const GbVec3<T>& n) const
+{
+  GbVec3<T> nn= ((*this | n) > T(0.0)) ? -n : n;
+  return *this - nn * (T(2.0) * (nn|*this));
+}
+
+/*! 
+  \param n The surface normal
+  \param index The refraction index
+  \param total_reflection Will be set to true if total reflection has occurred
+  \return The refracted direction vector
+
+  Returns a new vector that is the self vector refracted
+  (as an incoming vector) at a surface with the normal vector \a n and a
+  \a index of refraction (ni/no, where ni is first along the self
+  vector). In case of total internal reflection \a total_reflection is
+  set to true and self is returned unmodified, otherwise
+  \a total_reflection is false.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::getRefractedAt(const GbVec3<T>& n, T index, GbBool& total_reflection ) const
+{
+  // Reorient n
+  GbVec3<T> nn= ((*this | n) > T(0.0)) ? -n : n;
+  GbVec3<T> tmp= (*this - nn * (nn|*this)) * index;
+  T length= T(1.0) - (tmp|tmp);
+  total_reflection= (length < T(0.0)) ? true : false;
+  return (length < T(0.0)) ? *this : nn * -GbMath<T>::Sqrt(length) + tmp;
+}
+
+/*!
+  \param a The second vector
+  \return The vector product vector
+
+  This method computes the vector product (cross product)
+  of self and \a a.
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::cross(const GbVec3<T> &a) const
+{ 
+  return GbVec3<T>( xyz[1]*a.xyz[2] - xyz[2]*a.xyz[1],
+		    xyz[2]*a.xyz[0] - xyz[0]*a.xyz[2],
+		    xyz[0]*a.xyz[1] - xyz[1]*a.xyz[0] ); 
+}
+
+/*!
+  \param a The second vector
+  \return The vector product vector
+
+  This method computes the vector product (cross product)
+  of self and \a a and normalizes the result.
+
+  \sa GbVec3::normalize
+*/
+template <class T>
+INLINE GbVec3<T>
+GbVec3<T>::unitCross(const GbVec3<T> &a) const
+{ 
+  GbVec3<T> kCross;
+
+  kCross[0] = xyz[1]*a.xyz[2] - xyz[2]*a.xyz[1];
+  kCross[1] = xyz[2]*a.xyz[0] - xyz[0]*a.xyz[2];
+  kCross[2] = xyz[0]*a.xyz[1] - xyz[1]*a.xyz[0];
+  kCross.normalize();
+
+  return kCross;
+}
+
+/*!
+  \param v Array of three vectors that are modified
+
+  This method orthonormalizes a basis given by three vectors.
+  If the input vectors are \f$ v_0 \f$ , \f$ v_1 \f$ , and \f$ v_2 \f$ , 
+  then the Gram-Schmidt orthonormalization produces vectors 
+  \f$ u_0 \f$ , \f$ u_1 \f$ , and \f$ u_2 \f$ as follows,
+  
+  \f[ u_0 = v_0/|v_0| \f]
+  \f[ u_1 = (v_1-(u_0*v_1)u_0)/|v_1-(u_0*v_1)u_0| \f]
+  \f[ u_2 = (v_2-(u_0*v_2)u_0-(u_1*v_2)u_1)/|v_2-(u_0*v_2)u_0-(u_1*v_2)u_1| \f]
+  
+  where \f$ |A| \f$ indicates length of vector \f$ A \f$ and \f$ A*B \f$ 
+  indicates the dot product of vectors \f$ A \f$ and \f$ B \f$ .
+*/
+template <class T>
+INLINE void
+GbVec3<T>::orthonormalize(GbVec3<T> v[/*3*/])
+{ 
+  // compute u0
+  v[0].normalize();
+
+  // compute u1
+  T fDot0 = v[0].dot(v[1]); 
+  v[1] -= fDot0*v[0];
+  v[1].normalize();
+
+  // compute u2
+  T fDot1 = v[1].dot(v[2]);
+  fDot0 = v[0].dot(v[2]);
+  v[2] -= fDot0*v[0] + fDot1*v[1];
+  v[2].normalize();
+}
+
+/*!	
+  \param u First basis vector
+  \param v Second basis vector
+  \param w Third basis vector
+  \param unitLenW Flag whether W is already unit length
+
+  This method generates an orthonormal basis from scratch in the parameter vectors. 
+  The vector \a w must be initialized to a nonzero vector. Building the new basis
+  starts from this vector.
+*/
+template <class T>
+INLINE void
+GbVec3<T>::generateOrthonormalBasis(GbVec3<T>& u, GbVec3<T>& v, GbVec3<T>& w, GbBool unitLenW)
+{
+  if ( !unitLenW ) w.normalize();
+
+  T fInvLength;
+
+  if ( GbMath<T>::Abs(w[0]) >= GbMath<T>::Abs(w[1]) ) {
+    // w[0] or w[2] is the largest magnitude component, swap them
+    fInvLength = T(1.0)/GbMath<T>::Sqrt(w[0]*w[0]+w[2]*w[2]);
+    u[0] = -w[2]*fInvLength;
+    u[1] = T(0.0);
+    u[2] = +w[0]*fInvLength;
+  }
+  else {
+    // w[1] or w[2] is the largest magnitude component, swap them
+    fInvLength = T(1.0)/GbMath<T>::Sqrt(w[1]*w[1]+w[2]*w[2]);
+    u[0] = T(0.0);
+    u[1] = +w[2]*fInvLength;
+    u[2] = -w[1]*fInvLength;
+  }
+
+  v = w.cross(u);
+}
+
+/*!
+  \param a The second vector
+  \return The scalar product value
+
+  This method computes the scalar product (dot product) of
+  self and \a a.
+*/
+template <class T>
+INLINE T
+GbVec3<T>::dot(const GbVec3<T> &a) const
+{ 
+  return a.xyz[0] * xyz[0] + a.xyz[1] * xyz[1] + a.xyz[2] * xyz[2] ; 
+}
+
+/*!
+  \param a First row vector
+  \param b Second row vector
+  \param c Third row vector
+  \return The determinant of the matrix
+
+  This method computes and returns the determinant of a \f$ 3 \times 3 \f$ 
+  matrix that is formed
+  by considering the three given vectors to be the rows of the matrix.
+*/
+template <class T>
+INLINE T
+GbVec3<T>::det(const GbVec3<T> &a, const GbVec3<T> &b, const GbVec3<T> &c)
+{ 
+  return (a[1]*b[2]-a[2]*b[1]) * c[0]
+       + (a[2]*b[0]-a[0]*b[2]) * c[1]
+       + (a[0]*b[1]-a[1]*b[0]) * c[2];
+}
+
+/*!
+  \param a First point
+  \param b Second point
+  \return The angle value
+
+  This method computes and returns the angle between the two vectors given
+  by the two input points and the origin.
+*/
+template <class T>
+INLINE T
+GbVec3<T>::angle(const GbVec3<T> &a, const GbVec3<T> &b)
+{
+  T c = a.dot( b );
+  if( c > T(1.0) ) c = T(1.0);
+  if( c < T(-1.0) ) c = T(-1.0);
+  return GbMath<T>::ACos(c);
+}
+

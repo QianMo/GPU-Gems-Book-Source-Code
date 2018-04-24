@@ -1,0 +1,32 @@
+// Okay, this is stupid.  We'll do something more clever one day...
+
+struct v2fConnector {
+  float4 projCoord : POSITION;
+  float2 tex       : TEXCOORD;
+  //float2 POSITION : POSITION;
+};
+
+Texture2D logo;
+SamplerState LinearClamp;
+
+cbuffer LogoF_CB {
+  float opacity=1;
+  float streaky=1;
+  float4 time;
+}
+
+half4 main(v2fConnector v2f) : COLOR
+{
+  half4 logoColor = logo.Sample(LinearClamp, v2f.tex);
+  logoColor.w *= saturate(opacity);
+  
+  const float period = 25.0;
+  
+  float t = (v2f.tex.x + v2f.tex.y)*0.01f - time.x/period;
+  t = frac(t);
+  t = saturate( 1.5 - abs(t-0.5)*999  );
+  //t = saturate( sin(t*6.28)*1900 - 1898.5 );
+  logoColor.xyz *= 1 + t*streaky;
+  
+  return logoColor;
+}

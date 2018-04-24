@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nbody", "nbody_vc7.vcproj", "{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		EmuDebug = EmuDebug
+		EmuRelease = EmuRelease
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.Debug.ActiveCfg = Debug|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.Debug.Build.0 = Debug|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.EmuDebug.ActiveCfg = EmuDebug|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.EmuDebug.Build.0 = EmuDebug|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.EmuRelease.ActiveCfg = EmuRelease|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.EmuRelease.Build.0 = EmuRelease|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.Release.ActiveCfg = Release|Win32
+		{AF7F45C7-8545-4CA2-B835-FDE8823B7B09}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

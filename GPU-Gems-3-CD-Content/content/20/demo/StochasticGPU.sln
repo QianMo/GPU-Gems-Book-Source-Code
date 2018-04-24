@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StochasticGPU", "StochasticGPU.vcproj", "{94641E8C-E5DD-4B46-B0AA-15FEC234285F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4E6A9B6C-815C-457C-9BB5-64D38B05A249} = {4E6A9B6C-815C-457C-9BB5-64D38B05A249}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PDSample", "PDSample\PDSample.vcproj", "{4E6A9B6C-815C-457C-9BB5-64D38B05A249}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94641E8C-E5DD-4B46-B0AA-15FEC234285F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94641E8C-E5DD-4B46-B0AA-15FEC234285F}.Debug|Win32.Build.0 = Debug|Win32
+		{94641E8C-E5DD-4B46-B0AA-15FEC234285F}.Release|Win32.ActiveCfg = Release|Win32
+		{94641E8C-E5DD-4B46-B0AA-15FEC234285F}.Release|Win32.Build.0 = Release|Win32
+		{4E6A9B6C-815C-457C-9BB5-64D38B05A249}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E6A9B6C-815C-457C-9BB5-64D38B05A249}.Debug|Win32.Build.0 = Debug|Win32
+		{4E6A9B6C-815C-457C-9BB5-64D38B05A249}.Release|Win32.ActiveCfg = Release|Win32
+		{4E6A9B6C-815C-457C-9BB5-64D38B05A249}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,97 @@
+#include "Resources.h"
+#include "WinResrc.h"
+
+ID_FILE MENU DISCARDABLE
+{
+    POPUP "File"
+    {
+      MENUITEM "Exit", ID_FILE_EXIT
+    }
+    POPUP "Rendering"
+    {
+      POPUP "Shadow map size (R)"
+      {
+        MENUITEM "256x256", ID_SM256
+        MENUITEM "512x512", ID_SM512
+        MENUITEM "1024x1024", ID_SM1024, CHECKED
+        MENUITEM "2048x2048", ID_SM2048
+        MENUITEM "4096x4096", ID_SM4096
+      }
+      POPUP "Splits (number keys)"
+      {
+        MENUITEM "1", ID_SPLITS1
+        MENUITEM "2", ID_SPLITS2
+        MENUITEM "3", ID_SPLITS3
+        MENUITEM "4", ID_SPLITS4, CHECKED
+        MENUITEM "5", ID_SPLITS5
+        MENUITEM "6", ID_SPLITS6
+        MENUITEM "7", ID_SPLITS7
+        MENUITEM "8", ID_SPLITS8
+        MENUITEM "9", ID_SPLITS9
+      }
+      MENUITEM "Use scene-dependent projection (P)", ID_SCENEDEPENDENTPROJ, CHECKED
+      POPUP "Method (M)"
+      {
+        MENUITEM "Multi-pass", ID_METHOD_MULTIPASS, CHECKED
+        MENUITEM "DX9-level", ID_METHOD_DX9
+        MENUITEM "DX10-level (GS cloning)", ID_METHOD_DX10_GSC
+        MENUITEM "DX10-level (instancing)", ID_METHOD_DX10_INST
+      }
+      POPUP "Visibility tests (V)"
+      {
+        MENUITEM "Accurate", ID_VISTEST_ACCURATE, CHECKED
+        MENUITEM "Cheap", ID_VISTEST_CHEAP
+        MENUITEM "Disabled", ID_VISTEST_NONE
+      }
+      POPUP "Light projection (T)"
+      {
+        MENUITEM "Orthographic", ID_LIGHT_ORTH, CHECKED
+        MENUITEM "Perspective", ID_LIGHT_PERS
+      }
+    }
+    POPUP "Scene"
+    {
+      POPUP "Area"
+      {
+        MENUITEM "Larger (Page up)", ID_SCENE_LARGER
+        MENUITEM "Smaller (Page down)", ID_SCENE_SMALLER
+      }
+      POPUP "Meshes"
+      {
+        MENUITEM "Random", ID_SCENE_MESHES_RND, CHECKED
+        MENUITEM "High-poly", ID_SCENE_MESHES_HP
+        MENUITEM "Low-poly", ID_SCENE_MESHES_LP
+      }
+      POPUP "Objects"
+      {
+        MENUITEM "More (Insert)", ID_SCENE_ADD
+        MENUITEM "Less (Delete)", ID_SCENE_REM
+      }
+    }
+    POPUP "HUD (H)"
+    {
+      MENUITEM "Show statistics", ID_HUD_STATS, CHECKED
+      MENUITEM "Show FPS", ID_HUD_FPS, CHECKED
+      MENUITEM "Show textures", ID_HUD_TEXTURES, CHECKED
+    }
+    POPUP "Help"
+    {
+      MENUITEM "About", ID_HELP_ABOUT
+    }
+}
+
+IDD_ABOUT DIALOG FIXED 6, 21, 198, 89
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT
+"\
+This demo is based on the GPU Gems 3 chapter\r\n\
+'Parallel-Split Shadow Maps on Programmable GPUs'\r\n\
+by Fan Zhang, Hanqui Sun and Oskari Nyman\r\n\
+\r\n\
+Programming by Oskari Nyman\r\n\
+Artwork by Jurica Dolic\r\n", -1, 4, 4, 198, 89, SS_CENTER
+    DEFPUSHBUTTON   "&OK", IDOK, 79, 64, 40, 14
+END

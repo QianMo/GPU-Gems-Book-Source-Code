@@ -1,0 +1,62 @@
+// this shader does a fine, *short*-streak, depth-unaware (i.e. fast) 
+// motion blur on the input image, then composites it with glow & lens flares.
+
+
+#include "hdr_scale.fp30"
+#include "global_color_scale.h"    //* GLOBAL_COLOR_SCALE
+#include "sliders.h"
+
+struct v2fConnector {
+  float4 projCoord : POSITION;  // cg would accept this, but d3dx compiler dies
+  float2 tex : TEXCOORD;
+};
+
+Texture2D glowTex;
+Texture2D origTex;
+SamplerState LinearClamp;
+Texture3D<uint> VertexIDVol;//FIXME
+
+cbuffer ShaderCB {
+  float2 time = float2(0,0);
+  float4 g_screenSize = float4(1024,768,1.0/1024.0,1.0/768.0);
+  float  brightness = 1;    // use this for fade-to-black effect
+  float  glow_str = 0.3;    // exposed so we can turn off glow during tiled screenshots
+}
+
+
+float4 main(v2fConnector v2f) : SV_Target 
+{
+  // NOTE: texel shift (to keep alignment 1:1) is done in *vertex* shader!
+  
+  
+  float2 uv = v2f.tex.xy;
+
+  float3 orig_color = origTex.Sample(LinearClamp, uv).xyz / (float)(GLOBAL_COLOR_SCALE);
+
+  float3 glow_color = glowTex.Sample(LinearClamp, uv).xyz;
+  // note: doesn't need divided by GLOBAL_COLOR_SCALE;
+  //   that already happened in downsample_glow.fp30
+  
+  float3 ret = lerp(orig_color.xyz, glow_color.xyz*(1-SOFTNESS) + glow_color.xyz, glow_str);
+
+
+  // COLOR [DE]SATURATION  
+  float grey = dot(ret.xyz, float3(0.33,0.37,0.30));
+  ret.xyz = lerp(grey.xxx, ret.xyz, (color_saturation*1.15).xxx);
+  
+  // FINAL GAMMA CORRECTION
+  //ret.xyz *= ret.xyz;
+
+
+//FIXME
+//int x = (int)(v2f.tex.x * g_screenSize.x * 0.1);
+//int y = (int)(v2f.tex.y * g_screenSize.y * 0.1);
+//x *= 3;
+//uint3 VertexID;
+//VertexID.x = VertexIDVol.Load(int4(x  , y, 16, 0)).x;
+//VertexID.y = VertexIDVol.Load(int4(x+1, y, 16, 0)).x;
+//VertexID.z = VertexIDVol.Load(int4(x+2, y, 16, 0)).x;
+//return float4(VertexID, 1);
+
+  return float4(ret.xyz*brightness.xxx, 1);
+}
