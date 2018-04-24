@@ -100,15 +100,15 @@ CD Content ( Source Code ) of Book <GPU Gems 1~3>
  	
 ### General-Purpose Computation on GPUs: A Primer
 
-- [Ch. 31: Mapping Computational Concepts to GPUs](/GPU-Gems-2-CD-Content/High-General-Purpose_Computation_on_GPUs_A_Primer/Ch_31_Mapping_Computational_Concepts_to_GPUs)
-- [Ch. 36: Stream Reduction Operations for GPGPU Applications](/GPU-Gems-2-CD-Content/High-General-Purpose_Computation_on_GPUs_A_Primer/Ch_36_Stream_Reduction_Operations_for_GPGPU_Applications)
+- [Ch. 31: Mapping Computational Concepts to GPUs](/GPU-Gems-2-CD-Content/General-Purpose_Computation_on_GPUs_A_Primer/Ch_31_Mapping_Computational_Concepts_to_GPUs)
+- [Ch. 36: Stream Reduction Operations for GPGPU Applications](/GPU-Gems-2-CD-Content/General-Purpose_Computation_on_GPUs_A_Primer/Ch_36_Stream_Reduction_Operations_for_GPGPU_Applications)
  	
 ### Image-Oriented Computing
 
-- [Ch. 37: Octree Textures on the GPU](/GPU-Gems-2-CD-Content/High-General-Image-Oriented_Computing/Ch_37_Octree_Textures_on_the_GPU)
-- [Ch. 38: High-Quality Global Illumination Using Rasterization](/GPU-Gems-2-CD-Content/High-General-Image-Oriented_Computing/Ch_38_High-Quality_Global_Illumination_Using_Rasterization)
-- [Ch. 40: Computer Vision on the GPU](/GPU-Gems-2-CD-Content/High-General-Image-Oriented_Computing/Ch_40_Computer_Vision_on_the_GPU)
-- [Ch. 42: Conservative Rasterization](/GPU-Gems-2-CD-Content/High-General-Image-Oriented_Computing/Ch_42_Conservative_Rasterization)
+- [Ch. 37: Octree Textures on the GPU](/GPU-Gems-2-CD-Content/Image-Oriented_Computing/Ch_37_Octree_Textures_on_the_GPU)
+- [Ch. 38: High-Quality Global Illumination Using Rasterization](/GPU-Gems-2-CD-Content/Image-Oriented_Computing/Ch_38_High-Quality_Global_Illumination_Using_Rasterization)
+- [Ch. 40: Computer Vision on the GPU](/GPU-Gems-2-CD-Content/Image-Oriented_Computing/Ch_40_Computer_Vision_on_the_GPU)
+- [Ch. 42: Conservative Rasterization](/GPU-Gems-2-CD-Content/Image-Oriented_Computing/Ch_42_Conservative_Rasterization)
  	
 ### Simulation and Numerical Algorithms
 
