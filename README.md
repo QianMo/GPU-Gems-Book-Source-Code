@@ -125,7 +125,7 @@ CD Content ( Source Code ) of Book <GPU Gems 1~3>
 
 <br>
 
-## <GPU Gems 2> CD Conents
+## <GPU Gems 3> CD Conents
 
 ![](Media/gems3.jpg)
 
