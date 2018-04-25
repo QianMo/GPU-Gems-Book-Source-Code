@@ -2,20 +2,11 @@
 
 # GPU Gems CD Content
 
-CD Content ( Source Code ) of Book <GPU Gems> 1~3
+CD Content ( Source Code ) of Book < GPU Gems > 1~3
 
 <br>
 
-
-#  Full Book Web Version of Book GPU Gems 1~3
-
-- [<GPU Gems 1> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems/gpugems_pref01.html)
-- [<GPU Gems 2> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_inside_front_cover.html)
-- [<GPU Gems 3> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_pref01.html)
-
-<br>
-
-# GPU Gems 1 CD Conents
+# <GPU Gems 1> CD Conents
 ![](Media/gems1-cover.jpg)
 
 ## Natural Effects
@@ -75,7 +66,7 @@ CD Content ( Source Code ) of Book <GPU Gems> 1~3
 
 
 
-# GPU Gems 2 CD Conents
+# <GPU Gems 2> CD Conents
 
 ![](Media/gems2-cover.jpg)
 
@@ -133,7 +124,7 @@ CD Content ( Source Code ) of Book <GPU Gems> 1~3
 
 <br>
 
-# [GPU Gems 3] CD Conents
+# <GPU Gems 3> CD Conents
 
 ![](Media/gems3-cover.jpg)
 
@@ -182,3 +173,11 @@ CD Content ( Source Code ) of Book <GPU Gems> 1~3
 :neutral_face: PS: NVIDIA did not provide official website for <GPU Gems 3> CD Content
 
 <br> 
+
+<br>
+
+# 【Bonus】Full Book Web Version of GPU Gems 1~3
+
+- [<GPU Gems 1> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems/gpugems_pref01.html)
+- [<GPU Gems 2> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_inside_front_cover.html)
+- [<GPU Gems 3> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_pref01.html)
