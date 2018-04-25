@@ -175,7 +175,7 @@ CD Content ( Source Code ) of Book <GPU Gems> 1~3
 
 <br> 
 
-# <GPU Gems> Full Book Web Version
+#  Full Book Web Version of Book GPU Gems 1~3
 
 - [<GPU Gems 1> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems/gpugems_pref01.html)
 - [<GPU Gems 2> Full Book Web Version](https://developer.nvidia.com/gpugems/GPUGems2/gpugems2_inside_front_cover.html)
